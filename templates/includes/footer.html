@@ -25,42 +25,45 @@
                     <!-- start footer column -->
                     <div class="col-lg-3 col-md-12 col-sm-6 text-lg-start text-md-center md-mb-30px">
                         <a href="{% url 'inicio:index' %}" class="footer-logo d-inline-block">
-                            <img src="{% static 'crafto/images/demo-gym-and-fitness-logo-white.png' %}" data-at2x="{% static 'crafto/images/demo-gym-and-fitness-logo-white@2x.png' %}" alt="">
+                            <img src="{{ logo_white_url }}" data-at2x="{{ logo_white_url }}" alt="{{ site_config.company_name }}">
                         </a>
                     </div>
                     <!-- end footer column -->
                     <!-- start footer column -->
                     <div class="col-lg-3 col-md-4 col-sm-6 fs-16 lh-26 fw-500 last-paragraph-no-margin sm-mb-30px">
                         <span class="text-white ls-05px d-block fs-17 mb-5px">Hablemos de tu producción</span>
-                        <div><i class="feather icon-feather-phone-call icon-very-small me-10px"></i><a href="tel:12345678910">Teléfono por definir</a></div>
-                        <div><i class="feather icon-feather-mail icon-very-small me-10px"></i><a href="mailto:info@domain.com" class="text-decoration-line-bottom">Correo por definir</a></div>
+                        {% if site_config.phone %}<div><i class="feather icon-feather-phone-call icon-very-small me-10px"></i><a href="tel:{{ site_config.phone_link }}">{{ site_config.phone }}</a></div>{% endif %}
+                        {% for email in corporate_emails %}
+                        <div><i class="feather icon-feather-mail icon-very-small me-10px"></i><a href="mailto:{{ email.email }}" class="text-decoration-line-bottom" title="{{ email.label }}">{{ email.email }}</a></div>
+                        {% empty %}{% if site_config.main_email %}
+                        <div><i class="feather icon-feather-mail icon-very-small me-10px"></i><a href="mailto:{{ site_config.main_email }}" class="text-decoration-line-bottom">{{ site_config.main_email }}</a></div>
+                        {% endif %}{% endfor %}
                     </div>
                     <!-- end footer column -->  
                     <!-- start footer column -->
                     <div class="col-lg-3 col-md-4 col-sm-6 fs-16 lh-26 fw-500 last-paragraph-no-margin xs-mb-30px">
                         <span class="text-white ls-05px d-block fs-17 mb-5px">Ubicación</span>
-                        <p class="w-90 xs-w-70 xs-mx-auto">Dirección corporativa por definir</p>
+                        <p class="w-90 xs-w-70 xs-mx-auto">{% if site_config.google_maps_url %}<a href="{{ site_config.google_maps_url }}" target="_blank" rel="noopener">{{ site_config.location_text }}</a>{% else %}{{ site_config.location_text }}{% endif %}</p>
                     </div>
                     <!-- end footer column -->
                     <!-- start footer column -->
                     <div class="col-lg-3 col-md-4 col-sm-6 fs-16 lh-26 fw-500 last-paragraph-no-margin">
                         <span class="text-white ls-05px d-block fs-17 mb-5px">Horario de atención</span>
-                        <span class="d-block">Lunes a viernes: horario por definir</span>
-                        <span class="d-block">Sábado: horario por definir</span>
+                        {% if site_config.business_hours %}<span class="d-block">{{ site_config.business_hours }}</span>{% endif %}
                     </div>
                     <!-- end footer column -->
                 </div>
                 <div class="footer-bottom position-relative pt-25px pb-25px border-top border-color-transparent-white-light">                    
                     <div class="row align-items-center">
                         <div class="col-lg-4 text-center text-lg-start md-mb-15px"> 
-                            <span class="fs-16 fw-500">&COPY; Copyright 2026 <a href="{% url 'inicio:index' %}" class="text-white text-decoration-line-bottom">GRAVIOR</a></span>
+                            <span class="fs-16 fw-500">&COPY; {{ site_config.copyright_text }} <a href="{% url 'inicio:index' %}" class="text-white text-decoration-line-bottom">{{ site_config.company_name }}</a></span>
                         </div>   
                         <div class="col-lg-8 text-center text-lg-end"> 
                             <ul class="footer-navbar fs-16 fw-500"> 
                                 <li class="nav-item"><a href="{% url 'inicio:index' %}" class="nav-link">Inicio</a></li>
                                 <li class="nav-item"><a href="{% url 'empresa:index' %}" class="nav-link">Nosotros</a></li>
                                 <li class="nav-item"><a href="{% url 'genetica:index' %}" class="nav-link">Genética</a></li>
-                                <li class="nav-item"><a href="{% url 'calidad:index' %}" class="nav-link">Servicios</a></li>
+                                <li class="nav-item"><a href="{% url 'calidad:index' %}" class="nav-link">Calidad y bioseguridad</a></li>
                                 <li class="nav-item"><a href="{% url 'productos:index' %}" class="nav-link">Productos</a></li>
                                 <li class="nav-item"><a href="{% url 'infraestructura:index' %}" class="nav-link">Instalaciones</a></li>
                                 <li class="nav-item"><a href="{% url 'equipo:index' %}" class="nav-link">Equipo</a></li>

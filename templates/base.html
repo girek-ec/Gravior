@@ -2,14 +2,14 @@
 <!doctype html>
 <html class="no-js" lang="es">
     <head>
-        <title>{% block title %}GRAVIOR | Soluciones avícolas integrales{% endblock %}</title>
+        <title>{% block title %}{% firstof site_config.default_seo_title site_config.company_name %}{% endblock %}</title>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="author" content="GRAVIOR">
+        <meta name="author" content="{{ site_config.company_name }}">
         <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-        <meta name="description" content="{% block meta_description %}GRAVIOR impulsa el desarrollo de la avicultura con soluciones integrales en genética, calidad, bioseguridad y acompañamiento técnico.{% endblock %}">
+        <meta name="description" content="{% block meta_description %}{% firstof site_config.default_seo_description site_config.short_description %}{% endblock %}">
         <!-- favicon icon -->
-        <link rel="shortcut icon" href="{% static 'crafto/images/favicon.png' %}">
+        <link rel="shortcut icon" href="{{ favicon_url }}">
         <link rel="apple-touch-icon" href="{% static 'crafto/images/apple-touch-icon-57x57.png' %}">
         <link rel="apple-touch-icon" sizes="72x72" href="{% static 'crafto/images/apple-touch-icon-72x72.png' %}">
         <link rel="apple-touch-icon" sizes="114x114" href="{% static 'crafto/images/apple-touch-icon-114x114.png' %}">
@@ -46,6 +46,12 @@
         {% block footer %}{% include "includes/footer.html" %}{% endblock %}
 
         {% block after_footer %}{% endblock %}
+
+        {% if whatsapp_url %}
+        <!-- start whatsapp button (activar/desactivar en Configuración general) -->
+        <a href="{{ whatsapp_url }}" target="_blank" rel="noopener" aria-label="WhatsApp" class="position-fixed left-30px bottom-30px w-60px h-60px rounded-circle d-flex align-items-center justify-content-center text-white fs-30 box-shadow-large" style="background-color: #25D366; z-index: 1000;"><i class="fa-brands fa-whatsapp"></i></a>
+        <!-- end whatsapp button -->
+        {% endif %}
 
 <!-- start scroll progress -->
         <div class="scroll-progress d-none d-xxl-block">
