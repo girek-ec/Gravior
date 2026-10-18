@@ -103,3 +103,119 @@ revisión visual en navegador.
   definir", logos de la demo): se reemplazan desde el admin en el bloque A.
 - Validación de extensiones/tamaño de archivos: se implementa en el bloque A
   con los primeros `ImageField`.
+
+> Estado de estos pendientes al cerrar el Bloque A: la etiqueta "Servicios",
+> el popup, los datos fijos del header/footer y la validación de archivos
+> quedaron resueltos. El error JS quedó acotado (ver Bloque A).
+
+---
+
+## Bloque A · Configuración e Inicio (18/10/2026)
+
+### Modelos y ubicación
+
+| Modelo | App (grupo admin) | Motivo |
+| --- | --- | --- |
+| SiteConfiguration (singleton) | `core` (Configuración) | Datos globales de header, footer, contacto, WhatsApp y SEO |
+| CorporateEmail | `core` (Configuración) | Correos reutilizados en footer y contacto |
+| SocialNetwork | `core` (Configuración) | Redes del sitio completo |
+| CallToAction | `core` (Configuración) | CTAs reutilizables en cualquier página, por identificador |
+| HeroSlide | `inicio` (Inicio) | Slider principal del Home |
+| Differential | `inicio` (Inicio) | Diferenciales del Home y Nosotros |
+| Statistic | `inicio` (Inicio) | Indicadores del Home y Nosotros |
+| ProcessStep | `inicio` (Inicio) | Proceso de trabajo del Home |
+
+Campos exactamente los del documento (secciones 6 y 7). Añadidos por la
+convención de la sección 5: `created_at` / `updated_at` en todos
+(`core.models.TimeStampedModel`).
+
+### Decisiones
+- **Statistic.value es entero** (`PositiveIntegerField`): el contador de
+  Crafto (`vertical-counter`) anima dígito a dígito y no admite decimales.
+  Prefijo y sufijo se muestran junto al contador.
+- **Singleton**: `SiteConfiguration.clean()` impide una segunda instancia;
+  en el admin no se puede crear otra ni borrar la existente y el listado
+  redirige al formulario.
+- **Admin ordenado** como la sección 4 con `core.admin_site.GraviorAdminSite`
+  (reemplaza a `django.contrib.admin` en `INSTALLED_APPS`).
+- **Validación de archivos** (`core/validators.py`): JPG/PNG/WEBP (favicon
+  PNG/ICO) y peso máximo por campo (logos 1 MB, slides 5 MB, etc.). Las
+  ayudas del admin indican medidas recomendadas.
+- **Enlaces administrables** validados: `/ruta/`, `#ancla`, `https://`,
+  `mailto:`, `tel:`.
+- **Context processor** `core.context_processors.site`: `site_config`,
+  `corporate_emails`, `social_networks`, `whatsapp_url` (solo si
+  `whatsapp_enabled`), `ctas` (CTA activos por `code`), `logo_url`,
+  `logo_white_url` y `favicon_url` (con respaldo a las imágenes de la
+  maqueta si no hay configuración). No se ejecuta en `/admin/`.
+- **CTA por identificador**: `header_contact` (botón del header),
+  `home_process` (sección de proceso), `about_contact` (Nosotros). Si se
+  desactiva o borra, el bloque correspondiente no se muestra.
+- **Slider**: un loop sobre el slide 1 de la maqueta. Las diferencias de
+  atributos de los slides 2 y 3 (`data-responsive`, `border-radius`, `fb`)
+  se conservan con `forloop.first`. `highlight_text` = etiqueta oscura,
+  `eyebrow` = texto junto a ella, fondo grande = `company_name`. El botón 2
+  abre `video_url` en popup si existe; si no, enlaza a
+  `secondary_button_url`. `thumbnail` es el fondo de "Siguiente" (respaldo:
+  imagen de escritorio).
+- **Imagen móvil**: la demo reemplazaba el fondo de cada slide en ≤ 778 px
+  por un placeholder (`gym-and-fitness.css`). El Home sobrescribe esa regla
+  con `mobile_image` o, si falta, `desktop_image`.
+- **Diferenciales**: Home (lista con flecha) y Nosotros (acordeón) según
+  `show_home` / `show_about`. Muestra `image` si existe, si no `icon_class`.
+  La flecha enlaza a Nosotros (el modelo no tiene campo de enlace).
+- **Estados vacíos**: slider (y su JS), diferenciales, indicadores y proceso
+  se omiten sin datos; el botón de WhatsApp solo aparece con número y
+  activado; header/footer no fallan sin configuración.
+- **WhatsApp**: botón flotante abajo a la izquierda (a la derecha y más
+  pequeño en móvil para no tapar el slider; a la derecha en escritorio
+  chocaría con la barra "Subir" del tema).
+- Se eliminó el popup promocional de la demo y "Servicios" pasó a
+  "Calidad y bioseguridad" en header y footer.
+
+### Datos por defecto
+```bash
+python manage.py seed_bloque_a
+```
+Idempotente: cada modelo se carga solo si su tabla está vacía (los CTA, por
+identificador) y nunca modifica registros existentes. Copia imágenes de
+`static/crafto/images/` a `media/` como relleno.
+
+Carga: configuración general (textos del brief/maqueta; teléfono y WhatsApp
+`+593 00 000 0000`, correo `info@example.com`, dirección y horario "por
+definir", país Ecuador, logos y favicon de la demo), 4 correos
+`@example.com`, 3 redes de ejemplo, 3 CTA, 3 slides, 6 diferenciales
+(mensajes de la sección 2.2), 3 etapas. **No carga indicadores.**
+
+### Verificación
+`check` sin issues · `makemigrations --check` sin cambios · `migrate` al
+día · 16 tests OK (context processor, singleton, seed idempotente, admin,
+secciones del Home) · 11 URLs públicas 200 con datos y con las tablas del
+bloque vacías · Home y Nosotros revisados en navegador a 1366 px y 375 px
+(menú lateral, slider, diferenciales, indicadores con datos temporales,
+proceso, footer, WhatsApp, estado vacío).
+
+### Error JS de la consola
+`main.js:2720` (`slideChange` → `current_slide.querySelectorAll`). Viene del
+carrusel de testimonios del Home (`.slider-one-slide`, sección "Experiencias
+y confianza"), **no** del slider principal ni del header. Es intermitente
+(aparece en algunas primeras cargas, cuando Swiper se inicializa con 0
+slides) y no se reprodujo al recargar. No se tocó `main.js`. Posible
+arreglo en frontend: comprobar `current_slide` antes de usarlo en ese
+handler. En Calidad y Aliados no hay error (lo que se veía antes era el log
+arrastrado del Home).
+
+### Pendientes
+- Contenido real del cliente para reemplazar los ejemplos (logo, teléfono,
+  WhatsApp, correos, dirección, horario, redes, Google Maps). **Antes de
+  publicar** desactivar o corregir el WhatsApp de ejemplo.
+- Textos que siguen fijos en header, footer y Home: lista entregada para
+  decisión (no se cambian sin aprobación).
+- El documento prevé un "CTA final" en el Home, pero la maqueta no tiene ese
+  bloque.
+- "Calidad y bioseguridad" ocupa dos líneas muy juntas en el menú lateral de
+  escritorio (revisar en diseño).
+- Statistic.description no tiene lugar visible en el diseño de contadores
+  (se usa como `title` del elemento). ProcessStep.icon_class tampoco se
+  muestra (el diseño usa el número).
+- Error JS intermitente del carrusel de testimonios (frontend).

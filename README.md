@@ -28,6 +28,7 @@ Luego:
 
 ```powershell
 python manage.py migrate
+python manage.py seed_bloque_a   # contenidos por defecto (no pisa lo editado)
 python manage.py createsuperuser
 python manage.py runserver
 ```
