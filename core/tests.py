@@ -127,3 +127,38 @@ class SeedBloqueATests(TestCase):
         for path in ('/', '/nosotros/', '/contacto/'):
             with self.subTest(path=path):
                 self.assertEqual(self.client.get(path).status_code, 200)
+
+
+class BlockAAdminTests(TestCase):
+    def setUp(self):
+        from django.contrib.auth import get_user_model
+        user = get_user_model().objects.create_superuser('admin-test', 'admin@example.com', 'x')
+        self.client.force_login(user)
+
+    def test_changelists_load(self):
+        for name in ('core_corporateemail', 'core_socialnetwork', 'core_calltoaction',
+                     'inicio_heroslide', 'inicio_differential', 'inicio_statistic', 'inicio_processstep'):
+            with self.subTest(name=name):
+                self.assertEqual(self.client.get(reverse(f'admin:{name}_changelist')).status_code, 200)
+                self.assertEqual(self.client.get(reverse(f'admin:{name}_add')).status_code, 200)
+
+    def test_site_configuration_singleton(self):
+        from .models import SiteConfiguration
+        response = self.client.get(reverse('admin:core_siteconfiguration_changelist'))
+        self.assertRedirects(response, reverse('admin:core_siteconfiguration_add'))
+        config = SiteConfiguration.objects.create(
+            company_name='Empresa', logo='site/logo.png', short_description='Desc',
+            whatsapp_number='+593 00 000 0000', copyright_text='Copyright 2026')
+        response = self.client.get(reverse('admin:core_siteconfiguration_changelist'))
+        self.assertRedirects(response, reverse('admin:core_siteconfiguration_change', args=[config.pk]),
+                             fetch_redirect_response=False)
+        self.assertEqual(self.client.get(reverse('admin:core_siteconfiguration_add')).status_code, 403)
+        self.assertEqual(self.client.get(reverse('admin:core_siteconfiguration_delete', args=[config.pk])).status_code, 403)
+
+    def test_admin_index_groups_order(self):
+        response = self.client.get(reverse('admin:index'))
+        labels = [app['app_label'] for app in response.context['app_list']]
+        self.assertEqual(labels[:2], ['core', 'inicio'])
+        inicio = next(app for app in response.context['app_list'] if app['app_label'] == 'inicio')
+        self.assertEqual([m['object_name'] for m in inicio['models']],
+                         ['HeroSlide', 'Differential', 'Statistic', 'ProcessStep'])
