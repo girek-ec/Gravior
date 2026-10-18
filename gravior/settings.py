@@ -53,6 +53,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Apps del proyecto (una por dominio de contenido)
+    'core',
+    'empresa',
+    'genetica',
+    'calidad',
+    'productos',
+    'infraestructura',
+    'equipo',
+    'actualidad',
+    'contacto',
 ]
 
 MIDDLEWARE = [
