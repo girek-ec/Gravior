@@ -8,6 +8,7 @@ Reglas comunes:
   sobrescribir jamás un campo que ya tenga contenido.
 """
 
+from io import BytesIO
 from pathlib import Path
 
 from django.conf import settings
@@ -16,6 +17,7 @@ from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.db.models.fields.files import FieldFile
+from PIL import Image, ImageOps
 
 STATIC_IMAGES = Path(settings.BASE_DIR) / 'static' / 'crafto' / 'images'
 
@@ -63,8 +65,23 @@ def sample_pdf(title, lines=()):
     return bytes(pdf)
 
 
-def attach_image(instance, field_name, relative_path):
-    attach_file(instance, field_name, STATIC_IMAGES / relative_path)
+def attach_image(instance, field_name, spec):
+    """Copia una imagen de static/crafto/images/.
+
+    `spec` es la ruta relativa o (ruta, (ancho, alto)) para recortarla al centro con esas medidas,
+    de modo que el relleno respete las proporciones que espera la plantilla.
+    """
+    if isinstance(spec, tuple):
+        relative_path, size = spec
+        source = STATIC_IMAGES / relative_path
+        with Image.open(source) as image:
+            fitted = ImageOps.fit(image.convert('RGB'), size)
+            buffer = BytesIO()
+            fitted.save(buffer, 'JPEG', quality=85)
+        name = f'{source.stem}-{size[0]}x{size[1]}.jpg'
+        getattr(instance, field_name).save(name, ContentFile(buffer.getvalue()), save=False)
+        return
+    attach_file(instance, field_name, STATIC_IMAGES / spec)
 
 
 def is_blank(value):

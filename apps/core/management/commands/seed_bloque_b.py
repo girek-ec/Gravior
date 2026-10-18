@@ -86,7 +86,8 @@ GENETIC_LINES = [
         'order': 1,
         'seo_title': 'Genética Cobb | GRAVIOR',
         'seo_description': 'Genética Cobb con el acompañamiento técnico de GRAVIOR para una producción avícola eficiente.',
-        'images': {'main_image': 'gravior/home/solution-genetics.jpg', 'secondary_image': 'gravior/home/hero-02.jpg'},
+        'images': {'main_image': ('gravior/home/solution-genetics.jpg', (578, 691)),
+                   'secondary_image': ('gravior/home/hero-02.jpg', (600, 672))},
         'features': [
             ('Potencial genético', 'Selección orientada a productividad, uniformidad y eficiencia bajo un manejo adecuado.',
              'bi bi-diagram-3-fill'),
@@ -115,7 +116,8 @@ GENETIC_LINES = [
         'order': 2,
         'seo_title': 'Línea genética | GRAVIOR',
         'seo_description': 'Líneas genéticas de GRAVIOR con acompañamiento técnico en cada etapa productiva.',
-        'images': {'main_image': 'gravior/home/solution-technical.jpg', 'secondary_image': 'gravior/home/hero-01.jpg'},
+        'images': {'main_image': ('gravior/home/solution-technical.jpg', (578, 691)),
+                   'secondary_image': ('gravior/home/hero-01.jpg', (600, 672))},
         'features': [
             ('Desempeño', 'Orientación a resultados productivos consistentes bajo un manejo adecuado.', 'bi bi-graph-up-arrow'),
             ('Adaptación', 'Atención a las condiciones de cada operación y de su entorno productivo.', 'bi bi-gear-fill'),
