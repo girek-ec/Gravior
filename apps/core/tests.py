@@ -94,10 +94,12 @@ class SeedBloqueATests(TestCase):
         override.enable()
         self.addCleanup(override.disable)
 
-    def run_seed(self):
+    def run_seed(self, *args):
         from io import StringIO
         from django.core.management import call_command
-        call_command('seed_bloque_a', stdout=StringIO())
+        out = StringIO()
+        call_command('seed_bloque_a', *args, stdout=out)
+        return out.getvalue()
 
     def test_seed_is_idempotent_and_keeps_edits(self):
         from apps.inicio.models import Differential, HeroSlide, Statistic
@@ -121,6 +123,45 @@ class SeedBloqueATests(TestCase):
         self.assertEqual(HeroSlide.objects.count(), 3)
         self.assertTrue(HeroSlide.objects.filter(title='Título editado').exists())
         self.assertTrue(CallToAction.objects.filter(code='home_process').exists())
+
+    def test_fill_blanks_only_completes_empty_fields(self):
+        from apps.inicio.models import HeroSlide, ProcessStep
+        from .models import CallToAction, SiteConfiguration
+        self.run_seed()
+        config = SiteConfiguration.objects.get()
+        config.legal_name = ''
+        config.city = 'Ciudad del cliente'
+        config.save()
+        CallToAction.objects.filter(code='header_contact').update(text='', button_text='Texto del cliente')
+        ProcessStep.objects.filter(number='01').update(icon_class='')
+        slide = HeroSlide.objects.get(order=1)
+        slide.eyebrow = ''
+        slide.save()
+
+        self.run_seed()  # sin la opción no se toca nada
+        self.assertEqual(SiteConfiguration.objects.get().legal_name, '')
+
+        output = self.run_seed('--fill-blanks')
+        config = SiteConfiguration.objects.get()
+        self.assertEqual(config.legal_name, 'Razón social por confirmar')
+        self.assertEqual(config.city, 'Ciudad del cliente')
+        cta = CallToAction.objects.get(code='header_contact')
+        self.assertTrue(cta.text)
+        self.assertEqual(cta.button_text, 'Texto del cliente')
+        self.assertTrue(ProcessStep.objects.get(number='01').icon_class)
+        self.assertTrue(HeroSlide.objects.get(order=1).eyebrow)
+        self.assertIn('legal_name', output)
+        config_line = next(line for line in output.splitlines() if 'Configuración general:' in line and 'legal_name' in line)
+        self.assertNotIn('city', config_line)
+
+        self.assertIn('No había campos vacíos', self.run_seed('--fill-blanks'))
+
+    def test_fill_blanks_restores_missing_image(self):
+        from .models import SiteConfiguration
+        self.run_seed()
+        SiteConfiguration.objects.update(logo_white='')
+        self.run_seed('--fill-blanks')
+        self.assertTrue(SiteConfiguration.objects.get().logo_white)
 
     def test_pages_render_with_seeded_data(self):
         self.run_seed()

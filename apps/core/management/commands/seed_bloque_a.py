@@ -1,29 +1,23 @@
-"""Carga los contenidos por defecto del Bloque A (Configuración e Inicio).
+"""Carga los contenidos de ejemplo del Bloque A (Configuración e Inicio).
 
-Idempotente y conservador: un modelo solo se carga si su tabla está vacía, y
-los llamados a la acción se crean por identificador si no existen. Nunca
-modifica registros existentes, así que no pisa lo que el cliente ya editó.
+    python manage.py seed_bloque_a                 # crea lo que falta, no toca lo existente
+    python manage.py seed_bloque_a --fill-blanks   # además completa campos vacíos
 
 Los textos salen de la maqueta y del brief (docs/). Los datos que solo puede
-entregar el cliente se cargan con valores de ejemplo evidentes.
+entregar el cliente usan valores de ejemplo evidentes. No se cargan
+indicadores (Statistic): solo se publican cifras oficiales aprobadas.
+Ver docs/CONTENIDO_EJEMPLO.md.
 """
 
-from pathlib import Path
-
-from django.conf import settings
-from django.core.files import File
-from django.core.management.base import BaseCommand
-from django.db import transaction
-
 from apps.core.models import CallToAction, CorporateEmail, SiteConfiguration, SocialNetwork
+from apps.core.seeding import SeedCommand
 from apps.inicio.models import Differential, HeroSlide, ProcessStep
-
-STATIC_IMAGES = Path(settings.BASE_DIR) / 'static' / 'crafto' / 'images'
 
 EXAMPLE_PHONE = '+593 00 000 0000'
 
 SITE_CONFIGURATION = {
     'company_name': 'GRAVIOR',
+    'legal_name': 'Razón social por confirmar',
     'short_description': (
         'Gravior es una empresa del sector avícola dedicada a la producción y comercialización de '
         'genética avícola de alto valor, orientada a atender las necesidades de productores y '
@@ -35,40 +29,47 @@ SITE_CONFIGURATION = {
     'whatsapp_enabled': True,
     'main_email': 'info@example.com',
     'address': 'Dirección por definir',
+    'city': 'Ciudad por definir',
+    'province': 'Provincia por definir',
     'country': 'Ecuador',
     'business_hours': 'Lunes a viernes: horario por definir',
+    'google_maps_url': 'https://maps.example.com/gravior',
     'copyright_text': 'Copyright 2026',
     'default_seo_title': 'GRAVIOR | Soluciones avícolas integrales',
     'default_seo_description': (
         'GRAVIOR impulsa el desarrollo de la avicultura con soluciones integrales en genética, '
         'calidad, bioseguridad y acompañamiento técnico.'
     ),
-}
-# Imágenes de relleno de la maqueta; el cliente debe reemplazarlas por el logo oficial.
-SITE_IMAGES = {
-    'logo': 'demo-gym-and-fitness-logo-black.png',
-    'logo_white': 'demo-gym-and-fitness-logo-white.png',
-    'favicon': 'favicon.png',
+    # Relleno de la maqueta: el cliente debe reemplazarlo por su identidad oficial.
+    'images': {
+        'logo': 'demo-gym-and-fitness-logo-black.png',
+        'logo_white': 'demo-gym-and-fitness-logo-white.png',
+        'favicon': 'favicon.png',
+    },
 }
 
 CORPORATE_EMAILS = [
-    ('Información', 'info@example.com', CorporateEmail.EmailType.INFO),
-    ('Comercial', 'comercial@example.com', CorporateEmail.EmailType.COMMERCIAL),
-    ('Ventas', 'ventas@example.com', CorporateEmail.EmailType.SALES),
-    ('Administración', 'administracion@example.com', CorporateEmail.EmailType.ADMIN),
+    {'label': 'Información', 'email': 'info@example.com', 'email_type': CorporateEmail.EmailType.INFO, 'order': 1},
+    {'label': 'Comercial', 'email': 'comercial@example.com', 'email_type': CorporateEmail.EmailType.COMMERCIAL, 'order': 2},
+    {'label': 'Ventas', 'email': 'ventas@example.com', 'email_type': CorporateEmail.EmailType.SALES, 'order': 3},
+    {'label': 'Administración', 'email': 'administracion@example.com', 'email_type': CorporateEmail.EmailType.ADMIN, 'order': 4},
 ]
 
 SOCIAL_NETWORKS = [
-    ('Facebook', 'fa-brands fa-facebook-f', 'https://www.facebook.com/example'),
-    ('Instagram', 'fa-brands fa-instagram', 'https://www.instagram.com/example'),
-    ('LinkedIn', 'fa-brands fa-linkedin-in', 'https://www.linkedin.com/company/example'),
+    {'name': 'Facebook', 'icon_class': 'fa-brands fa-facebook-f', 'url': 'https://www.facebook.com/example', 'order': 1},
+    {'name': 'Instagram', 'icon_class': 'fa-brands fa-instagram', 'url': 'https://www.instagram.com/example', 'order': 2},
+    {'name': 'LinkedIn', 'icon_class': 'fa-brands fa-linkedin-in', 'url': 'https://www.linkedin.com/company/example', 'order': 3},
 ]
 
 CALLS_TO_ACTION = [
-    {'code': 'header_contact', 'title': 'Contacto', 'button_text': 'Contáctanos', 'button_url': '/contacto/'},
+    {'code': 'header_contact', 'title': 'Contacto',
+     'text': 'Conversemos sobre las necesidades de tu operación avícola.',
+     'button_text': 'Contáctanos', 'button_url': '/contacto/'},
     {'code': 'home_process', 'title': 'Trabajamos junto a cada productor',
+     'text': 'Te acompañamos desde el diagnóstico hasta el seguimiento de resultados.',
      'button_text': 'Contactar asesor', 'button_url': '/contacto/'},
     {'code': 'about_contact', 'title': 'Hablar con un asesor',
+     'text': 'Nuestro equipo comercial y técnico está disponible para orientarte.',
      'button_text': 'Contactar asesor', 'button_url': '/contacto/'},
 ]
 
@@ -80,7 +81,8 @@ HERO_SLIDES = [
                        'con acompañamiento técnico en cada etapa.',
         'primary_button_text': 'Conoce más', 'primary_button_url': '/nosotros/',
         'secondary_button_text': 'Hablar con un asesor', 'secondary_button_url': '/contacto/',
-        'images': ('gravior/home/hero-01.jpg', 'gravior/home/hero-thumb-01.jpg'),
+        'order': 1,
+        'images': {'desktop_image': 'gravior/home/hero-01.jpg', 'thumbnail': 'gravior/home/hero-thumb-01.jpg'},
     },
     {
         'highlight_text': 'TECNOLOGÍA', 'eyebrow': 'Genética de alto desempeño',
@@ -89,7 +91,8 @@ HERO_SLIDES = [
                        'productivo de cada operación avícola.',
         'primary_button_text': 'Conoce más', 'primary_button_url': '/genetica/',
         'secondary_button_text': 'Hablar con un asesor', 'secondary_button_url': '/contacto/',
-        'images': ('gravior/home/hero-02.jpg', 'gravior/home/hero-thumb-02.jpg'),
+        'order': 2,
+        'images': {'desktop_image': 'gravior/home/hero-02.jpg', 'thumbnail': 'gravior/home/hero-thumb-02.jpg'},
     },
     {
         'highlight_text': 'CONFIANZA', 'eyebrow': 'Acompañamiento especializado',
@@ -98,101 +101,62 @@ HERO_SLIDES = [
                        'eficiencia, bienestar y resultados consistentes.',
         'primary_button_text': 'Conoce más', 'primary_button_url': '/calidad-bioseguridad/',
         'secondary_button_text': 'Hablar con un asesor', 'secondary_button_url': '/contacto/',
-        'images': ('gravior/home/hero-03.jpg', 'gravior/home/hero-thumb-03.jpg'),
+        'order': 3,
+        'images': {'desktop_image': 'gravior/home/hero-03.jpg', 'thumbnail': 'gravior/home/hero-thumb-03.jpg'},
     },
 ]
 
 # Mensajes de la sección 2.2 del documento de arquitectura (lectura del brief).
 DIFFERENTIALS = [
-    ('Genética', 'Genética avícola de alto valor, con desempeño y respaldo técnico.', 'bi bi-heart-fill'),
-    ('Calidad', 'Consistencia, precisión y criterios de operación profesional.', 'bi bi-patch-check-fill'),
-    ('Bioseguridad', 'Prevención, control y responsabilidad en los procesos.', 'bi bi-shield-fill-check'),
-    ('Tecnología', 'Una empresa moderna y tecnificada, con visión de futuro.', 'bi bi-cpu'),
-    ('Eficiencia', 'Orientación a la productividad, los resultados y la generación de valor.',
-     'bi bi-graph-up-arrow'),
-    ('Confianza', 'Cumplimiento, solidez y relaciones comerciales de largo plazo.', 'bi bi-hand-thumbs-up-fill'),
+    {'title': 'Genética', 'description': 'Genética avícola de alto valor, con desempeño y respaldo técnico.',
+     'icon_class': 'bi bi-heart-fill', 'order': 1},
+    {'title': 'Calidad', 'description': 'Consistencia, precisión y criterios de operación profesional.',
+     'icon_class': 'bi bi-patch-check-fill', 'order': 2},
+    {'title': 'Bioseguridad', 'description': 'Prevención, control y responsabilidad en los procesos.',
+     'icon_class': 'bi bi-shield-fill-check', 'order': 3},
+    {'title': 'Tecnología', 'description': 'Una empresa moderna y tecnificada, con visión de futuro.',
+     'icon_class': 'bi bi-cpu', 'order': 4},
+    {'title': 'Eficiencia', 'description': 'Orientación a la productividad, los resultados y la generación de valor.',
+     'icon_class': 'bi bi-graph-up-arrow', 'order': 5},
+    {'title': 'Confianza', 'description': 'Cumplimiento, solidez y relaciones comerciales de largo plazo.',
+     'icon_class': 'bi bi-hand-thumbs-up-fill', 'order': 6},
 ]
 
 PROCESS_STEPS = [
-    ('01', 'Diagnóstico', 'Conocemos las necesidades, condiciones y objetivos de cada operación.'),
-    ('02', 'Estrategia', 'Definimos soluciones técnicas acordes con la realidad productiva.'),
-    ('03', 'Acompañamiento', 'Damos seguimiento para fortalecer procesos y resultados de manera continua.'),
+    {'number': '01', 'title': 'Diagnóstico', 'icon_class': 'bi bi-clipboard-check', 'order': 1,
+     'description': 'Conocemos las necesidades, condiciones y objetivos de cada operación.'},
+    {'number': '02', 'title': 'Estrategia', 'icon_class': 'bi bi-diagram-3-fill', 'order': 2,
+     'description': 'Definimos soluciones técnicas acordes con la realidad productiva.'},
+    {'number': '03', 'title': 'Acompañamiento', 'icon_class': 'bi bi-people-fill', 'order': 3,
+     'description': 'Damos seguimiento para fortalecer procesos y resultados de manera continua.'},
 ]
 
 
-def attach_image(instance, field_name, relative_path):
-    """Copia una imagen de static/crafto/images/ al campo (y por lo tanto a media/)."""
-    source = STATIC_IMAGES / relative_path
-    with source.open('rb') as fh:
-        getattr(instance, field_name).save(source.name, File(fh), save=False)
+class Command(SeedCommand):
+    help = 'Carga los contenidos de ejemplo del Bloque A. Con --fill-blanks completa campos vacíos.'
 
-
-class Command(BaseCommand):
-    help = 'Carga los contenidos por defecto del Bloque A sin modificar registros existentes.'
-
-    @transaction.atomic
-    def handle(self, *args, **options):
-        self.seed_site_configuration()
-        self.seed_collection(CorporateEmail, 'correos corporativos', [
-            CorporateEmail(label=label, email=email, email_type=kind, order=i)
-            for i, (label, email, kind) in enumerate(CORPORATE_EMAILS, start=1)
-        ])
-        self.seed_collection(SocialNetwork, 'redes sociales', [
-            SocialNetwork(name=name, icon_class=icon, url=url, order=i)
-            for i, (name, icon, url) in enumerate(SOCIAL_NETWORKS, start=1)
-        ])
+    def seed(self):
+        self.seed_singleton(SiteConfiguration, SITE_CONFIGURATION, 'Configuración general')
+        self.seed_collection(CorporateEmail, 'Correos corporativos', 'email', CORPORATE_EMAILS)
+        self.seed_collection(SocialNetwork, 'Redes sociales', 'name', SOCIAL_NETWORKS)
         self.seed_calls_to_action()
-        self.seed_hero_slides()
-        self.seed_collection(Differential, 'diferenciales', [
-            Differential(title=title, description=text, icon_class=icon, order=i)
-            for i, (title, text, icon) in enumerate(DIFFERENTIALS, start=1)
-        ])
-        self.seed_collection(ProcessStep, 'etapas del proceso', [
-            ProcessStep(number=number, title=title, description=text, order=i)
-            for i, (number, title, text) in enumerate(PROCESS_STEPS, start=1)
-        ])
+        self.seed_collection(HeroSlide, 'Slider principal', 'title', HERO_SLIDES)
+        self.seed_collection(Differential, 'Diferenciales', 'title', DIFFERENTIALS)
+        self.seed_collection(ProcessStep, 'Etapas del proceso', 'number', PROCESS_STEPS)
         self.stdout.write('Indicadores: no se cargan cifras (solo se publican cifras oficiales aprobadas).')
         self.stdout.write(self.style.SUCCESS('Bloque A listo.'))
 
-    def report(self, label, created):
-        if created:
-            self.stdout.write(self.style.SUCCESS(f'{label}: {created} creado(s).'))
-        else:
-            self.stdout.write(f'{label}: ya tiene datos, no se modifica.')
-
-    def seed_site_configuration(self):
-        if SiteConfiguration.objects.exists():
-            return self.report('Configuración general', 0)
-        config = SiteConfiguration(**SITE_CONFIGURATION)
-        for field, filename in SITE_IMAGES.items():
-            attach_image(config, field, filename)
-        config.save()
-        self.report('Configuración general', 1)
-
-    def seed_collection(self, model, label, objects):
-        if model.objects.exists():
-            return self.report(label.capitalize(), 0)
-        model.objects.bulk_create(objects)
-        self.report(label.capitalize(), len(objects))
-
     def seed_calls_to_action(self):
+        """Los CTA se crean por identificador: la plantilla depende de cada código."""
         created = 0
-        for data in CALLS_TO_ACTION:
-            _, was_created = CallToAction.objects.get_or_create(code=data['code'], defaults=data)
-            created += was_created
+        for row in CALLS_TO_ACTION:
+            instance = CallToAction.objects.filter(code=row['code']).first()
+            if instance is None:
+                self.build(CallToAction, row).save()
+                created += 1
+            elif self.fill_blanks:
+                self.fill(instance, row, f'Llamados a la acción «{row["code"]}»')
         if created:
             self.report('Llamados a la acción', created)
         else:
-            self.stdout.write('Llamados a la acción: todos los identificadores ya existen, no se modifican.')
-
-    def seed_hero_slides(self):
-        if HeroSlide.objects.exists():
-            return self.report('Slider principal', 0)
-        for i, data in enumerate(HERO_SLIDES, start=1):
-            data = dict(data)
-            desktop, thumbnail = data.pop('images')
-            slide = HeroSlide(order=i, **data)
-            attach_image(slide, 'desktop_image', desktop)
-            attach_image(slide, 'thumbnail', thumbnail)
-            slide.save()
-        self.report('Slider principal', len(HERO_SLIDES))
+            self.stdout.write('Llamados a la acción: todos los identificadores ya existen.')
