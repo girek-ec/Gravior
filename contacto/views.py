@@ -2,4 +2,4 @@ from django.views.generic import TemplateView
 
 
 class ContactView(TemplateView):
-    template_name = 'contacto/contacto.html'
+    template_name = 'gravior/contacto.html'

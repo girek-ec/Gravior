@@ -1,42 +1,81 @@
-{% load static %}<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}{% endblock %}</title>
-    <meta name="description" content="{% block meta_description %}{% endblock %}">
-    {% block extra_head %}{% endblock %}
-</head>
-<body>
-    {% block nav %}
-    <header>
-        <nav>
-            <ul>
-                <li><a href="{% url 'inicio:index' %}">Inicio</a></li>
-                <li><a href="{% url 'empresa:index' %}">Quiénes somos</a></li>
-                <li><a href="{% url 'genetica:index' %}">Genética</a></li>
-                <li><a href="{% url 'calidad:index' %}">Calidad y bioseguridad</a></li>
-                <li><a href="{% url 'productos:index' %}">Productos</a></li>
-                <li><a href="{% url 'infraestructura:index' %}">Instalaciones</a></li>
-                <li><a href="{% url 'equipo:index' %}">Equipo</a></li>
-                <li><a href="{% url 'aliados:index' %}">Aliados</a></li>
-                <li><a href="{% url 'actualidad:index' %}">Actualidad</a></li>
-                <li><a href="{% url 'contacto:index' %}">Contacto</a></li>
-            </ul>
-        </nav>
-    </header>
-    {% endblock %}
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="es">
+    <head>
+        <title>{% block title %}GRAVIOR | Soluciones avícolas integrales{% endblock %}</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="author" content="GRAVIOR">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <meta name="description" content="{% block meta_description %}GRAVIOR impulsa el desarrollo de la avicultura con soluciones integrales en genética, calidad, bioseguridad y acompañamiento técnico.{% endblock %}">
+        <!-- favicon icon -->
+        <link rel="shortcut icon" href="{% static 'crafto/images/favicon.png' %}">
+        <link rel="apple-touch-icon" href="{% static 'crafto/images/apple-touch-icon-57x57.png' %}">
+        <link rel="apple-touch-icon" sizes="72x72" href="{% static 'crafto/images/apple-touch-icon-72x72.png' %}">
+        <link rel="apple-touch-icon" sizes="114x114" href="{% static 'crafto/images/apple-touch-icon-114x114.png' %}">
+        <!-- google fonts preconnect -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <!-- slider revolution CSS files -->
+        <link rel="stylesheet" type="text/css" href="{% static 'crafto/revolution/css/settings.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'crafto/revolution/css/layers.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'crafto/revolution/css/navigation.css' %}">
+        <!-- style sheets and font icons -->
+        <link rel="stylesheet" href="{% static 'crafto/css/vendors.min.css' %}"/>
+        <link rel="stylesheet" href="{% static 'crafto/css/icon.min.css' %}"/>
+        <link rel="stylesheet" href="{% static 'crafto/css/style.css' %}"/>
+        <link rel="stylesheet" href="{% static 'crafto/css/responsive.css' %}"/>
+        <link rel="stylesheet" href="{% static 'crafto/demos/gym-and-fitness/gym-and-fitness.css' %}" />
+        {% block extra_css %}{% endblock %}
+        {% block extra_head %}{% endblock %}
+    </head>
+    <body data-mobile-nav-style="classic" class="custom-cursor">
+ 
+        <!-- start cursor -->
+        <div class="cursor-page-inner">
+            <div class="circle-cursor circle-cursor-inner"></div>
+            <div class="circle-cursor circle-cursor-outer"></div>
+        </div>
+        <!-- end cursor -->
+        <!-- start header --> 
+        
+        {% block nav %}{% include "includes/header.html" %}{% endblock %}
 
-    <main>
         {% block content %}{% endblock %}
-    </main>
 
-    {% block footer %}
-    <footer>
-        {# Datos corporativos desde SiteConfiguration, CorporateEmail y SocialNetwork (bloque A). #}
-    </footer>
-    {% endblock %}
+        {% block footer %}{% include "includes/footer.html" %}{% endblock %}
 
-    {% block extra_js %}{% endblock %}
-</body>
+        {% block after_footer %}{% endblock %}
+
+<!-- start scroll progress -->
+        <div class="scroll-progress d-none d-xxl-block">
+            <a href="#" class="scroll-top" aria-label="scroll">
+                <span class="scroll-text">Subir</span><span class="scroll-line"><span class="scroll-point"></span></span>
+            </a>
+        </div>
+        <!-- end scroll progress -->
+
+<!-- javascript libraries -->
+        <script type="text/javascript" src="{% static 'crafto/js/jquery.js' %}"></script>
+        <script type="text/javascript" src="{% static 'crafto/js/vendors.min.js' %}"></script>
+        <!-- slider revolution core javaScript files -->
+        <script type="text/javascript" src="{% static 'crafto/revolution/js/jquery.themepunch.tools.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'crafto/revolution/js/jquery.themepunch.revolution.min.js' %}"></script>
+
+        <!-- slider revolution extension scripts. ONLY NEEDED FOR LOCAL TESTING -->
+        <!-- <script type="text/javascript" src="{% static 'crafto/revolution/js/extensions/revolution.extension.actions.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'crafto/revolution/js/extensions/revolution.extension.carousel.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'crafto/revolution/js/extensions/revolution.extension.kenburn.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'crafto/revolution/js/extensions/revolution.extension.layeranimation.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'crafto/revolution/js/extensions/revolution.extension.migration.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'crafto/revolution/js/extensions/revolution.extension.navigation.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'crafto/revolution/js/extensions/revolution.extension.parallax.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'crafto/revolution/js/extensions/revolution.extension.slideanims.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'crafto/revolution/js/extensions/revolution.extension.video.min.js' %}"></script> -->
+        <!-- Slider's main "init" script -->
+        
+        {% block extra_js %}{% endblock %}
+
+        <script type="text/javascript" src="{% static 'crafto/js/main.js' %}"></script>
+    </body>
 </html>

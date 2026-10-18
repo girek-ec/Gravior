@@ -14,7 +14,7 @@ PAGES = [
     ('contacto:index', '/contacto/'),
 ]
 
-PENDING_DETAILS = ['genetica:detail', 'productos:detail', 'infraestructura:detail', 'actualidad:detail']
+PENDING_DETAILS = ['genetica:detail', 'productos:detail', 'infraestructura:detail']
 
 
 class PublicPagesTests(TestCase):
@@ -31,6 +31,10 @@ class PublicPagesTests(TestCase):
             with self.subTest(name=name):
                 response = self.client.get(reverse(name, kwargs={'slug': 'ejemplo'}))
                 self.assertEqual(response.status_code, 404)
+
+    def test_post_detail_mockup_renders(self):
+        response = self.client.get(reverse('actualidad:detail', kwargs={'slug': 'ejemplo'}))
+        self.assertEqual(response.status_code, 200)
 
     def test_admin_login_loads(self):
         response = self.client.get(reverse('admin:login'))

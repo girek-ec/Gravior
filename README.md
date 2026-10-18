@@ -60,8 +60,12 @@ python manage.py test
 | `actualidad` | Noticias y artículos |
 | `contacto` | Motivos de consulta y mensajes recibidos |
 
-- `templates/`: `base.html` y un template por sección.
-- `static/`: assets de Crafto (css, js, images, fonts).
+- `templates/base.html`: layout Crafto con bloques `title`, `meta_description`,
+  `extra_css`, `extra_head`, `nav`, `content`, `footer`, `after_footer` y `extra_js`.
+- `templates/includes/`: header y footer.
+- `templates/gravior/`: maqueta adaptada de cada página (la usan las vistas).
+- `templates/crafto/`: HTML originales de la demo, solo como referencia.
+- `static/crafto/`: assets de Crafto (css, js, images, fonts, revolution, demos).
 - `media/`: archivos subidos desde el admin (no se versiona).
 
 ## Documentación
