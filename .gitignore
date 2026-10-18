@@ -1,21 +1,27 @@
+# Entornos virtuales
+venv/
+.venv/
+env/
+
 # Python
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
 
-# Virtual environment
-.venv/
-venv/
-env/
+# Base de datos local
+db.sqlite3
 
-# PyCharm
+# IDE
 .idea/
+.vscode/
 
-# Django
-*.log
+# Archivos subidos y estáticos recolectados
+media/
+staticfiles/
 
-# Environment variables
+# Variables de entorno (se versiona solo .env.example)
 .env
 .env.*
 !.env.example
+
+# Logs
+*.log

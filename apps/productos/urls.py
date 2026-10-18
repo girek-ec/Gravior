@@ -1,0 +1,13 @@
+from django.urls import path
+
+from apps.core.views import PendingDetailView
+
+from . import views
+
+app_name = 'productos'
+
+urlpatterns = [
+    path('productos/', views.ProductListView.as_view(), name='index'),
+    # Detalle por slug: se implementa en el bloque C.
+    path('productos/<slug:slug>/', PendingDetailView.as_view(), name='detail'),
+]

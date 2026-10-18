@@ -16,9 +16,9 @@
                     <div class="row">
                         <div class="col-xxl-9 col-xl-10 col-lg-11 d-flex flex-column justify-content-center full-screen sm-h-600px">
                             <div class="ps-15 pe-15 md-ps-10 md-pe-10 sm-px-0" data-anime='{ "el": "childs", "translateX": [50, 0], "opacity": [0,1], "duration": 1200, "delay": 0, "staggervalue": 150, "easing": "easeOutQuad" }'>
-                                <span class="alt-font fs-20 text-white mb-3 d-inline-block fw-300">Publicado por <a href="{% url 'actualidad' %}" class="text-white text-white-hover fw-700 text-decoration-line-bottom">Equipo GRAVIOR</a></span>
+                                <span class="alt-font fs-20 text-white mb-3 d-inline-block fw-300">Publicado por <a href="{% url 'actualidad:index' %}" class="text-white text-white-hover fw-700 text-decoration-line-bottom">Equipo GRAVIOR</a></span>
                                 <h1 class="alt-font text-white fw-600 mb-5 ls-minus-2px">Bioseguridad: prevención como parte de la eficiencia productiva.</h1>
-                                <a href="{% url 'actualidad' %}" class="btn btn-large btn-white btn-hover-animation-switch btn-box-shadow btn-rounded fw-600">Bioseguridad</a>
+                                <a href="{% url 'actualidad:index' %}" class="btn btn-large btn-white btn-hover-animation-switch btn-box-shadow btn-rounded fw-600">Bioseguridad</a>
                             </div>
                         </div>
                     </div>
@@ -90,10 +90,10 @@
                         <div class="col-lg-8">
                             <div class="row mb-30px">
                                 <div class="tag-cloud col-md-9 text-center text-md-start sm-mb-15px">
-                                    <a href="{% url 'actualidad' %}">Bioseguridad</a> 
-                                    <a href="{% url 'actualidad' %}">Manejo</a>
-                                    <a href="{% url 'actualidad' %}">Producción</a>
-                                    <a href="{% url 'actualidad' %}">Genética</a>
+                                    <a href="{% url 'actualidad:index' %}">Bioseguridad</a> 
+                                    <a href="{% url 'actualidad:index' %}">Manejo</a>
+                                    <a href="{% url 'actualidad:index' %}">Producción</a>
+                                    <a href="{% url 'actualidad:index' %}">Genética</a>
                                 </div> 
                                 <div class="tag-cloud col-md-3 text-uppercase text-center text-md-end">
                                     <a class="likes-count fw-500 mx-0" href="#"><i class="fa-regular fa-heart text-red me-10px"></i><span class="text-dark-gray text-dark-gray-hover">Contenido técnico</span></a>
@@ -104,12 +104,12 @@
                                     <div class="bg-nero-grey d-block d-md-flex w-100 box-shadow-extra-large align-items-center border-radius-4px p-7 sm-p-35px">
                                         <div class="w-140px text-center me-50px sm-mx-auto">
                                             <img src="https://placehold.co/125x125" class="rounded-circle w-120px" alt="">
-                                            <a href="{% url 'actualidad' %}" class="text-dark-gray fw-500 mt-20px d-inline-block lh-20">Equipo GRAVIOR</a>
+                                            <a href="{% url 'actualidad:index' %}" class="text-dark-gray fw-500 mt-20px d-inline-block lh-20">Equipo GRAVIOR</a>
                                             <span class="fs-15 lh-20 d-block sm-mb-15px">Contenido técnico</span>
                                         </div>
                                         <div class="w-75 sm-w-100 text-center text-md-start last-paragraph-no-margin">
                                             <p>La bioseguridad no funciona como una acción aislada. Debe relacionarse con manejo, ambiente, bienestar, sanidad y capacitación del equipo responsable de la producción.</p>
-                                            <a href="{% url 'actualidad' %}" class="btn btn-link btn-large text-dark-gray mt-15px">Ver actualidad</a>
+                                            <a href="{% url 'actualidad:index' %}" class="btn btn-link btn-large text-dark-gray mt-15px">Ver actualidad</a>
                                         </div>
                                     </div>
                                 </div>
@@ -147,21 +147,21 @@
                                 <li class="grid-item">
                                     <div class="card border-0 border-radius-5px box-shadow-quadruple-large box-shadow-quadruple-large-hover">
                                         <div class="blog-image">
-                                            <a href="{% url 'actualidad_detalle' %}" class="d-block"><img src="https://placehold.co/600x430" alt="" /></a>
+                                            <a href="{% url 'actualidad:detail' 'ejemplo' %}" class="d-block"><img src="https://placehold.co/600x430" alt="" /></a>
                                             <div class="blog-categories">
-                                                <a href="{% url 'actualidad' %}" class="categories-btn bg-white text-dark-gray text-dark-gray-hover text-uppercase fw-700">Genética</a>
+                                                <a href="{% url 'actualidad:index' %}" class="categories-btn bg-white text-dark-gray text-dark-gray-hover text-uppercase fw-700">Genética</a>
                                             </div>
                                         </div>
                                         <div class="card-body p-12 lg-p-10">
-                                            <a href="{% url 'actualidad_detalle' %}" class="card-title mb-15px fw-700 fs-19 lh-30 text-dark-gray d-inline-block w-90 md-w-100">Claves para expresar el potencial genético en producción avícola</a>
+                                            <a href="{% url 'actualidad:detail' 'ejemplo' %}" class="card-title mb-15px fw-700 fs-19 lh-30 text-dark-gray d-inline-block w-90 md-w-100">Claves para expresar el potencial genético en producción avícola</a>
                                             <p>Información técnica orientada a una producción avícola eficiente y segura</p>
                                             <div class="author d-flex justify-content-center align-items-center position-relative overflow-hidden fs-14 text-uppercase">
                                                 <div class="me-auto">
                                                     <span class="blog-date d-inline-block fw-700 text-dark-gray">Próximamente</span>
-                                                    <div class="d-inline-block author-name fw-700 text-dark-gray">By <a href="{% url 'actualidad' %}" class="text-dark-gray text-decoration-line-bottom">Equipo GRAVIOR</a></div>
+                                                    <div class="d-inline-block author-name fw-700 text-dark-gray">By <a href="{% url 'actualidad:index' %}" class="text-dark-gray text-decoration-line-bottom">Equipo GRAVIOR</a></div>
                                                 </div>
                                                 <div class="like-count">
-                                                    <a href="{% url 'actualidad_detalle' %}"><i class="fa-regular fa-heart text-red"></i><span class="text-dark-gray align-middle fw-700">25</span></a>
+                                                    <a href="{% url 'actualidad:detail' 'ejemplo' %}"><i class="fa-regular fa-heart text-red"></i><span class="text-dark-gray align-middle fw-700">25</span></a>
                                                 </div>  
                                             </div>
                                         </div>
@@ -172,21 +172,21 @@
                                 <li class="grid-item">
                                     <div class="card border-0 border-radius-5px box-shadow-quadruple-large box-shadow-quadruple-large-hover">
                                         <div class="blog-image">
-                                            <a href="{% url 'actualidad_detalle' %}" class="d-block"><img src="https://placehold.co/600x430" alt="" /></a>
+                                            <a href="{% url 'actualidad:detail' 'ejemplo' %}" class="d-block"><img src="https://placehold.co/600x430" alt="" /></a>
                                             <div class="blog-categories">
-                                                <a href="{% url 'actualidad' %}" class="categories-btn bg-white text-dark-gray text-dark-gray-hover text-uppercase fw-700">Bioseguridad</a>
+                                                <a href="{% url 'actualidad:index' %}" class="categories-btn bg-white text-dark-gray text-dark-gray-hover text-uppercase fw-700">Bioseguridad</a>
                                             </div>
                                         </div>
                                         <div class="card-body p-12 lg-p-10">
-                                            <a href="{% url 'actualidad_detalle' %}" class="card-title mb-15px fw-700 fs-19 lh-30 text-dark-gray d-inline-block w-90 md-w-100">Bioseguridad y prevención en cada etapa productiva</a>
+                                            <a href="{% url 'actualidad:detail' 'ejemplo' %}" class="card-title mb-15px fw-700 fs-19 lh-30 text-dark-gray d-inline-block w-90 md-w-100">Bioseguridad y prevención en cada etapa productiva</a>
                                             <p>Información técnica orientada a una producción avícola eficiente y segura</p>
                                             <div class="author d-flex justify-content-center align-items-center position-relative overflow-hidden fs-14 text-uppercase">
                                                 <div class="me-auto">
                                                     <span class="blog-date d-inline-block fw-700 text-dark-gray">Próximamente</span>
-                                                    <div class="d-inline-block author-name fw-700 text-dark-gray">By <a href="{% url 'actualidad' %}" class="text-dark-gray text-decoration-line-bottom">Equipo GRAVIOR</a></div>
+                                                    <div class="d-inline-block author-name fw-700 text-dark-gray">By <a href="{% url 'actualidad:index' %}" class="text-dark-gray text-decoration-line-bottom">Equipo GRAVIOR</a></div>
                                                 </div>
                                                 <div class="like-count">
-                                                    <a href="{% url 'actualidad_detalle' %}"><i class="fa-regular fa-heart text-red"></i><span class="text-dark-gray align-middle fw-700">58</span></a>
+                                                    <a href="{% url 'actualidad:detail' 'ejemplo' %}"><i class="fa-regular fa-heart text-red"></i><span class="text-dark-gray align-middle fw-700">58</span></a>
                                                 </div>  
                                             </div>
                                         </div>
@@ -197,21 +197,21 @@
                                 <li class="grid-item">
                                     <div class="card border-0 border-radius-5px box-shadow-quadruple-large box-shadow-quadruple-large-hover">
                                         <div class="blog-image">
-                                            <a href="{% url 'actualidad_detalle' %}" class="d-block"><img src="https://placehold.co/600x430" alt="" /></a>
+                                            <a href="{% url 'actualidad:detail' 'ejemplo' %}" class="d-block"><img src="https://placehold.co/600x430" alt="" /></a>
                                             <div class="blog-categories">
-                                                <a href="{% url 'actualidad' %}" class="categories-btn bg-white text-dark-gray text-dark-gray-hover text-uppercase fw-700">Manejo</a>
+                                                <a href="{% url 'actualidad:index' %}" class="categories-btn bg-white text-dark-gray text-dark-gray-hover text-uppercase fw-700">Manejo</a>
                                             </div>
                                         </div>
                                         <div class="card-body p-12 lg-p-10">
-                                            <a href="{% url 'actualidad_detalle' %}" class="card-title mb-15px fw-700 fs-19 lh-30 text-dark-gray d-inline-block w-90 md-w-100">Ambiente y manejo para una producción consistente</a>
+                                            <a href="{% url 'actualidad:detail' 'ejemplo' %}" class="card-title mb-15px fw-700 fs-19 lh-30 text-dark-gray d-inline-block w-90 md-w-100">Ambiente y manejo para una producción consistente</a>
                                             <p>Información técnica orientada a una producción avícola eficiente y segura</p>
                                             <div class="author d-flex justify-content-center align-items-center position-relative overflow-hidden fs-14 text-uppercase">
                                                 <div class="me-auto">
                                                     <span class="blog-date d-inline-block fw-700 text-dark-gray">Próximamente</span>
-                                                    <div class="d-inline-block author-name fw-700 text-dark-gray">By <a href="{% url 'actualidad' %}" class="text-dark-gray text-decoration-line-bottom">Equipo GRAVIOR</a></div>
+                                                    <div class="d-inline-block author-name fw-700 text-dark-gray">By <a href="{% url 'actualidad:index' %}" class="text-dark-gray text-decoration-line-bottom">Equipo GRAVIOR</a></div>
                                                 </div>
                                                 <div class="like-count">
-                                                    <a href="{% url 'actualidad_detalle' %}"><i class="fa-regular fa-heart text-red"></i><span class="text-dark-gray align-middle fw-700">75</span></a>
+                                                    <a href="{% url 'actualidad:detail' 'ejemplo' %}"><i class="fa-regular fa-heart text-red"></i><span class="text-dark-gray align-middle fw-700">75</span></a>
                                                 </div>  
                                             </div>
                                         </div>

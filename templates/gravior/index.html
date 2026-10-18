@@ -1,10 +1,20 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}GRAVIOR | Soluciones avícolas integrales{% endblock %}
-{% block meta_description %}GRAVIOR impulsa el desarrollo de la avicultura con soluciones integrales en genética, calidad, bioseguridad y acompañamiento técnico.{% endblock %}
+{% block extra_css %}
+{% if hero_slides %}
+{# En móvil la demo reemplaza el fondo de cada slide por CSS (gym-and-fitness.css); se usa la imagen móvil o la de escritorio. #}
+<style>
+    @media (max-width: 778px) {
+        {% for slide in hero_slides %}#rs-gym-and-fitness-{{ forloop.counter|stringformat:"02d" }} .tp-bgimg {background-image: url("{% if slide.mobile_image %}{{ slide.mobile_image.url }}{% else %}{{ slide.desktop_image.url }}{% endif %}") !important;}
+        {% endfor %}
+    }
+</style>
+{% endif %}
+{% endblock %}
 
 {% block content %}
+{% if hero_slides %}
 <!-- start slider -->
         <section class="p-0 bg-dark-gray">
             <article class="content">
@@ -13,15 +23,16 @@
                     <div id="gym-and-fitness-slider" class="rev_slider fullscreenbanner" data-version="5.4.5" >
                         <!-- Begin slides list -->
                         <ul>
-                            <!-- Slide one -->
-                            <li id="rs-gym-and-fitness-01" data-index="rs-gym-and-fitness-01" data-transition="fade" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off"  data-easein="default" data-easeout="default" data-masterspeed="default"  data-rotate="0"  data-fstransition="fade" data-fsmasterspeed="100" data-fsslotamount="2" data-saveperformance="off"  data-title="Slide" data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9="" data-param10='{"revslider-weather-addon":{"type":"name","name":"Cologne","woeid":"667931","unit":"c"}}' data-description="">
+                            {% for slide in hero_slides %}{% with n=forloop.counter|stringformat:"02d" %}
+                            <!-- Slide {{ n }} -->
+                            <li id="rs-gym-and-fitness-{{ n }}" data-index="rs-gym-and-fitness-{{ n }}" data-transition="fade" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off"  data-easein="default" data-easeout="default" data-masterspeed="default"  data-rotate="0"  data-fstransition="fade" data-fsmasterspeed="100" data-fsslotamount="2" data-saveperformance="off"  data-title="Slide" data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9="" data-param10='{"revslider-weather-addon":{"type":"name","name":"Cologne","woeid":"667931","unit":"c"}}' data-description="">
                                 <!-- slide background image -->
-                                <img src="{% static 'crafto/images/gravior/home/hero-01.jpg' %}" alt="slider-image" data-bgposition="center center" data-duration="2500" data-ease="Power3.easeInOut" class="rev-slidebg" data-no-retina>
+                                <img src="{{ slide.desktop_image.url }}" alt="{{ slide.title }}" data-bgposition="center center" data-duration="2500" data-ease="Power3.easeInOut" class="rev-slidebg" data-no-retina>
                                 <!-- start main row -->
-                                <div id="rrzm_638" class="rev_row_zone rev_row_zone_middle">
+                                <div id="rrzm_{{ forloop.counter0|add:638 }}" class="rev_row_zone rev_row_zone_middle">
                                     <!-- start row -->
                                     <div class="tp-caption row" 
-                                         id="slide-01-layer-01" 
+                                         id="slide-{{ n }}-layer-01" 
                                          data-x="['left','left','left','center']" data-hoffset="['0','0','0','0']" 
                                          data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','0']" 
                                          data-width="none"
@@ -29,7 +40,7 @@
                                          data-type="row" 
                                          data-columnbreak="2"
                                          data-responsive_offset="on" 
-                                         data-responsive="on"
+                                         {% if forloop.first %}data-responsive="on"{% else %}data-responsive="off"{% endif %}
                                          data-frames='[{"delay":"500","speed":"300","frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
                                          data-textAlign="['inherit','inherit','inherit','inherit']"
                                          data-paddingtop="[0,0,0,0]"
@@ -45,7 +56,7 @@
                                          >
                                         <!-- start colum -->
                                         <div class="tp-caption d-flex justify-content-center flex-column left-col" 
-                                             id="slide-01-layer-02" 
+                                             id="slide-{{ n }}-layer-02" 
                                              data-x="['left','left','left','center']" data-hoffset="['0','0','0','0']" 
                                              data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','0']"  
                                              data-width="none"
@@ -67,9 +78,9 @@
                                              data-paddingbottom="[0,0,0,0]"
                                              data-paddingleft="[255,0,0,0]"
                                              style="background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(247,247,247,1) 100%);">
-                                            <!-- start subtitle text layer -->
+                                            {% if slide.highlight_text or slide.eyebrow %}<!-- start subtitle text layer -->
                                             <div class="tp-caption tp-resizeme bg-very-light-gray text-uppercase border-radius-4px d-inline-block"
-                                                 id="slide-01-layer-03"
+                                                 id="slide-{{ n }}-layer-03"
                                                  data-frames='[{"delay":"+800","speed":"500","from":"opacity: 0","to": "opacity: 1"}, {"delay": "wait","speed": 300,"to": "opacity: 0"}]'
                                                  data-visibility="['on','on','on','on']"
                                                  data-fontsize="['13','13','13','12']"
@@ -93,13 +104,13 @@
                                                  data-paddingright="[15,15,15,12]"
                                                  data-paddingbottom="[12,12,12,9]"
                                                  data-paddingleft="[8,8,8,5]"
-                                                 data-responsive_offset="on"
-                                                 data-responsive="on"
-                                                 ><span style="padding: 7px 8px 4px 8px; " class="bg-dark-gray alt-font d-inline me-10px border-radius-3px fs-12 text-white fw-500">GRAVIOR</span><span class="d-inline">Genética · calidad · bioseguridad</span></div>
-                                            <!-- end subtitle text layer -->
+                                                 {% if forloop.first %}data-responsive_offset="on"{% else %}data-responsive_offset="off"{% endif %}
+                                                 {% if forloop.first %}data-responsive="on"{% else %}data-responsive="off"{% endif %}
+                                                 >{% if slide.highlight_text %}<span style="padding: 7px 8px 4px 8px; " class="bg-dark-gray alt-font d-inline me-10px border-radius-3px fs-12 text-white fw-500">{{ slide.highlight_text }}</span>{% endif %}<span class="d-inline">{{ slide.eyebrow }}</span></div>
+                                            <!-- end subtitle text layer -->{% endif %}
                                             <!-- start large text layer -->
                                             <div class="tp-caption tp-resizeme alt-font"
-                                                 id="slide-01-layer-04"
+                                                 id="slide-{{ n }}-layer-04"
                                                  data-frames='[{"delay":"+1000","speed":"2000","frame":"0","from":"x:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:[-100%];y:0px;s:inherit;e:inherit;","to":"o:1;","ease":"Power4.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
                                                  data-visibility="['on','on','on','on']"
                                                  data-fontsize="['100','80','78','50']"
@@ -119,14 +130,14 @@
                                                  data-marginright="[0, 0, 0, 0]"
                                                  data-marginbottom="[10, 0, 10, 10]"
                                                  data-marginleft="[0, 0, 0, 0]"
-                                                 data-responsive_offset="on"
+                                                 {% if forloop.first %}data-responsive_offset="on"{% else %}data-responsive_offset="off"{% endif %}
                                                  data-responsive="on"
                                                  style="z-index: 999 !important"
-                                                 >Impulsamos el futuro avícola<span class="text-base-color">.</span> </div>
+                                                 >{{ slide.title }}<span class="text-base-color">.</span> </div>
                                             <!-- end large text layer -->
                                             <!-- start text layer -->
                                             <div class="tp-caption tp-resizeme d-inline-block"
-                                                 id="slide-01-layer-05"
+                                                 id="slide-{{ n }}-layer-05"
                                                  data-frames='[{"delay":"+2000","speed":"1000","from": "opacity: 0","to": "opacity: 1"}, {"delay": "wait","speed": 300,"to": "opacity: 0"}]'
                                                  data-visibility="['on','on','on','on']"
                                                  data-fontsize="['17','17','22','16']"
@@ -146,16 +157,16 @@
                                                  data-marginright="[0, 0, 0, 0]"
                                                  data-marginbottom="[50, 50, 40, 30]"
                                                  data-marginleft="[0, 0, 0, 0]"
-                                                 data-responsive_offset="on"
+                                                 {% if forloop.first %}data-responsive_offset="on"{% else %}data-responsive_offset="off"{% endif %}
                                                  data-responsive="on"
-                                                 >Soluciones integrales para una avicultura eficiente, segura y sostenible, con acompañamiento técnico en cada etapa.</div>
+                                                 >{{ slide.description }}</div>
                                             <!-- end text layer -->
                                             <!-- start button layer -->
                                             <div>
-                                                <!--  start button layer -->
-                                                <a class="tp-caption rev-btn alt-font bg-base-color text-dark-gray d-inline-block text-uppercase border-radius-4px" 
-                                                   id="slide-01-layer-06" 
-                                                   href="#"			 
+                                                {% if slide.primary_button_text and slide.primary_button_url %}<!--  start button layer -->
+                                                {% if forloop.first %}<a class="tp-caption rev-btn alt-font bg-base-color text-dark-gray d-inline-block text-uppercase border-radius-4px"{% else %}<a class="tp-caption rev-btn alt-font bg-base-color text-dark-gray d-inline-block text-uppercase border-radius-6px"{% endif %}
+                                                   id="slide-{{ n }}-layer-06" 
+                                                   href="{{ slide.primary_button_url }}"			 
                                                    data-x="['left','left','left','left']" data-hoffset="['0','0','0','0']" 
                                                    data-y="['top','top','top','top']" data-voffset="['0','0','0','0']" 
                                                    data-fontsize="['17','15','15','14']"
@@ -166,8 +177,8 @@
                                                    data-fontweight="['600','700', '700','700']"
                                                    data-whitespace="normal"
                                                    data-type="button" 
-                                                   data-responsive_offset="on" 
-                                                   data-responsive="on"
+                                                   {% if forloop.first %}data-responsive_offset="on"{% else %}data-responsive_offset="off"{% endif %}
+                                                   {% if forloop.first %}data-responsive="on"{% else %}data-responsive="off"{% endif %}
                                                    data-frames='[{"delay":"+2500","speed":1000,"frame":"0","from":"y:50px;opacity:0;fb:10px;","to":"o:1;fb:0;","ease":"Power3.easeInOut"},{"delay":"wait","speed":600,"frame":"999","to":"auto:auto;fb:0;","ease":"Power3.easeInOut"},{"frame":"hover","speed":"500","ease":"Power1.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;fb:0;","style":"c:#ffffff;bg:#232323;"}]'
                                                    data-margintop="[0,0,0,0]"
                                                    data-marginright="[15,15,15,15]"
@@ -178,12 +189,12 @@
                                                    data-paddingright="[30,32,32,25]"
                                                    data-paddingbottom="[16,15,15,11]"
                                                    data-paddingleft="[30,32,32,25]"
-                                                   >Conoce más</a>
-                                                <!--  end button layer  -->
-                                                <!--  start button layer  -->
-                                                <a class="popup-youtube tp-caption btn btn-large btn-transparent-dark-gray border border-color-transparent-dark-very-light left-icon d-inline-block border-radius-6px"
-                                                   id="slide-01-layer-07"
-                                                   href="https://www.youtube.com/watch?v=cfXHhfNy7tU"			 
+                                                   >{{ slide.primary_button_text }}</a>
+                                                <!--  end button layer  -->{% endif %}
+                                                {% if slide.secondary_button_text and slide.secondary_link %}<!--  start button layer  -->
+                                                <a class="{% if slide.video_url %}popup-youtube {% endif %}tp-caption btn btn-large btn-transparent-dark-gray border border-color-transparent-dark-very-light left-icon d-inline-block border-radius-6px"
+                                                   id="slide-{{ n }}-layer-07"
+                                                   href="{{ slide.secondary_link }}"			 
                                                    data-x="['left','left','left','left']" data-hoffset="['0','0','0','0']" 
                                                    data-y="['top','top','top','top']" data-voffset="['0','0','0','0']" 
                                                    data-fontsize="['17','15','15','14']"
@@ -194,9 +205,9 @@
                                                    data-fontweight="['500','700', '700','700']"
                                                    data-whitespace="normal"
                                                    data-type="button" 
-                                                   data-responsive_offset="on" 
-                                                   data-responsive="on"
-                                                   data-frames='[{"delay":"3000","speed":1000,"frame":"0","from":"y:50px;opacity:0;fb:10px;","to":"o:1;fb:0;","ease":"Power3.easeInOut"},{"delay":"wait","speed":600,"frame":"999","to":"auto:auto;fb:0;","ease":"Power3.easeInOut"},{"frame":"hover","speed":"500","ease":"Power1.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;fb:0;","style":"c:#ffffff;bg:#232323;"}]'
+                                                   {% if forloop.first %}data-responsive_offset="on"{% else %}data-responsive_offset="off"{% endif %}
+                                                   {% if forloop.first %}data-responsive="on"{% else %}data-responsive="off"{% endif %}
+                                                   {% if forloop.first %}data-frames='[{"delay":"3000","speed":1000,"frame":"0","from":"y:50px;opacity:0;fb:10px;","to":"o:1;fb:0;","ease":"Power3.easeInOut"},{"delay":"wait","speed":600,"frame":"999","to":"auto:auto;fb:0;","ease":"Power3.easeInOut"},{"frame":"hover","speed":"500","ease":"Power1.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;fb:0;","style":"c:#ffffff;bg:#232323;"}]'{% else %}data-frames='[{"delay":"3000","speed":1000,"frame":"0","from":"y:50px;opacity:0;fb:0px;","to":"o:1;fb:0;","ease":"Power3.easeInOut"},{"delay":"wait","speed":600,"frame":"999","to":"auto:auto;fb:0;","ease":"Power3.easeInOut"},{"frame":"hover","speed":"500","ease":"Power1.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;fb:0;","style":"c:#ffffff;bg:#232323;"}]'{% endif %}
                                                    data-margintop="[0,0,0,0]"
                                                    data-marginright="[0,0,0,0]"
                                                    data-marginbottom="[0,0,0,0]"
@@ -206,13 +217,13 @@
                                                    data-paddingright="[30,28,28,22]"
                                                    data-paddingbottom="[12,12,12,9]"
                                                    data-paddingleft="[30,28,28,22]"
-                                                   ><i class="bi bi-play-circle align-middle" style="font-size:24px; line-height: 14px;"></i>Ver presentación</a>
-                                                <!-- end button layer -->
+                                                   >{% if slide.video_url %}<i class="bi bi-play-circle align-middle" style="font-size:24px; line-height: 14px;"></i>{% endif %}{{ slide.secondary_button_text }}</a>
+                                                <!-- end button layer -->{% endif %}
                                             </div>
                                         </div>
                                         <!-- start background large text layer -->
                                         <div class="tp-caption tp-resizeme alt-font text-uppercase background-text"
-                                             id="slide-01-layer-08"
+                                             id="slide-{{ n }}-layer-08"
                                              data-frames='[{"delay":"+3500","speed": 3000,"frame":"0","from":"rZ:-90,y:50px;opacity:0;fb:10px;","to":"rZ:-90,o:1;fb:0;","ease":"Power3.easeInOut"},{"delay":"wait","speed":600,"frame":"999","to":"auto:auto;fb:0;","ease":"Power3.easeInOut"}]'
                                              data-visibility="['on','off','off','off']"
                                              data-fontsize="['320','150','160','120']"
@@ -232,13 +243,13 @@
                                              data-marginright="[0, 0, 0, 0]"
                                              data-marginbottom="[10, 0, 0, 0]"
                                              data-marginleft="[0, 0, 0, 0]"
-                                             data-responsive_offset="on"
+                                             {% if forloop.first %}data-responsive_offset="on"{% else %}data-responsive_offset="off"{% endif %}
                                              data-responsive="on"
-                                             style="text-shadow: 0px 0px 35px rgba(0,0,0,0.05); z-index: 1 !important">GRAVIOR</div>
+                                             style="text-shadow: 0px 0px 35px rgba(0,0,0,0.05); z-index: 1 !important">{{ site_config.company_name }}</div>
                                         <!-- end background large text layer -->
                                         <!-- end colum -->
                                         <div class="tp-caption right-col" 
-                                             id="slide-01-layer-09" 
+                                             id="slide-{{ n }}-layer-09" 
                                              data-x="['left','left','left','left']" data-hoffset="['100','100','100','100']" 
                                              data-y="['top','top','top','top']" data-voffset="['100','100','100','100']" 
                                              data-fontsize="['20','20','20','20']"
@@ -251,7 +262,7 @@
 
                                              data-type="column" 
                                              data-responsive_offset="on" 
-                                             data-responsive="on"
+                                             {% if forloop.first %}data-responsive="on"{% else %}data-responsive="off"{% endif %}
                                              data-frames='[{"delay":"+0","speed":300,"frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
                                              data-columnwidth="58%"
                                              data-verticalalign="top"
@@ -271,7 +282,7 @@
                                 <!-- end main row -->
                                 <!-- start arrow text layer -->
                                 <div class="tp-caption rev-btn d-flex justify-content-center align-items-center text-dark-gray btn btn-large bg-base-color btn-slide-right pb-5px text-uppercase" 
-                                     id="slide-01-layer-10"
+                                     id="slide-{{ n }}-layer-10"
                                      data-x="['right','right','center','center']" data-hoffset="['280','200','-40','-40']" 
                                      data-y="['bottom','bottom','bottom','bottom']" data-voffset="['0','0','0','00']" 
                                      data-visibility="['on','on','off','off']"
@@ -284,8 +295,8 @@
                                      data-lineheight="['20','60','50','55']"
                                      data-type="button" 
                                      data-actions='[{"event":"click","action":"jumptoslide","slide":"previous","delay":""}]'
-                                     data-responsive_offset="on" 
-                                     data-responsive="on"
+                                     {% if forloop.first %}data-responsive_offset="on"{% else %}data-responsive_offset="off"{% endif %}
+                                     {% if forloop.first %}data-responsive="on"{% else %}data-responsive="off"{% endif %}
                                      data-frames='[{"delay":"+4500","speed":1000,"sfxcolor":"#ffffff","sfx_effect":"blockfromright","frame":"0","ease":"Power3.easeInOut"},{"delay":"wait","speed":500,"sfxcolor":"#ffffff","sfx_effect":"blocktoleft","frame":"999","to":"z:0;","ease":"Power2.easeInOut"},{"frame":"hover","speed":"500","ease":"Power1.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgb(255,255,255);bc:rgba(255,255,255,0);"}]'
                                      data-textAlign="['center','center','center','center']"
                                      data-basealign="slide"
@@ -295,7 +306,7 @@
                                 <!-- end arrow icon layer -->
                                 <!-- start arrow icon layer -->
                                 <div class="tp-caption rev-btn alt-font text-black d-flex justify-content-start align-items-center text-dark-gray text-uppercase pb-5px next-btn"
-                                     id="slide-01-layer-11"
+                                     id="slide-{{ n }}-layer-11"
                                      data-x="['right','right','center','center']" data-hoffset="['0','0','40','40']" 
                                      data-y="['bottom','bottom','bottom','bottom']" data-voffset="['0','0','0','0']" 
                                      data-visibility="['on','on','off','off']"
@@ -307,630 +318,24 @@
                                      data-fontweight="['700','700','700','700']"
                                      data-type="button" 
                                      data-actions='[{"event":"click","action":"jumptoslide","slide":"next","delay":""}]'
-                                     data-responsive_offset="on" 
-                                     data-responsive="on"
+                                     {% if forloop.first %}data-responsive_offset="on"{% else %}data-responsive_offset="off"{% endif %}
+                                     {% if forloop.first %}data-responsive="on"{% else %}data-responsive="off"{% endif %}
                                      data-frames='[{"delay":"+4000","speed":1000,"sfxcolor":"#ffffff","sfx_effect":"blockfromright","frame":"0","from":"y:50px;opacity:0;","to":"o:1;","ease":"Power4.easeOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
                                      data-textAlign="['center','center','center','center']"
                                      data-basealign="slide"
-                                     style="border: none; background-image: url({% static 'crafto/images/gravior/home/hero-thumb-01.jpg' %});"
+                                     style="border: none; background-image: url({% if slide.thumbnail %}{{ slide.thumbnail.url }}{% else %}{{ slide.desktop_image.url }}{% endif %});"
                                      >Siguiente
                                 </div>
                                 <!-- end arrow icon layer -->
                             </li>
-                            <!-- Slide tow -->
-                            <li id="rs-gym-and-fitness-02" data-index="rs-gym-and-fitness-02" data-transition="fade" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off"  data-easein="default" data-easeout="default" data-masterspeed="default"  data-rotate="0"  data-fstransition="fade" data-fsmasterspeed="100" data-fsslotamount="2" data-saveperformance="off"  data-title="Slide" data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9="" data-param10='{"revslider-weather-addon":{"type":"name","name":"Cologne","woeid":"667931","unit":"c"}}' data-description="">
-                                <!-- slide background image -->
-                                <img src="{% static 'crafto/images/gravior/home/hero-02.jpg' %}" alt="slider-image" data-bgposition="center center" data-duration="2500" data-ease="Power3.easeInOut" class="rev-slidebg" data-no-retina>
-                                <!-- start main row -->
-                                <div id="rrzm_639" class="rev_row_zone rev_row_zone_middle">
-                                    <!-- start row -->
-                                    <div class="tp-caption row" 
-                                         id="slide-02-layer-01" 
-                                         data-x="['left','left','left','center']" data-hoffset="['0','0','0','0']" 
-                                         data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','0']" 
-                                         data-width="none"
-                                         data-height="100vh"
-                                         data-type="row" 
-                                         data-columnbreak="2"
-                                         data-responsive_offset="on" 
-                                         data-responsive="off"
-                                         data-frames='[{"delay":"500","speed":"300","frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
-                                         data-textAlign="['inherit','inherit','inherit','inherit']"
-                                         data-paddingtop="[0,0,0,0]"
-                                         data-paddingright="[0,0,0,0]"
-                                         data-paddingbottom="[0,0,0,0]"
-                                         data-paddingleft="[0,0,0,0]"
-                                         data-margintop="[0,0,0,0]"
-                                         data-marginright="[0,0,0,0]"
-                                         data-marginbottom="[0,0,0,0]"
-                                         data-marginleft="[0,0,0,0]"
-                                         data-basealign="slide"
-                                         style="transform-style: inherit !important;"
-                                         >
-                                        <!-- start colum -->
-                                        <div class="tp-caption d-flex justify-content-center flex-column left-col" 
-                                             id="slide-02-layer-02" 
-                                             data-x="['left','left','left','center']" data-hoffset="['0','0','0','0']" 
-                                             data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','0']"  
-                                             data-width="none"
-                                             data-height="none"
-                                             data-whitespace="nowrap"
-                                             data-verticalalign="middle"
-                                             data-type="column" 
-                                             data-responsive_offset="on" 
-                                             data-responsive="on"
-                                             data-frames='[{"delay":"+100","speed":"800","frame":"0","from":"x:-50px;opacity:0;","to":"o:1;","ease":"power3.inOut"},{"delay":"wait","speed":300,"frame":"999","to":"auto:auto;","ease":"power3.inOut"}]'
-                                             data-columnwidth="42%"
-                                             data-margintop="[0,0,0,0]"
-                                             data-marginright="[0,0,0,0]"
-                                             data-marginbottom="[0,0,0,0]"
-                                             data-marginleft="[0,0,0,0]"
-                                             data-textAlign="['left','left','center','center']"
-                                             data-paddingtop="[0,0,0,0]"
-                                             data-paddingright="[150,0,0,0]"
-                                             data-paddingbottom="[0,0,0,0]"
-                                             data-paddingleft="[255,0,0,0]"
-                                             style="background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(247,247,247,1) 100%);">
-                                            <!-- start subtitle text layer -->
-                                            <div class="tp-caption tp-resizeme bg-very-light-gray text-uppercase border-radius-4px d-inline-block"
-                                                 id="slide-02-layer-03"
-                                                 data-frames='[{"delay":"+800","speed":"500","from":"opacity: 0","to": "opacity: 1"}, {"delay": "wait","speed": 300,"to": "opacity: 0"}]'
-                                                 data-visibility="['on','on','on','on']"
-                                                 data-fontsize="['13','13','13','12']"
-                                                 data-lineheight="['10','10','10','10']"
-                                                 data-fontweight="['700','700','700','700']"
-                                                 data-color="['#232323','#232323','#232323','#232323']"
-                                                 data-textAlign="['left','left','center','center']"
-                                                 data-letterspacing="['0','0','0','0']"
-                                                 data-x="['left','left','left','center']"
-                                                 data-y="['middle','middle','middle','bottom']"
-                                                 data-hoffset="['0','0','0','0']"
-                                                 data-voffset="['0','0','0','0']"
-                                                 data-width="['auto','auto','auto','auto']"
-                                                 data-height="['auto','auto','auto','auto']"
-                                                 data-whitespace="['normal','normal','normal','normal']"
-                                                 data-margintop="[0,0,0,0]"
-                                                 data-marginright="[0,0,0,0]"
-                                                 data-marginbottom="[40,40,30,25]"
-                                                 data-marginleft="[0,0,0,0]"
-                                                 data-paddingtop="[15,15,15,12]"
-                                                 data-paddingright="[15,15,15,12]"
-                                                 data-paddingbottom="[12,12,12,9]"
-                                                 data-paddingleft="[8,8,8,5]"
-                                                 data-responsive_offset="off"
-                                                 data-responsive="off"
-                                                 ><span style="padding: 7px 8px 4px 8px; " class="bg-dark-gray alt-font d-inline me-10px border-radius-3px fs-12 text-white fw-500">TECNOLOGÍA</span><span class="d-inline">Genética de alto desempeño</span></div>
-                                            <!-- end subtitle text layer -->
-                                            <!-- start large text layer -->
-                                            <div class="tp-caption tp-resizeme alt-font"
-                                                 id="slide-02-layer-04"
-                                                 data-frames='[{"delay":"+1000","speed":"2000","frame":"0","from":"x:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:[-100%];y:0px;s:inherit;e:inherit;","to":"o:1;","ease":"Power4.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
-                                                 data-visibility="['on','on','on','on']"
-                                                 data-fontsize="['100','80','78','50']"
-                                                 data-lineheight="['100','80','78','50']"
-                                                 data-fontweight="['600','700', '700','700']"
-                                                 data-color="['#232323','#232323','#232323','#232323']"
-                                                 data-textAlign="['left','left','center','center']"
-                                                 data-letterspacing="['-2.5','-2','-2','-1']"
-                                                 data-x="['left','left','center','center']"
-                                                 data-y="['middle','middle','middle','bottom']"
-                                                 data-hoffset="['0','0','0','0']"
-                                                 data-voffset="['0','0','0','0']"
-                                                 data-width="['auto','auto','100%','100%']"
-                                                 data-height="['auto','auto','auto','auto']"
-                                                 data-whitespace="['normal','normal','normal', 'normal']"
-                                                 data-margintop="[0, 0, 0, 0]"
-                                                 data-marginright="[0, 0, 0, 0]"
-                                                 data-marginbottom="[10, 0, 10, 10]"
-                                                 data-marginleft="[0, 0, 0, 0]"
-                                                 data-responsive_offset="off"
-                                                 data-responsive="on"
-                                                 style="z-index: 999 !important"
-                                                 >Soluciones que nacen de la genética<span class="text-base-color">.</span> </div>
-                                            <!-- end large text layer -->
-                                            <!-- start text layer -->
-                                            <div class="tp-caption tp-resizeme d-inline-block"
-                                                 id="slide-02-layer-05"
-                                                 data-frames='[{"delay":"+2000","speed":"1000","from": "opacity: 0","to": "opacity: 1"}, {"delay": "wait","speed": 300,"to": "opacity: 0"}]'
-                                                 data-visibility="['on','on','on','on']"
-                                                 data-fontsize="['17','17','22','16']"
-                                                 data-lineheight="['30','30','30','30']"
-                                                 data-fontweight="['400','400','400','400']"
-                                                 data-color="['#828282','#828282','#828282','#828282']"
-                                                 data-textAlign="['left','left','center','center']"
-                                                 data-letterspacing="['0','0','0','0']"
-                                                 data-x="['left','left','center','center']"
-                                                 data-y="['middle','middle','middle','bottom']"
-                                                 data-hoffset="['0','0','0','0']"
-                                                 data-voffset="['0','0','0','0']"
-                                                 data-width="['auto','auto','80%','90%']"
-                                                 data-height="['auto','auto','auto','auto']"
-                                                 data-whitespace="['normal','normal','normal','normal']"
-                                                 data-margintop="[0, 0, 0, 0]"
-                                                 data-marginright="[0, 0, 0, 0]"
-                                                 data-marginbottom="[50, 50, 40, 30]"
-                                                 data-marginleft="[0, 0, 0, 0]"
-                                                 data-responsive_offset="off"
-                                                 data-responsive="on"
-                                                 >Integramos conocimiento, calidad y manejo para fortalecer el desempeño productivo de cada operación avícola.</div>
-                                            <!-- end text layer -->
-                                            <!-- start button layer -->
-                                            <div>
-                                                <!--  start button layer -->
-                                                <a class="tp-caption rev-btn alt-font bg-base-color text-dark-gray d-inline-block text-uppercase border-radius-6px" 
-                                                   id="slide-02-layer-06" 
-                                                   href="#"			 
-                                                   data-x="['left','left','left','left']" data-hoffset="['0','0','0','0']" 
-                                                   data-y="['top','top','top','top']" data-voffset="['0','0','0','0']" 
-                                                   data-fontsize="['17','15','15','14']"
-                                                   data-lineheight="['16','20','20','20']"
-                                                   data-width="['auto','auto','auto','auto']"
-                                                   data-letterspacing="['0.5','0.5','0','0']"
-                                                   data-height="none"
-                                                   data-fontweight="['600','700', '700','700']"
-                                                   data-whitespace="normal"
-                                                   data-type="button" 
-                                                   data-responsive_offset="off" 
-                                                   data-responsive="off"
-                                                   data-frames='[{"delay":"+2500","speed":1000,"frame":"0","from":"y:50px;opacity:0;fb:10px;","to":"o:1;fb:0;","ease":"Power3.easeInOut"},{"delay":"wait","speed":600,"frame":"999","to":"auto:auto;fb:0;","ease":"Power3.easeInOut"},{"frame":"hover","speed":"500","ease":"Power1.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;fb:0;","style":"c:#ffffff;bg:#232323;"}]'
-                                                   data-margintop="[0,0,0,0]"
-                                                   data-marginright="[15,15,15,15]"
-                                                   data-marginbottom="[10,10,10,10]"
-                                                   data-marginleft="[0,0,0,0]"
-                                                   data-textAlign="['center','center','center','center']"
-                                                   data-paddingtop="[19,18,17,15]"
-                                                   data-paddingright="[30,32,32,25]"
-                                                   data-paddingbottom="[16,15,15,11]"
-                                                   data-paddingleft="[30,32,32,25]"
-                                                   >Conoce más</a>
-                                                <!--  end button layer  -->
-                                                <!--  start button layer  -->
-                                                <a class="popup-youtube tp-caption btn btn-large btn-transparent-dark-gray border border-color-transparent-dark-very-light left-icon d-inline-block border-radius-6px"
-                                                   id="slide-02-layer-07"
-                                                   href="https://www.youtube.com/watch?v=cfXHhfNy7tU"			 
-                                                   data-x="['left','left','left','left']" data-hoffset="['0','0','0','0']" 
-                                                   data-y="['top','top','top','top']" data-voffset="['0','0','0','0']" 
-                                                   data-fontsize="['17','15','15','14']"
-                                                   data-lineheight="['20','20','20','20']"
-                                                   data-width="['auto','auto','auto','auto']"
-                                                   data-letterspacing="['0.7','0.7','0','0']"
-                                                   data-height="none"
-                                                   data-fontweight="['500','700', '700','700']"
-                                                   data-whitespace="normal"
-                                                   data-type="button" 
-                                                   data-responsive_offset="off" 
-                                                   data-responsive="off"
-                                                   data-frames='[{"delay":"3000","speed":1000,"frame":"0","from":"y:50px;opacity:0;fb:0px;","to":"o:1;fb:0;","ease":"Power3.easeInOut"},{"delay":"wait","speed":600,"frame":"999","to":"auto:auto;fb:0;","ease":"Power3.easeInOut"},{"frame":"hover","speed":"500","ease":"Power1.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;fb:0;","style":"c:#ffffff;bg:#232323;"}]'
-                                                   data-margintop="[0,0,0,0]"
-                                                   data-marginright="[0,0,0,0]"
-                                                   data-marginbottom="[0,0,0,0]"
-                                                   data-marginleft="[0,0,0,0]"
-                                                   data-textAlign="['center','center','center','center']"
-                                                   data-paddingtop="[14,14,14,11]"
-                                                   data-paddingright="[30,28,28,22]"
-                                                   data-paddingbottom="[12,12,12,9]"
-                                                   data-paddingleft="[30,28,28,22]"
-                                                   ><i class="bi bi-play-circle align-middle" style="font-size:24px; line-height: 14px;"></i>Ver presentación</a>
-                                                <!-- end button layer -->
-                                            </div>
-                                        </div>
-                                        <!-- start background large text layer -->
-                                        <div class="tp-caption tp-resizeme alt-font text-uppercase background-text"
-                                             id="slide-02-layer-08"
-                                             data-frames='[{"delay":"+3500","speed": 3000,"frame":"0","from":"rZ:-90,y:50px;opacity:0;fb:10px;","to":"rZ:-90,o:1;fb:0;","ease":"Power3.easeInOut"},{"delay":"wait","speed":600,"frame":"999","to":"auto:auto;fb:0;","ease":"Power3.easeInOut"}]'
-                                             data-visibility="['on','off','off','off']"
-                                             data-fontsize="['320','150','160','120']"
-                                             data-lineheight="['100','160','160','120']"
-                                             data-fontweight="['700','700', '700','700']"
-                                             data-color="['#ffffff','#ffffff','#ffffff','#ffffff']"
-                                             data-textAlign="['left','left','center','center']"
-                                             data-letterspacing="['-3.5','-8','-8','-6']"
-                                             data-x="['left','left','center','center']"
-                                             data-y="['middle','middle','middle','bottom']"
-                                             data-hoffset="['-460','0','0','0']"
-                                             data-voffset="['0','0','0','0']"
-                                             data-width="['auto','500','100%','100%']"
-                                             data-height="['auto','auto','auto','auto']"
-                                             data-whitespace="['nowrap', 'normal', 'normal', 'normal']"
-                                             data-margintop="[0, 0, 0, 0]"
-                                             data-marginright="[0, 0, 0, 0]"
-                                             data-marginbottom="[10, 0, 0, 0]"
-                                             data-marginleft="[0, 0, 0, 0]"
-                                             data-responsive_offset="off"
-                                             data-responsive="on"
-                                             style="text-shadow: 0px 0px 35px rgba(0,0,0,0.05); z-index: 1 !important">GRAVIOR</div>
-                                        <!-- end background large text layer -->
-                                        <!-- end colum -->
-                                        <div class="tp-caption right-col" 
-                                             id="slide-02-layer-09" 
-                                             data-x="['left','left','left','left']" data-hoffset="['100','100','100','100']" 
-                                             data-y="['top','top','top','top']" data-voffset="['100','100','100','100']" 
-                                             data-fontsize="['20','20','20','20']"
-                                             data-lineheight="['22','22','22','22']"
-                                             data-fontweight="['400','400','400','400']"
-                                             data-letterspacing="['0','0','0','0']"
-                                             data-width="none"
-                                             data-height="none"
-                                             data-whitespace="nowrap"
-
-                                             data-type="column" 
-                                             data-responsive_offset="on" 
-                                             data-responsive="off"
-                                             data-frames='[{"delay":"+0","speed":300,"frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
-                                             data-columnwidth="58%"
-                                             data-verticalalign="top"
-                                             data-margintop="[0,0,0,0]"
-                                             data-marginright="[0,0,0,0]"
-                                             data-marginbottom="[0,0,0,0]"
-                                             data-marginleft="[0,0,0,0]"
-                                             data-textAlign="['inherit','inherit','inherit','inherit']"
-                                             data-paddingtop="[0,0,0,0]"
-                                             data-paddingright="[0,0,0,0]"
-                                             data-paddingbottom="[0,0,0,0]"
-                                             data-paddingleft="[0,0,0,0]"
-                                             style="width: 100%; height: 100% !important;" ></div>
-                                    </div>
-                                    <!-- end row -->
-                                </div>
-                                <!-- end main row -->
-                                <!-- start arrow text layer -->
-                                <div class="tp-caption rev-btn d-flex justify-content-center align-items-center text-dark-gray btn btn-large bg-base-color btn-slide-right pb-5px text-uppercase" 
-                                     id="slide-02-layer-10"
-                                     data-x="['right','right','center','center']" data-hoffset="['280','200','-40','-40']" 
-                                     data-y="['bottom','bottom','bottom','bottom']" data-voffset="['0','0','0','00']" 
-                                     data-visibility="['on','on','off','off']"
-                                     data-width="['140','100','80','80']"
-                                     data-height="['140','100','80','80']"
-                                     data-whitespace="nowrap"
-                                     data-fontsize="['18','18','16','15']"
-                                     data-fontweight="['700','700','700','700']"
-                                     data-letterspacing="['0','0','0','0']"
-                                     data-lineheight="['20','60','50','55']"
-                                     data-type="button" 
-                                     data-actions='[{"event":"click","action":"jumptoslide","slide":"previous","delay":""}]'
-                                     data-responsive_offset="off" 
-                                     data-responsive="off"
-                                     data-frames='[{"delay":"+4500","speed":1000,"sfxcolor":"#ffffff","sfx_effect":"blockfromright","frame":"0","ease":"Power3.easeInOut"},{"delay":"wait","speed":500,"sfxcolor":"#ffffff","sfx_effect":"blocktoleft","frame":"999","to":"z:0;","ease":"Power2.easeInOut"},{"frame":"hover","speed":"500","ease":"Power1.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgb(255,255,255);bc:rgba(255,255,255,0);"}]'
-                                     data-textAlign="['center','center','center','center']"
-                                     data-basealign="slide"
-                                     style="border: none;"
-                                     >Anterior<span class="bg-black"></span>
-                                </div>
-                                <!-- end arrow icon layer -->
-                                <!-- start arrow icon layer -->
-                                <div class="tp-caption rev-btn alt-font text-black d-flex justify-content-start align-items-center text-dark-gray text-uppercase pb-5px next-btn"
-                                     id="slide-02-layer-11"
-                                     data-x="['right','right','center','center']" data-hoffset="['0','0','40','40']" 
-                                     data-y="['bottom','bottom','bottom','bottom']" data-voffset="['0','0','0','0']" 
-                                     data-visibility="['on','on','off','off']"
-                                     data-width="['285','200','80','80']"
-                                     data-height="['140','100','80','80']"
-                                     data-whitespace="nowrap"
-                                     data-fontsize="['18','18','22','15']"
-                                     data-lineheight="['20','60','50','55']"
-                                     data-fontweight="['700','700','700','700']"
-                                     data-type="button" 
-                                     data-actions='[{"event":"click","action":"jumptoslide","slide":"next","delay":""}]'
-                                     data-responsive_offset="off" 
-                                     data-responsive="off"
-                                     data-frames='[{"delay":"+4000","speed":1000,"sfxcolor":"#ffffff","sfx_effect":"blockfromright","frame":"0","from":"y:50px;opacity:0;","to":"o:1;","ease":"Power4.easeOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
-                                     data-textAlign="['center','center','center','center']"
-                                     data-basealign="slide"
-                                     style="border: none; background-image: url({% static 'crafto/images/gravior/home/hero-thumb-02.jpg' %});"
-                                     >Siguiente
-                                </div>
-                                <!-- end arrow icon layer -->
-                            </li>
-                            <!-- Slide tow -->
-                            <li id="rs-gym-and-fitness-03" data-index="rs-gym-and-fitness-03" data-transition="fade" data-slotamount="default" data-hideafterloop="0" data-hideslideonmobile="off"  data-easein="default" data-easeout="default" data-masterspeed="default"  data-rotate="0"  data-fstransition="fade" data-fsmasterspeed="100" data-fsslotamount="2" data-saveperformance="off"  data-title="Slide" data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9="" data-param10='{"revslider-weather-addon":{"type":"name","name":"Cologne","woeid":"667931","unit":"c"}}' data-description="">
-                                <!-- slide background image -->
-                                <img src="{% static 'crafto/images/gravior/home/hero-03.jpg' %}" alt="slider-image" data-bgposition="center center" data-duration="2500" data-ease="Power3.easeInOut" class="rev-slidebg" data-no-retina>
-                                <!-- start main row -->
-                                <div id="rrzm_640" class="rev_row_zone rev_row_zone_middle">
-                                    <!-- start row -->
-                                    <div class="tp-caption row" 
-                                         id="slide-03-layer-01" 
-                                         data-x="['left','left','left','center']" data-hoffset="['0','0','0','0']" 
-                                         data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','0']" 
-                                         data-width="none"
-                                         data-height="100vh"
-                                         data-type="row" 
-                                         data-columnbreak="2"
-                                         data-responsive_offset="on" 
-                                         data-responsive="off"
-                                         data-frames='[{"delay":"500","speed":"300","frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
-                                         data-textAlign="['inherit','inherit','inherit','inherit']"
-                                         data-paddingtop="[0,0,0,0]"
-                                         data-paddingright="[0,0,0,0]"
-                                         data-paddingbottom="[0,0,0,0]"
-                                         data-paddingleft="[0,0,0,0]"
-                                         data-margintop="[0,0,0,0]"
-                                         data-marginright="[0,0,0,0]"
-                                         data-marginbottom="[0,0,0,0]"
-                                         data-marginleft="[0,0,0,0]"
-                                         data-basealign="slide"
-                                         style="transform-style: inherit !important;"
-                                         >
-                                        <!-- start colum -->
-                                        <div class="tp-caption d-flex justify-content-center flex-column left-col" 
-                                             id="slide-03-layer-02" 
-                                             data-x="['left','left','left','center']" data-hoffset="['0','0','0','0']" 
-                                             data-y="['middle','middle','middle','middle']" data-voffset="['0','0','0','0']"  
-                                             data-width="none"
-                                             data-height="none"
-                                             data-whitespace="nowrap"
-                                             data-verticalalign="middle"
-                                             data-type="column" 
-                                             data-responsive_offset="on" 
-                                             data-responsive="on"
-                                             data-frames='[{"delay":"+100","speed":"800","frame":"0","from":"x:-50px;opacity:0;","to":"o:1;","ease":"power3.inOut"},{"delay":"wait","speed":300,"frame":"999","to":"auto:auto;","ease":"power3.inOut"}]'
-                                             data-columnwidth="42%"
-                                             data-margintop="[0,0,0,0]"
-                                             data-marginright="[0,0,0,0]"
-                                             data-marginbottom="[0,0,0,0]"
-                                             data-marginleft="[0,0,0,0]"
-                                             data-textAlign="['left','left','center','center']"
-                                             data-paddingtop="[0,0,0,0]"
-                                             data-paddingright="[150,0,0,0]"
-                                             data-paddingbottom="[0,0,0,0]"
-                                             data-paddingleft="[255,0,0,0]"
-                                             style="background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(247,247,247,1) 100%);">
-                                            <!-- start subtitle text layer -->
-                                            <div class="tp-caption tp-resizeme bg-very-light-gray text-uppercase border-radius-4px d-inline-block"
-                                                 id="slide-03-layer-03"
-                                                 data-frames='[{"delay":"+800","speed":"500","from":"opacity: 0","to": "opacity: 1"}, {"delay": "wait","speed": 300,"to": "opacity: 0"}]'
-                                                 data-visibility="['on','on','on','on']"
-                                                 data-fontsize="['13','13','13','12']"
-                                                 data-lineheight="['10','10','10','10']"
-                                                 data-fontweight="['700','700','700','700']"
-                                                 data-color="['#232323','#232323','#232323','#232323']"
-                                                 data-textAlign="['left','left','center','center']"
-                                                 data-letterspacing="['0','0','0','0']"
-                                                 data-x="['left','left','left','center']"
-                                                 data-y="['middle','middle','middle','bottom']"
-                                                 data-hoffset="['0','0','0','0']"
-                                                 data-voffset="['0','0','0','0']"
-                                                 data-width="['auto','auto','auto','auto']"
-                                                 data-height="['auto','auto','auto','auto']"
-                                                 data-whitespace="['normal','normal','normal','normal']"
-                                                 data-margintop="[0,0,0,0]"
-                                                 data-marginright="[0,0,0,0]"
-                                                 data-marginbottom="[40,40,30,25]"
-                                                 data-marginleft="[0,0,0,0]"
-                                                 data-paddingtop="[15,15,15,12]"
-                                                 data-paddingright="[15,15,15,12]"
-                                                 data-paddingbottom="[12,12,12,9]"
-                                                 data-paddingleft="[8,8,8,5]"
-                                                 data-responsive_offset="off"
-                                                 data-responsive="off"
-                                                 ><span style="padding: 7px 8px 4px 8px; " class="bg-dark-gray alt-font d-inline me-10px border-radius-3px fs-12 text-white fw-500">CONFIANZA</span><span class="d-inline">Acompañamiento especializado</span></div>
-                                            <!-- end subtitle text layer -->
-                                            <!-- start large text layer -->
-                                            <div class="tp-caption tp-resizeme alt-font"
-                                                 id="slide-03-layer-04"
-                                                 data-frames='[{"delay":"+1000","speed":"2000","frame":"0","from":"x:[100%];z:0;rX:0deg;rY:0;rZ:0;sX:1;sY:1;skX:0;skY:0;","mask":"x:[-100%];y:0px;s:inherit;e:inherit;","to":"o:1;","ease":"Power4.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
-                                                 data-visibility="['on','on','on','on']"
-                                                 data-fontsize="['100','80','78','50']"
-                                                 data-lineheight="['100','80','78','50']"
-                                                 data-fontweight="['600','700', '700','700']"
-                                                 data-color="['#232323','#232323','#232323','#232323']"
-                                                 data-textAlign="['left','left','center','center']"
-                                                 data-letterspacing="['-2.5','-2','-2','-1']"
-                                                 data-x="['left','left','center','center']"
-                                                 data-y="['middle','middle','middle','bottom']"
-                                                 data-hoffset="['0','0','0','0']"
-                                                 data-voffset="['0','0','0','0']"
-                                                 data-width="['auto','auto','100%','100%']"
-                                                 data-height="['auto','auto','auto','auto']"
-                                                 data-whitespace="['normal','normal','normal', 'normal']"
-                                                 data-margintop="[0, 0, 0, 0]"
-                                                 data-marginright="[0, 0, 0, 0]"
-                                                 data-marginbottom="[10, 0, 10, 10]"
-                                                 data-marginleft="[0, 0, 0, 0]"
-                                                 data-responsive_offset="off"
-                                                 data-responsive="on"
-                                                 style="z-index: 999 !important"
-                                                 >Conocimiento para producir mejor<span class="text-base-color">.</span> </div>
-                                            <!-- end large text layer -->
-                                            <!-- start text layer -->
-                                            <div class="tp-caption tp-resizeme d-inline-block"
-                                                 id="slide-03-layer-05"
-                                                 data-frames='[{"delay":"+2000","speed":"1000","from": "opacity: 0","to": "opacity: 1"}, {"delay": "wait","speed": 300,"to": "opacity: 0"}]'
-                                                 data-visibility="['on','on','on','on']"
-                                                 data-fontsize="['17','17','22','16']"
-                                                 data-lineheight="['30','30','30','30']"
-                                                 data-fontweight="['400','400','400','400']"
-                                                 data-color="['#828282','#828282','#828282','#828282']"
-                                                 data-textAlign="['left','left','center','center']"
-                                                 data-letterspacing="['0','0','0','0']"
-                                                 data-x="['left','left','center','center']"
-                                                 data-y="['middle','middle','middle','bottom']"
-                                                 data-hoffset="['0','0','0','0']"
-                                                 data-voffset="['0','0','0','0']"
-                                                 data-width="['auto','auto','80%','90%']"
-                                                 data-height="['auto','auto','auto','auto']"
-                                                 data-whitespace="['normal','normal','normal','normal']"
-                                                 data-margintop="[0, 0, 0, 0]"
-                                                 data-marginright="[0, 0, 0, 0]"
-                                                 data-marginbottom="[50, 50, 40, 30]"
-                                                 data-marginleft="[0, 0, 0, 0]"
-                                                 data-responsive_offset="off"
-                                                 data-responsive="on"
-                                                 >Trabajamos junto al productor con soluciones enfocadas en bioseguridad, eficiencia, bienestar y resultados consistentes.</div>
-                                            <!-- end text layer -->
-                                            <!-- start button layer -->
-                                            <div>
-                                                <!--  start button layer -->
-                                                <a class="tp-caption rev-btn alt-font bg-base-color text-dark-gray d-inline-block text-uppercase border-radius-6px" 
-                                                   id="slide-03-layer-06" 
-                                                   href="#"			 
-                                                   data-x="['left','left','left','left']" data-hoffset="['0','0','0','0']" 
-                                                   data-y="['top','top','top','top']" data-voffset="['0','0','0','0']" 
-                                                   data-fontsize="['17','15','15','14']"
-                                                   data-lineheight="['16','20','20','20']"
-                                                   data-width="['auto','auto','auto','auto']"
-                                                   data-letterspacing="['0.5','0.5','0','0']"
-                                                   data-height="none"
-                                                   data-fontweight="['600','700', '700','700']"
-                                                   data-whitespace="normal"
-                                                   data-type="button" 
-                                                   data-responsive_offset="off" 
-                                                   data-responsive="off"
-                                                   data-frames='[{"delay":"+2500","speed":1000,"frame":"0","from":"y:50px;opacity:0;fb:10px;","to":"o:1;fb:0;","ease":"Power3.easeInOut"},{"delay":"wait","speed":600,"frame":"999","to":"auto:auto;fb:0;","ease":"Power3.easeInOut"},{"frame":"hover","speed":"500","ease":"Power1.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;fb:0;","style":"c:#ffffff;bg:#232323;"}]'
-                                                   data-margintop="[0,0,0,0]"
-                                                   data-marginright="[15,15,15,15]"
-                                                   data-marginbottom="[10,10,10,10]"
-                                                   data-marginleft="[0,0,0,0]"
-                                                   data-textAlign="['center','center','center','center']"
-                                                   data-paddingtop="[19,18,17,15]"
-                                                   data-paddingright="[30,32,32,25]"
-                                                   data-paddingbottom="[16,15,15,11]"
-                                                   data-paddingleft="[30,32,32,25]"
-                                                   >Conoce más</a>
-                                                <!--  end button layer  -->
-                                                <!--  start button layer  -->
-                                                <a class="popup-youtube tp-caption btn btn-large btn-transparent-dark-gray border border-color-transparent-dark-very-light left-icon d-inline-block border-radius-6px"
-                                                   id="slide-03-layer-07"
-                                                   href="https://www.youtube.com/watch?v=cfXHhfNy7tU"			 
-                                                   data-x="['left','left','left','left']" data-hoffset="['0','0','0','0']" 
-                                                   data-y="['top','top','top','top']" data-voffset="['0','0','0','0']" 
-                                                   data-fontsize="['17','15','15','14']"
-                                                   data-lineheight="['20','20','20','20']"
-                                                   data-width="['auto','auto','auto','auto']"
-                                                   data-letterspacing="['0.7','0.7','0','0']"
-                                                   data-height="none"
-                                                   data-fontweight="['500','700', '700','700']"
-                                                   data-whitespace="normal"
-                                                   data-type="button" 
-                                                   data-responsive_offset="off" 
-                                                   data-responsive="off"
-                                                   data-frames='[{"delay":"3000","speed":1000,"frame":"0","from":"y:50px;opacity:0;fb:0px;","to":"o:1;fb:0;","ease":"Power3.easeInOut"},{"delay":"wait","speed":600,"frame":"999","to":"auto:auto;fb:0;","ease":"Power3.easeInOut"},{"frame":"hover","speed":"500","ease":"Power1.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;fb:0;","style":"c:#ffffff;bg:#232323;"}]'
-                                                   data-margintop="[0,0,0,0]"
-                                                   data-marginright="[0,0,0,0]"
-                                                   data-marginbottom="[0,0,0,0]"
-                                                   data-marginleft="[0,0,0,0]"
-                                                   data-textAlign="['center','center','center','center']"
-                                                   data-paddingtop="[14,14,14,11]"
-                                                   data-paddingright="[30,28,28,22]"
-                                                   data-paddingbottom="[12,12,12,9]"
-                                                   data-paddingleft="[30,28,28,22]"
-                                                   ><i class="bi bi-play-circle align-middle" style="font-size:24px; line-height: 14px;"></i>Ver presentación</a>
-                                                <!-- end button layer -->
-                                            </div>
-                                        </div>
-                                        <!-- start background large text layer -->
-                                        <div class="tp-caption tp-resizeme alt-font text-uppercase background-text"
-                                             id="slide-03-layer-08"
-                                             data-frames='[{"delay":"+3500","speed": 3000,"frame":"0","from":"rZ:-90,y:50px;opacity:0;fb:10px;","to":"rZ:-90,o:1;fb:0;","ease":"Power3.easeInOut"},{"delay":"wait","speed":600,"frame":"999","to":"auto:auto;fb:0;","ease":"Power3.easeInOut"}]'
-                                             data-visibility="['on','off','off','off']"
-                                             data-fontsize="['320','150','160','120']"
-                                             data-lineheight="['100','160','160','120']"
-                                             data-fontweight="['700','700', '700','700']"
-                                             data-color="['#ffffff','#ffffff','#ffffff','#ffffff']"
-                                             data-textAlign="['left','left','center','center']"
-                                             data-letterspacing="['-3.5','-8','-8','-6']"
-                                             data-x="['left','left','center','center']"
-                                             data-y="['middle','middle','middle','bottom']"
-                                             data-hoffset="['-460','0','0','0']"
-                                             data-voffset="['0','0','0','0']"
-                                             data-width="['auto','500','100%','100%']"
-                                             data-height="['auto','auto','auto','auto']"
-                                             data-whitespace="['nowrap', 'normal', 'normal', 'normal']"
-                                             data-margintop="[0, 0, 0, 0]"
-                                             data-marginright="[0, 0, 0, 0]"
-                                             data-marginbottom="[10, 0, 0, 0]"
-                                             data-marginleft="[0, 0, 0, 0]"
-                                             data-responsive_offset="off"
-                                             data-responsive="on"
-                                             style="text-shadow: 0px 0px 35px rgba(0,0,0,0.05); z-index: 1 !important">GRAVIOR</div>
-                                        <!-- end background large text layer -->
-                                        <!-- end colum -->
-                                        <div class="tp-caption right-col" 
-                                             id="slide-03-layer-09" 
-                                             data-x="['left','left','left','left']" data-hoffset="['100','100','100','100']" 
-                                             data-y="['top','top','top','top']" data-voffset="['100','100','100','100']" 
-                                             data-fontsize="['20','20','20','20']"
-                                             data-lineheight="['22','22','22','22']"
-                                             data-fontweight="['400','400','400','400']"
-                                             data-letterspacing="['0','0','0','0']"
-                                             data-width="none"
-                                             data-height="none"
-                                             data-whitespace="nowrap"
-
-                                             data-type="column" 
-                                             data-responsive_offset="on" 
-                                             data-responsive="off"
-                                             data-frames='[{"delay":"+0","speed":300,"frame":"0","from":"opacity:0;","to":"o:1;","ease":"Power3.easeInOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
-                                             data-columnwidth="58%"
-                                             data-verticalalign="top"
-                                             data-margintop="[0,0,0,0]"
-                                             data-marginright="[0,0,0,0]"
-                                             data-marginbottom="[0,0,0,0]"
-                                             data-marginleft="[0,0,0,0]"
-                                             data-textAlign="['inherit','inherit','inherit','inherit']"
-                                             data-paddingtop="[0,0,0,0]"
-                                             data-paddingright="[0,0,0,0]"
-                                             data-paddingbottom="[0,0,0,0]"
-                                             data-paddingleft="[0,0,0,0]"
-                                             style="width: 100%; height: 100% !important;" ></div>
-                                    </div>
-                                    <!-- end row -->
-                                </div>
-                                <!-- end main row -->
-                                <!-- start arrow text layer -->
-                                <div class="tp-caption rev-btn d-flex justify-content-center align-items-center text-dark-gray btn btn-large bg-base-color btn-slide-right pb-5px text-uppercase" 
-                                     id="slide-03-layer-10"
-                                     data-x="['right','right','center','center']" data-hoffset="['280','200','-40','-40']" 
-                                     data-y="['bottom','bottom','bottom','bottom']" data-voffset="['0','0','0','00']" 
-                                     data-visibility="['on','on','off','off']"
-                                     data-width="['140','100','80','80']"
-                                     data-height="['140','100','80','80']"
-                                     data-whitespace="nowrap"
-                                     data-fontsize="['18','18','16','15']"
-                                     data-fontweight="['700','700','700','700']"
-                                     data-letterspacing="['0','0','0','0']"
-                                     data-lineheight="['20','60','50','55']"
-                                     data-type="button" 
-                                     data-actions='[{"event":"click","action":"jumptoslide","slide":"previous","delay":""}]'
-                                     data-responsive_offset="off" 
-                                     data-responsive="off"
-                                     data-frames='[{"delay":"+4500","speed":1000,"sfxcolor":"#ffffff","sfx_effect":"blockfromright","frame":"0","ease":"Power3.easeInOut"},{"delay":"wait","speed":500,"sfxcolor":"#ffffff","sfx_effect":"blocktoleft","frame":"999","to":"z:0;","ease":"Power2.easeInOut"},{"frame":"hover","speed":"500","ease":"Power1.easeInOut","to":"o:1;rX:0;rY:0;rZ:0;z:0;","style":"c:rgb(255,255,255);bc:rgba(255,255,255,0);"}]'
-                                     data-textAlign="['center','center','center','center']"
-                                     data-basealign="slide"
-                                     style="border: none;"
-                                     >Anterior<span class="bg-black"></span>
-                                </div>
-                                <!-- end arrow icon layer -->
-                                <!-- start arrow icon layer -->
-                                <div class="tp-caption rev-btn alt-font text-black d-flex justify-content-start align-items-center text-dark-gray text-uppercase pb-5px next-btn"
-                                     id="slide-03-layer-11"
-                                     data-x="['right','right','center','center']" data-hoffset="['0','0','40','40']" 
-                                     data-y="['bottom','bottom','bottom','bottom']" data-voffset="['0','0','0','0']" 
-                                     data-visibility="['on','on','off','off']"
-                                     data-width="['285','200','80','80']"
-                                     data-height="['140','100','80','80']"
-                                     data-whitespace="nowrap"
-                                     data-fontsize="['18','18','22','15']"
-                                     data-lineheight="['20','60','50','55']"
-                                     data-fontweight="['700','700','700','700']"
-                                     data-type="button" 
-                                     data-actions='[{"event":"click","action":"jumptoslide","slide":"next","delay":""}]'
-                                     data-responsive_offset="off" 
-                                     data-responsive="off"
-                                     data-frames='[{"delay":"+4000","speed":1000,"sfxcolor":"#ffffff","sfx_effect":"blockfromright","frame":"0","from":"y:50px;opacity:0;","to":"o:1;","ease":"Power4.easeOut"},{"delay":"wait","speed":300,"frame":"999","to":"opacity:0;","ease":"Power3.easeInOut"}]'
-                                     data-textAlign="['center','center','center','center']"
-                                     data-basealign="slide"
-                                     style="border: none; background-image: url({% static 'crafto/images/gravior/home/hero-thumb-03.jpg' %});"
-                                     >Siguiente
-                                </div>
-                                <!-- end arrow icon layer -->
-                            </li>
+                            {% endwith %}{% endfor %}
                         </ul>
                     </div>
                 </div>
             </article>
         </section>
         <!-- end slider -->  
+        {% endif %}
         <!-- start section -->
         <section class="pt-45px pb-40px border-bottom border-color-extra-medium-gray sm-pt-35px sm-pb-30px">
             <div class="container-fluid">
@@ -993,6 +398,7 @@
             </div>
         </section>
         <!-- end section -->
+        {% if about %}
         <!-- start section -->
         <section class="position-relative overflow-hidden">
             <div class="container position-relative z-index-1">
@@ -1001,16 +407,16 @@
                         <div class="position-absolute left-20px top-0px d-none d-md-inline-block" data-bottom-top="transform: rotate(-10deg) translateY(50px)" data-top-bottom="transform:rotate(10deg) translateY(-50px)">
                             <img src="{% static 'crafto/images/gravior/home/about-detail-01.jpg' %}" alt="">
                         </div>
-                        <img src="{% static 'crafto/images/gravior/home/about-main.jpg' %}" alt="">
+                        <img src="{{ about.main_image.url }}" alt="{{ about.page_title }}">
                         <div class="position-absolute right-minus-100px bottom-0px md-right-minus-30px d-none d-md-inline-block" data-bottom-top="transform: translateY(50px)" data-top-bottom="transform: translateY(-50px)">
                             <img src="{% static 'crafto/images/gravior/home/about-detail-02.jpg' %}" alt="">
                         </div>
                     </div>
                     <div class="col-lg-5 offset-lg-1 mb-50px mt-40px md-mt-0 order-1 order-lg-2 xs-mb-35px" data-anime='{ "el": "childs", "opacity": [0, 1], "translateY": [30, 0], "duration": 600, "delay": 0, "staggervalue": 300, "easing": "easeOutQuad" }'>
                         <span class="fs-19 lh-20 ls-0px fw-600 text-dark-gray d-inline-block text-decoration-line-bottom-medium border-color-base-color mb-25px">Sobre GRAVIOR</span>
-                        <h2 class="h1 alt-font fw-700 ls-minus-1px text-dark-gray mb-15px">Genética, conocimiento y experiencia al servicio de la avicultura<span class="text-base-color">.</span></h2>
-                        <p class="w-85 mb-30px lg-w-100">En GRAVIOR impulsamos el desarrollo de la avicultura mediante soluciones integrales en genética, calidad, bioseguridad y acompañamiento técnico, orientadas a mejorar la productividad, la eficiencia y la sostenibilidad.</p>
-                        <a href="{% url 'nosotros' %}" class="btn btn-large btn-round-edge btn-dark-gray btn-slide-right me-15px">Conoce más<span class="bg-white"></span></a>
+                        <h2 class="h1 alt-font fw-700 ls-minus-1px text-dark-gray mb-15px">{{ about.intro }}<span class="text-base-color">.</span></h2>
+                        <p class="w-85 mb-30px lg-w-100">{{ about.company_description }}</p>
+                        <a href="{% url 'empresa:index' %}" class="btn btn-large btn-round-edge btn-dark-gray btn-slide-right me-15px">Conoce más<span class="bg-white"></span></a>
                         <a href="https://www.youtube.com/watch?v=cfXHhfNy7tU" class="btn btn-link hover-text-light btn-extra-large text-dark-gray popup-youtube pb-0"><i class="bi bi-play-circle lh-normal align-middle icon-extra-medium me-5px"></i>Cómo trabajamos</a>
                     </div>
                 </div>
@@ -1018,9 +424,12 @@
             <div class="fs-275 lg-fs-180 md-fs-160 fw-700 alt-font text-uppercase ls-minus-5px text-gradient-light-gray-white position-absolute bottom-minus-40px right-0px d-none d-md-inline-block" data-bottom-top="transform: translate3d(50px, 0px, 0px);" data-top-bottom="transform: translate3d(150px, 0px, 0px);">AVICULTURA</div>
         </section>
         <!-- end section -->
+        {% endif %}
+        {% if differentials or statistics %}
         <!-- start section -->
         <section class="position-relative pt-1">
             <div class="container">
+                {% if differentials %}
                 <div class="row mb-7 xs-mb-40px">
                     <div class="col-xl-5 col-lg-6 d-flex flex-column align-items-start md-mb-20px" data-anime='{ "el": "childs", "translateY": [30, 0], "opacity": [0,1], "duration": 600, "delay": 0, "staggervalue": 200, "easing": "easeOutQuad" }'>
                         <span class="fs-19 lh-20 ls-0px fw-600 text-dark-gray d-inline-block text-decoration-line-bottom-medium border-color-base-color mb-25px">¿Por qué GRAVIOR?</span>
@@ -1028,78 +437,24 @@
                         <div class="fw-500 text-dark-gray w-100 mt-auto fs-19 ls-0px position-relative left-minus-20px d-flex align-items-center"><img src="https://placehold.co/156x113" alt=""><span>Respaldo técnico de <span class="fw-600 text-decoration-line-bottom">especialistas.</span></span></div>
                     </div>
                     <div class="col-lg-6 offset-xl-1 pe-50px md-pe-15px pricing-table-style-09" data-anime='{ "el": "childs", "translateY": [30, 0], "opacity": [0,1], "duration": 600, "delay": 0, "staggervalue": 200, "easing": "easeOutQuad" }'>
-                        <div class="row g-0">
-                            <div class="col-3 text-center align-self-center">
-                                <img src="https://placehold.co/114x114" class="w-55px" alt="">
+                        {% for differential in differentials %}
+                        <div class="row{% if not forloop.first %} border-top border-color-extra-medium-gray align-items-center{% endif %} g-0">
+                            <div class="col-3 {% if forloop.first %}text-center align-self-center{% else %}align-self-center text-center{% endif %}">
+                                {% if differential.image %}<img src="{{ differential.image.url }}" class="w-55px" alt="{{ differential.title }}">{% elif differential.icon_class %}<i class="{{ differential.icon_class }} icon-extra-medium text-dark-gray"></i>{% endif %}
                             </div>
                             <div class="col-8 last-paragraph-no-margin ps-40px pe-40px pt-30px pb-30px border-start border-color-extra-medium-gray xs-p-25px">
-                                <span class="fs-24 alt-font fw-500 text-dark-gray">Genética avícola</span>
-                                <p>Líneas orientadas a un desempeño productivo consistente.</p>
+                                <span class="fs-24 alt-font fw-500 text-dark-gray">{{ differential.title }}</span>
+                                <p>{{ differential.description }}</p>
                             </div>
                             <div class="col-1 align-self-center">
-                                <a class="action" href="{% url 'genetica' %}"><i class="bi bi-arrow-right text-dark-gray icon-extra-medium"></i></a>
+                                <a class="action" href="{% url 'empresa:index' %}"><i class="bi bi-arrow-right text-dark-gray icon-extra-medium"></i></a>
                             </div>
                         </div>
-                        <div class="row border-top border-color-extra-medium-gray align-items-center g-0">
-                            <div class="col-3 align-self-center text-center">
-                                <img src="https://placehold.co/114x114" class="w-55px" alt="">
-                            </div>
-                            <div class="col-8 last-paragraph-no-margin ps-40px pe-40px pt-30px pb-30px border-start border-color-extra-medium-gray xs-p-25px">
-                                <span class="fs-24 alt-font fw-500 text-dark-gray">Calidad y bioseguridad</span>
-                                <p>Procesos y protocolos para fortalecer la seguridad sanitaria.</p>
-                            </div>
-                            <div class="col-1 align-self-center">
-                                <a class="action" href="{% url 'genetica' %}"><i class="bi bi-arrow-right text-dark-gray icon-extra-medium"></i></a>
-                            </div>
-                        </div>
-                        <div class="row border-top border-color-extra-medium-gray align-items-center g-0">
-                            <div class="col-3 align-self-center text-center">
-                                <img src="https://placehold.co/114x114" class="w-55px" alt="">
-                            </div>
-                            <div class="col-8 last-paragraph-no-margin ps-40px pe-40px pt-30px pb-30px border-start border-color-extra-medium-gray xs-p-25px">
-                                <span class="fs-24 alt-font fw-500 text-dark-gray">Asesoría técnica</span>
-                                <p>Acompañamiento especializado para cada etapa productiva.</p>
-                            </div>
-                            <div class="col-1 align-self-center">
-                                <a class="action" href="{% url 'genetica' %}"><i class="bi bi-arrow-right text-dark-gray icon-extra-medium"></i></a>
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>                    
                 </div>
-                <div class="row row-cols-1 row-cols-md-4 row-cols-sm-2 justify-content-center counter-style-07">
-                    <!-- start counter item -->
-                    <div class="col text-center sm-mb-35px">
-                        <h1 class="alt-font vertical-counter d-inline-flex text-dark-gray fw-700 mb-0 ls-minus-2px md-ls-0px position-relative z-index-0" data-to="0">
-                            <span class="text-highlight position-absolute bottom-10px w-100"><span class="bg-base-color h-10px bottom-0px opacity-4"></span></span>
-                        </h1> 
-                        <span class="d-block fs-15 lh-20 fw-700 text-uppercase text-dark-gray">Años de experiencia</span>
-                    </div>
-                    <!-- end counter item -->                    
-                    <!-- start counter item -->
-                    <div class="col text-center sm-mb-35px">
-                        <h1 class="alt-font vertical-counter d-inline-flex text-dark-gray fw-700 mb-0 ls-minus-2px md-ls-0px position-relative" data-to="0">
-                            <span class="text-highlight position-absolute bottom-10px w-100"><span class="bg-base-color h-10px bottom-0px opacity-4"></span></span>
-                        </h1>
-                        <span class="d-block fs-15 lh-20 fw-700 text-uppercase text-dark-gray">Productores atendidos</span>
-                    </div>
-                    <!-- end counter item -->                    
-                    <!-- start counter item -->
-                    <div class="col text-center xs-mb-35px">
-                        <h1 class="alt-font vertical-counter d-inline-flex text-dark-gray fw-700 mb-0 ls-minus-2px md-ls-0px position-relative" data-to="0">
-                            <span class="text-highlight position-absolute bottom-10px w-100"><span class="bg-base-color h-10px bottom-0px opacity-4"></span></span>
-                        </h1>
-                        <span class="d-block fs-15 lh-20 fw-700 text-uppercase text-dark-gray">Aves comercializadas</span>
-                    </div>
-                    <!-- end counter item -->                    
-                    <!-- start counter item -->
-                    <div class="col text-center">
-                        <h1 class="alt-font vertical-counter d-inline-flex text-dark-gray fw-700 mb-0 ls-minus-2px md-ls-0px position-relative" data-to="0">
-                            <span class="text-highlight position-absolute bottom-10px w-100"><span class="bg-base-color h-10px bottom-0px opacity-4"></span></span>
-                        </h1>
-                        <span class="d-block fs-15 lh-20 fw-700 text-uppercase text-dark-gray">Especialistas</span>
-                    </div>
-                    <!-- end counter item -->                
-                </div>
+{% endif %}
+                {% if statistics %}{% include "includes/statistics.html" %}{% endif %}
             </div>
             <div class="position-absolute left-minus-50px bottom-minus-100px z-index-1 flex-column align-items-center justify-content-center w-220px h-220px lg-w-150px lg-h-150px md-w-130px md-h-130px border-radius-100 lg-bottom-minus-70px lg-left-minus-30px md-left-minus-20px md-bottom-minus-55px d-none d-lg-flex">
                 <img src="https://placehold.co/89x69" class="position-absolute top-50 translate-middle-y lg-w-45" alt="">
@@ -1107,137 +462,42 @@
             </div>            
         </section>
         <!-- end section -->
+        {% endif %}
+        {% if solution_tabs %}
         <!-- start section -->
         <section class="bg-cultured position-relative overflow-hidden p-0">
             <div class="container">
                 <div class="row">
                     <div class="col-12 tab-style-08"> 
                         <div class="tab-content">
+                            {% for tab in solution_tabs %}
                             <!-- start tab content -->
-                            <div class="tab-pane fade in active show" id="tab_eight1">
+                            <div class="tab-pane fade in{% if forloop.first %} active show{% endif %}" id="tab_eight{{ forloop.counter }}">
                                 <div class="row">
-                                    <div class="col-xl-4 col-lg-5 col-md-6 pt-8 pb-8 xs-pt-12 xs-pb-12">
-                                        <span class="fs-19 lh-20 ls-0px fw-600 text-dark-gray d-inline-block text-decoration-line-bottom-medium border-color-base-color mb-25px">Genética avícola</span>
-                                        <h2 class="alt-font fw-700 ls-minus-1px text-dark-gray mb-10px">Genética de alto desempeño para una producción eficiente<span class="text-base-color">.</span></h2>
-                                        <p class="w-90 md-w-100">Trabajamos con soluciones genéticas orientadas a productividad, uniformidad y eficiencia en la producción avícola.</p>
+                                    <div class="col-xl-4 col-lg-5 col-md-6 pt-8 pb-8{% if forloop.first %} xs-pt-12 xs-pb-12{% endif %}">
+                                        <span class="fs-19 lh-20 ls-0px fw-600 text-dark-gray d-inline-block text-decoration-line-bottom-medium border-color-base-color mb-25px">{{ tab.label }}</span>
+                                        <h2 class="alt-font fw-700 ls-minus-1px text-dark-gray mb-10px">{{ tab.title }}<span class="text-base-color">.</span></h2>
+                                        {% if tab.text %}<p class="w-90 md-w-100">{{ tab.text }}</p>{% endif %}
+                                        {% if tab.focus %}
                                         <div class="flex-row d-flex align-items-center border border-color-transparent-dark-very-light border-radius-6px w-90 sm-w-100 p-25px mb-15px xs-p-15px">
                                             <div class="col-auto align-items-center d-flex mx-auto">
                                                 <span class="fs-22 alt-font text-dark-gray mb-0 me-5px">Enfoque</span>
                                             </div>
                                             <div class="col">
-                                                <h5 class="alt-font fw-700 text-dark-gray mb-0 lh-inherit">Genética Cobb</h5>
+                                                <h5 class="alt-font fw-700 text-dark-gray mb-0 lh-inherit">{{ tab.focus }}</h5>
                                             </div>
-                                            <div class="fs-12 lh-30 fw-700 ls-0px text-dark-gray text-uppercase bg-base-color-transparent box-shadow-medium border-radius-26px ps-20px pe-20px">Alto desempeño</div>
                                         </div>
+                                        {% endif %}
                                         <p class="fs-15 mb-30px">Conoce nuestra <span class="fw-600 text-dark-gray text-decoration-line-bottom">solución recomendada</span> y recibe asesoría especializada.</p>
-                                        <a href="{% url 'productos' %}" class="btn btn-large btn-round-edge btn-dark-gray btn-slide-right">Conocer más<span class="bg-cultured"></span></a>
+                                        <a href="{{ tab.url }}" class="btn btn-large btn-round-edge btn-dark-gray btn-slide-right">Conocer más<span class="bg-cultured"></span></a>
                                     </div>
                                     <div class="col-lg-7 col-md-6 offset-xl-1 sm-pb-8">
-                                        <div class="h-100 outside-box-right-20 cover-background sm-h-350px sm-me-0" style="background-image: url({% static 'crafto/images/gravior/home/solution-genetics.jpg' %})"></div>
-                                    </div>                                    
+                                        <div class="h-100 outside-box-right-20 cover-background sm-h-350px sm-me-0"{% if tab.image %} style="background-image: url({{ tab.image.url }})"{% endif %}></div>
+                                    </div>
                                 </div>
                             </div>
                             <!-- end tab content -->
-                            <!-- start tab content -->
-                            <div class="tab-pane fade in" id="tab_eight2">
-                                <div class="row">
-                                    <div class="col-xl-4 col-lg-5 col-md-6 pt-8 pb-8">
-                                        <span class="fs-19 lh-20 ls-0px fw-600 text-dark-gray d-inline-block text-decoration-line-bottom-medium border-color-base-color mb-25px">Calidad y bioseguridad</span>
-                                        <h2 class="alt-font fw-700 ls-minus-1px text-dark-gray mb-10px">Procesos seguros para proteger cada etapa productiva<span class="text-base-color">.</span></h2>
-                                        <p class="w-90 md-w-100">Fortalecemos la prevención y el control mediante protocolos, buenas prácticas y acompañamiento especializado.</p>
-                                        <div class="flex-row d-flex align-items-center border border-color-transparent-dark-very-light border-radius-6px w-90 sm-w-100 p-25px mb-15px xs-p-15px">
-                                            <div class="col-auto align-items-center d-flex mx-auto">
-                                                <span class="fs-22 alt-font text-dark-gray mb-0 me-5px">Enfoque</span>
-                                            </div>
-                                            <div class="col">
-                                                <h5 class="alt-font fw-700 text-dark-gray mb-0 lh-inherit">Bioseguridad</h5>
-                                            </div>
-                                            <div class="fs-12 lh-30 fw-700 ls-0px text-dark-gray text-uppercase bg-base-color-transparent box-shadow-medium border-radius-26px ps-20px pe-20px">Procesos seguros</div>
-                                        </div>
-                                        <p class="fs-15 mb-30px">Conoce nuestra <span class="fw-600 text-dark-gray text-decoration-line-bottom">solución recomendada</span> y recibe asesoría especializada.</p>
-                                        <a href="{% url 'productos' %}" class="btn btn-large btn-round-edge btn-dark-gray btn-slide-right">Conocer más<span class="bg-cultured"></span></a>
-                                    </div>
-                                    <div class="col-lg-7 col-md-6 offset-xl-1 sm-pb-8">
-                                        <div class="h-100 outside-box-right-20 cover-background sm-h-350px sm-me-0" style="background-image: url({% static 'crafto/images/gravior/home/solution-biosecurity.jpg' %})"></div>
-                                    </div>                                    
-                                </div>
-                            </div>
-                            <!-- end tab content -->
-                            <!-- start tab content -->
-                            <div class="tab-pane fade in" id="tab_eight3">
-                                <div class="row">
-                                    <div class="col-xl-4 col-lg-5 col-md-6 pt-8 pb-8">
-                                        <span class="fs-19 lh-20 ls-0px fw-600 text-dark-gray d-inline-block text-decoration-line-bottom-medium border-color-base-color mb-25px">Asesoría especializada</span>
-                                        <h2 class="alt-font fw-700 ls-minus-1px text-dark-gray mb-10px">Acompañamiento técnico para tomar mejores decisiones<span class="text-base-color">.</span></h2>
-                                        <p class="w-90 md-w-100">Acompañamos al productor con conocimiento técnico aplicado a las necesidades reales de cada operación.</p>
-                                        <div class="flex-row d-flex align-items-center border border-color-transparent-dark-very-light border-radius-6px w-90 sm-w-100 p-25px mb-15px xs-p-15px">
-                                            <div class="col-auto align-items-center d-flex mx-auto">
-                                                <span class="fs-22 alt-font text-dark-gray mb-0 me-5px">Enfoque</span>
-                                            </div>
-                                            <div class="col">
-                                                <h5 class="alt-font fw-700 text-dark-gray mb-0 lh-inherit">Asesoría técnica</h5>
-                                            </div>
-                                            <div class="fs-12 lh-30 fw-700 ls-0px text-dark-gray text-uppercase bg-base-color-transparent box-shadow-medium border-radius-26px ps-20px pe-20px">Respaldo técnico</div>
-                                        </div>
-                                        <p class="fs-15 mb-30px">Conoce nuestra <span class="fw-600 text-dark-gray text-decoration-line-bottom">solución recomendada</span> y recibe asesoría especializada.</p>
-                                        <a href="{% url 'productos' %}" class="btn btn-large btn-round-edge btn-dark-gray btn-slide-right">Conocer más<span class="bg-cultured"></span></a>
-                                    </div>
-                                    <div class="col-lg-7 col-md-6 offset-xl-1 sm-pb-8">
-                                        <div class="h-100 outside-box-right-20 cover-background sm-h-350px sm-me-0" style="background-image: url({% static 'crafto/images/gravior/home/solution-technical.jpg' %})"></div>
-                                    </div>                                    
-                                </div>
-                            </div>
-                            <!-- end tab content -->
-                            <!-- start tab content -->
-                            <div class="tab-pane fade in" id="tab_eight4">
-                                <div class="row">
-                                    <div class="col-xl-4 col-lg-5 col-md-6 pt-8 pb-8">
-                                        <span class="fs-19 lh-20 ls-0px fw-600 text-dark-gray d-inline-block text-decoration-line-bottom-medium border-color-base-color mb-25px">Instalaciones tecnificadas</span>
-                                        <h2 class="alt-font fw-700 ls-minus-1px text-dark-gray mb-10px">Infraestructura orientada a eficiencia, manejo y bienestar<span class="text-base-color">.</span></h2>
-                                        <p class="w-90 md-w-100">Promovemos entornos productivos funcionales, tecnificados y alineados con las exigencias de la avicultura moderna.</p>
-                                        <div class="flex-row d-flex align-items-center border border-color-transparent-dark-very-light border-radius-6px w-90 sm-w-100 p-25px mb-15px xs-p-15px">
-                                            <div class="col-auto align-items-center d-flex mx-auto">
-                                                <span class="fs-22 alt-font text-dark-gray mb-0 me-5px">Enfoque</span>
-                                            </div>
-                                            <div class="col">
-                                                <h5 class="alt-font fw-700 text-dark-gray mb-0 lh-inherit">Instalaciones</h5>
-                                            </div>
-                                            <div class="fs-12 lh-30 fw-700 ls-0px text-dark-gray text-uppercase bg-base-color-transparent box-shadow-medium border-radius-26px ps-20px pe-20px">Eficiencia</div>
-                                        </div>
-                                        <p class="fs-15 mb-30px">Conoce nuestra <span class="fw-600 text-dark-gray text-decoration-line-bottom">solución recomendada</span> y recibe asesoría especializada.</p>
-                                        <a href="{% url 'productos' %}" class="btn btn-large btn-round-edge btn-dark-gray btn-slide-right">Conocer más<span class="bg-cultured"></span></a>
-                                    </div>
-                                    <div class="col-lg-7 col-md-6 offset-xl-1 sm-pb-8">
-                                        <div class="h-100 outside-box-right-20 cover-background sm-h-350px sm-me-0" style="background-image: url({% static 'crafto/images/gravior/home/solution-facilities.jpg' %})"></div>
-                                    </div>                                    
-                                </div>
-                            </div>
-                            <!-- end tab content -->
-                            <!-- start tab content -->
-                            <div class="tab-pane fade in" id="tab_eight5">
-                                <div class="row">
-                                    <div class="col-xl-4 col-lg-5 col-md-6 pt-8 pb-8">
-                                        <span class="fs-19 lh-20 ls-0px fw-600 text-dark-gray d-inline-block text-decoration-line-bottom-medium border-color-base-color mb-25px">Producción sostenible</span>
-                                        <h2 class="alt-font fw-700 ls-minus-1px text-dark-gray mb-10px">Buenas prácticas para crecer con responsabilidad<span class="text-base-color">.</span></h2>
-                                        <p class="w-90 md-w-100">Integramos eficiencia, bienestar, responsabilidad y mejora continua como parte de una producción sostenible.</p>
-                                        <div class="flex-row d-flex align-items-center border border-color-transparent-dark-very-light border-radius-6px w-90 sm-w-100 p-25px mb-15px xs-p-15px">
-                                            <div class="col-auto align-items-center d-flex mx-auto">
-                                                <span class="fs-22 alt-font text-dark-gray mb-0 me-5px">Enfoque</span>
-                                            </div>
-                                            <div class="col">
-                                                <h5 class="alt-font fw-700 text-dark-gray mb-0 lh-inherit">Sostenibilidad</h5>
-                                            </div>
-                                            <div class="fs-12 lh-30 fw-700 ls-0px text-dark-gray text-uppercase bg-base-color-transparent box-shadow-medium border-radius-26px ps-20px pe-20px">Responsabilidad</div>
-                                        </div>
-                                        <p class="fs-15 mb-30px">Conoce nuestra <span class="fw-600 text-dark-gray text-decoration-line-bottom">solución recomendada</span> y recibe asesoría especializada.</p>
-                                        <a href="{% url 'productos' %}" class="btn btn-large btn-round-edge btn-dark-gray btn-slide-right">Conocer más<span class="bg-cultured"></span></a>
-                                    </div>
-                                    <div class="col-lg-7 col-md-6 offset-xl-1 sm-pb-8">
-                                        <div class="h-100 outside-box-right-20 cover-background sm-h-350px sm-me-0" style="background-image: url({% static 'crafto/images/gravior/home/solution-sustainability.jpg' %})"></div>
-                                    </div>                                    
-                                </div>
-                            </div>
-                            <!-- end tab content -->                            
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -1245,16 +505,15 @@
             <div class="border-bottom border-1 border-color-extra-medium-gray bg-white">
                 <div class="container tab-style-08">
                     <ul class="nav nav-tabs fs-24 fw-500 alt-font border-0 text-center">
-                        <li class="nav-item"><a data-bs-toggle="tab" href="#tab_eight1" class="nav-link active">Genética<span class="tab-border bg-dark-gray"></span></a></li>
-                        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab_eight2">Bioseguridad<span class="tab-border bg-dark-gray"></span></a></li>
-                        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab_eight3">Asesoría<span class="tab-border bg-dark-gray"></span></a></li>
-                        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab_eight4">Instalaciones<span class="tab-border bg-dark-gray"></span></a></li>
-                        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab_eight5">Sostenibilidad<span class="tab-border bg-dark-gray"></span></a></li>
+                        {% for tab in solution_tabs %}
+                        <li class="nav-item"><a{% if forloop.first %} data-bs-toggle="tab" href="#tab_eight{{ forloop.counter }}" class="nav-link active"{% else %} class="nav-link" data-bs-toggle="tab" href="#tab_eight{{ forloop.counter }}"{% endif %}>{{ tab.label }}<span class="tab-border bg-dark-gray"></span></a></li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>
         </section>
         <!-- end section -->
+        {% endif %}
         <!-- start section -->
         <section class="position-relative overflow-hidden">
             <div class="container">
@@ -1293,51 +552,23 @@
                         <span class="fs-19 lh-20 ls-0px fw-600 text-dark-gray d-inline-block text-decoration-line-bottom-medium border-color-base-color mb-25px">Conocimiento aplicado</span>
                         <h2 class="h1 alt-font fw-700 ls-minus-1px text-dark-gray">Respuestas para una producción avícola mejor gestionada<span class="text-base-color">.</span></h2>
                         <div class="accordion accordion-style-06 text-start" id="accordion-style-07">
+                            {% for area in knowledge_areas %}
                             <!-- start accordion item -->
-                            <div class="accordion-item active-accordion">
+                            <div class="accordion-item{% if forloop.first %} active-accordion{% endif %}">
                                 <div class="accordion-header">
-                                    <a href="#" data-bs-toggle="collapse" data-bs-target="#accordion-style-07-01" aria-expanded="true" data-bs-parent="#accordion-style-07">
-                                        <div class="accordion-title fs-20 position-relative pe-0 alt-font text-dark-gray fw-500 mb-0">¿Cómo aporta la genética al desempeño productivo?</div>
+                                    <a href="#" data-bs-toggle="collapse" data-bs-target="#accordion-style-07-{{ forloop.counter|stringformat:"02d" }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}" data-bs-parent="#accordion-style-07">
+                                        <div class="accordion-title fs-20 position-relative pe-0 alt-font text-dark-gray fw-500 mb-0">{{ area.name }}</div>
                                     </a>
                                 </div>
-                                <div id="accordion-style-07-01" class="accordion-collapse collapse show" data-bs-parent="#accordion-style-07">
+                                <div id="accordion-style-07-{{ forloop.counter|stringformat:"02d" }}" class="accordion-collapse collapse{% if forloop.first %} show{% endif %}" data-bs-parent="#accordion-style-07">
                                     <div class="accordion-body last-paragraph-no-margin">
-                                        <p>La genética es el punto de partida para expresar potencial productivo cuando se integra con manejo, nutrición, ambiente y sanidad.</p>
-                                        <i class="line-icon-Sand-watch icon-extra-double-large opacity-2"></i>
+                                        <p>{{ area.description }}</p>
+                                        {% if area.icon_class %}<i class="{{ area.icon_class }} icon-extra-double-large opacity-2"></i>{% endif %}
                                     </div>
                                 </div>
                             </div>
                             <!-- end accordion item -->
-                            <!-- start accordion item -->
-                            <div class="accordion-item">
-                                <div class="accordion-header">
-                                    <a href="#" data-bs-toggle="collapse" data-bs-target="#accordion-style-07-02" aria-expanded="false" data-bs-parent="#accordion-style-07">
-                                        <div class="accordion-title fs-20 position-relative pe-0 alt-font text-dark-gray fw-500 mb-0">¿Por qué la bioseguridad es clave en la producción?</div>
-                                    </a>
-                                </div>
-                                <div id="accordion-style-07-02" class="accordion-collapse collapse" data-bs-parent="#accordion-style-07">
-                                    <div class="accordion-body last-paragraph-no-margin">
-                                        <p>La bioseguridad ayuda a prevenir riesgos sanitarios y a proteger la continuidad, estabilidad y desempeño de la operación avícola.</p>
-                                        <i class="line-icon-Car-Wheel icon-extra-double-large opacity-2"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end accordion item -->
-                            <!-- start accordion item -->
-                            <div class="accordion-item">
-                                <div class="accordion-header">
-                                    <a href="#" data-bs-toggle="collapse" data-bs-target="#accordion-style-07-03" aria-expanded="false" data-bs-parent="#accordion-style-07">
-                                        <div class="accordion-title fs-20 position-relative pe-0 alt-font text-dark-gray fw-500 mb-0">¿GRAVIOR brinda acompañamiento técnico especializado?</div>
-                                    </a>
-                                </div>
-                                <div id="accordion-style-07-03" class="accordion-collapse collapse" data-bs-parent="#accordion-style-07">
-                                    <div class="accordion-body last-paragraph-no-margin">
-                                        <p>GRAVIOR integra acompañamiento técnico para apoyar decisiones de manejo y fortalecer los resultados en cada etapa productiva.</p>
-                                        <i class="line-icon-Gear-2 icon-extra-double-large opacity-2"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end accordion item -->
+                            {% endfor %}
                         </div>                        
                     </div>
                 </div>
@@ -1345,49 +576,37 @@
             </div>  
         </section>
         <!-- end section -->
+        {% if process_steps %}
         <!-- start section -->
         <section class="pt-0">
             <div class="container">
                 <div class="row" data-anime='{ "el": "childs", "translateX": [30, 0], "opacity": [0,1], "duration": 600, "delay": 0, "staggervalue": 200, "easing": "easeOutQuad" }'>
                     <!-- start process step item -->
                     <div class="col-xl-3 text-center text-xl-start lg-mb-40px sm-mb-20px">
-                        <h3 class="alt-font fw-700 ls-minus-1px sm-ls-0px text-dark-gray mb-15px">Trabajamos junto a cada productor<span class="text-base-color">.</span></h3>
+                        {% with cta=ctas.home_process %}{% if cta %}
+                        <h3 class="alt-font fw-700 ls-minus-1px sm-ls-0px text-dark-gray mb-15px">{{ cta.title }}<span class="text-base-color">.</span></h3>
                         <div class="d-flex align-items-center justify-content-center justify-content-xl-start">
-                            <i class="bi bi-telephone-outbound icon-extra-medium text-base-color me-10px"></i><a href="tel:1-800-222-000" class="fs-15 lh-16 fw-700 text-uppercase text-dark-gray text-decoration-line-bottom">Contactar asesor</a>
+                            <i class="bi bi-telephone-outbound icon-extra-medium text-base-color me-10px"></i><a href="{{ cta.button_url }}" class="fs-15 lh-16 fw-700 text-uppercase text-dark-gray text-decoration-line-bottom">{{ cta.button_text }}</a>
                         </div>
+                        {% endif %}{% endwith %}
                     </div>
                     <!-- end process step item --> 
+                    {% for step in process_steps %}
                     <!-- start process step item -->
-                    <div class="col-xl-3 col-md-4 col-sm-6 process-step-style-10 last-paragraph-no-margin ps-5 pt-40px pt-40px md-pt-30px position-relative sm-mb-30px">
+                    <div class="col-xl-3 col-md-4 col-sm-6 process-step-style-10 last-paragraph-no-margin ps-5 pt-40px{% if forloop.first %} pt-40px{% endif %} md-pt-30px position-relative{% if not forloop.last %} sm-mb-30px{% endif %}">
                         <div class="process-step-icon-box position-absolute left-30px top-0px md-left-15px">
-                            <div class="number d-inline-block alt-font fs-80 fw-700 text-outline text-outline-color-base-color opacity-5">01</div>
+                            <div class="number d-inline-block alt-font fs-80 fw-700 text-outline text-outline-color-base-color opacity-5">{{ step.number }}</div>
                         </div>
-                        <span class="alt-font fs-24 fw-500 text-dark-gray position-relative">Diagnóstico</span>
-                        <p>Conocemos las necesidades, condiciones y objetivos de cada operación.</p>
+                        <span class="alt-font fs-24 fw-500 text-dark-gray position-relative">{{ step.title }}</span>
+                        <p>{{ step.description }}</p>
                     </div>
                     <!-- end process step item --> 
-                    <!-- start process step item -->
-                    <div class="col-xl-3 col-md-4 col-sm-6 process-step-style-10 last-paragraph-no-margin ps-5 pt-40px md-pt-30px position-relative sm-mb-30px">
-                        <div class="process-step-icon-box position-absolute left-30px top-0px md-left-15px">
-                            <div class="number d-inline-block alt-font fs-80 fw-700 text-outline text-outline-color-base-color opacity-5">02</div>
-                        </div>
-                        <span class="alt-font fs-24 fw-500 text-dark-gray position-relative">Estrategia</span>
-                        <p>Definimos soluciones técnicas acordes con la realidad productiva.</p>
-                    </div>
-                    <!-- end process step item --> 
-                    <!-- start process step item -->
-                    <div class="col-xl-3 col-md-4 col-sm-6 process-step-style-10 last-paragraph-no-margin ps-5 pt-40px md-pt-30px position-relative">
-                        <div class="process-step-icon-box position-absolute left-30px top-0px md-left-15px">
-                            <div class="number d-inline-block alt-font fs-80 fw-700 text-outline text-outline-color-base-color opacity-5">03</div>
-                        </div>
-                        <span class="alt-font fs-24 fw-500 text-dark-gray position-relative">Acompañamiento</span>
-                        <p>Damos seguimiento para fortalecer procesos y resultados de manera continua.</p>
-                    </div>
-                    <!-- end process step item --> 
+                    {% endfor %}
                 </div>
             </div>  
         </section>
         <!-- end section -->
+        {% endif %}
         <!-- start section -->
         <section class="bg-gradient-very-light-gray z-index-0 position-relative overflow-hidden pb-0 md-pb-5">
             <img src="{% static 'crafto/images/demo-gym-and-fitness-home-17.png' %}" class="h-190px z-index-minus-1 position-absolute left-0px top-0px lg-h-120px d-none d-md-inline-block" data-bottom-top="transform: translate3d(80px, 0px, 0px);" data-top-bottom="transform: translate3d(-150px, 0px, 0px);" alt="" >
@@ -1652,28 +871,8 @@
         <!-- start footer -->
 {% endblock %}
 
-{% block after_footer %}
-<!-- start subscription popup -->
-        <div id="subscribe-popup" class="mfp-hide subscribe-popup">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-xl-4 col-md-6 col-sm-8 bg-transparent">
-                        <div class="row position-relative box-shadow-quadruple-large">
-                            <div class="col-12 p-0 newsletter-popup position-relative text-center">
-                                <a href="{% url 'productos' %}">
-                                    <img src="https://placehold.co/480x706" alt="">
-                                </a>
-                            </div>
-                            <button title="Close (Esc)" type="button" class="mfp-close text-white"></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- end subscription popup -->
-{% endblock %}
-
 {% block extra_js %}
+{% if hero_slides %}
 <script type="text/javascript">
             /* https://learn.jquery.com/using-jquery-core/document-ready/ */
             jQuery(document).ready(function () {
@@ -1777,4 +976,5 @@
                 );
             });
         </script>
+{% endif %}
 {% endblock %}
