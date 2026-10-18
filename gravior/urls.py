@@ -10,16 +10,16 @@ from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('inicio.urls')),
-    path('', include('empresa.urls')),
-    path('', include('genetica.urls')),
-    path('', include('calidad.urls')),
-    path('', include('productos.urls')),
-    path('', include('infraestructura.urls')),
-    path('', include('equipo.urls')),
-    path('', include('aliados.urls')),
-    path('', include('actualidad.urls')),
-    path('', include('contacto.urls')),
+    path('', include('apps.inicio.urls')),
+    path('', include('apps.empresa.urls')),
+    path('', include('apps.genetica.urls')),
+    path('', include('apps.calidad.urls')),
+    path('', include('apps.productos.urls')),
+    path('', include('apps.infraestructura.urls')),
+    path('', include('apps.equipo.urls')),
+    path('', include('apps.aliados.urls')),
+    path('', include('apps.actualidad.urls')),
+    path('', include('apps.contacto.urls')),
 ]
 
 if settings.DEBUG:

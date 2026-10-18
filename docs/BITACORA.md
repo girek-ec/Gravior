@@ -219,3 +219,35 @@ arrastrado del Home).
   (se usa como `title` del elemento). ProcessStep.icon_class tampoco se
   muestra (el diseño usa el número).
 - Error JS intermitente del carrusel de testimonios (frontend).
+
+---
+
+## Reorganización · apps dentro de `apps/` (18/10/2026)
+
+Para despejar la raíz del proyecto, las 11 apps se movieron con `git mv` a
+`apps/<app>/` (se conserva el historial). Templates, static y media no se
+movieron.
+
+```
+Gravior/
+├── apps/            core, inicio, empresa, genetica, calidad, productos,
+│                    infraestructura, equipo, aliados, actualidad, contacto
+├── gravior/         settings.py, urls.py, wsgi.py, asgi.py
+├── templates/  static/  docs/  media/ (no versionado)
+└── manage.py  requirements.txt  README.md
+```
+
+- Cada `apps.py` usa `name = 'apps.<app>'` y **`label = '<app>'`**. El label
+  es el que Django usa para nombrar tablas (`core_siteconfiguration`), en
+  `django_migrations`, en los content types, los permisos y las rutas del
+  admin (`admin:core_siteconfiguration_change`). Conservarlo evita recrear
+  migraciones, renombrar tablas o perder datos y permisos.
+- Se actualizaron `INSTALLED_APPS`, el admin personalizado
+  (`apps.core.admin_site.GraviorAdminConfig`), el context processor, los
+  `include()` de `gravior/urls.py`, los imports entre apps, el comando
+  `seed_bloque_a`, los tests y los imports de `core.validators` dentro de
+  las migraciones (solo el import; el esquema no cambia).
+- Verificación: `check` sin issues, `makemigrations --check` sin cambios,
+  `migrate` sin pendientes, 16 tests OK, 11 URLs públicas + admin en 200,
+  mismos registros del Bloque A y superusuario intacto. Respaldo previo de
+  `db.sqlite3` fuera del repo.

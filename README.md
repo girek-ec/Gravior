@@ -47,19 +47,23 @@ python manage.py test
 
 ## Estructura
 
+Todas las apps están dentro de `apps/` (paquete Python). Cada una conserva su
+*label* original (`core`, `inicio`, …), por lo que las tablas y las migraciones
+no cambian de nombre.
+
 | App | Contenido |
 | --- | --- |
-| `core` | Configuración general, correos, redes, CTAs y utilidades compartidas |
-| `inicio` | Slider, diferenciales, indicadores y proceso de la página de inicio |
-| `empresa` | Quiénes somos y valores corporativos |
-| `genetica` | Líneas genéticas, características y documentos |
-| `calidad` | Calidad y bioseguridad |
-| `productos` | Catálogo informativo (sin tienda) |
-| `infraestructura` | Instalaciones y galería |
-| `equipo` | Equipo técnico |
-| `aliados` | Aliados estratégicos |
-| `actualidad` | Noticias y artículos |
-| `contacto` | Motivos de consulta y mensajes recibidos |
+| `apps/core` | Configuración general, correos, redes, CTAs y utilidades compartidas |
+| `apps/inicio` | Slider, diferenciales, indicadores y proceso de la página de inicio |
+| `apps/empresa` | Quiénes somos y valores corporativos |
+| `apps/genetica` | Líneas genéticas, características y documentos |
+| `apps/calidad` | Calidad y bioseguridad |
+| `apps/productos` | Catálogo informativo (sin tienda) |
+| `apps/infraestructura` | Instalaciones y galería |
+| `apps/equipo` | Equipo técnico |
+| `apps/aliados` | Aliados estratégicos |
+| `apps/actualidad` | Noticias y artículos |
+| `apps/contacto` | Motivos de consulta y mensajes recibidos |
 
 - `templates/base.html`: layout Crafto con bloques `title`, `meta_description`,
   `extra_css`, `extra_head`, `nav`, `content`, `footer`, `after_footer` y `extra_js`.

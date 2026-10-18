@@ -47,24 +47,24 @@ CSRF_TRUSTED_ORIGINS = env_list('CSRF_TRUSTED_ORIGINS')
 # Aplicaciones
 
 INSTALLED_APPS = [
-    'core.admin_site.GraviorAdminConfig',  # admin con grupos ordenados (core/admin_site.py)
+    'apps.core.admin_site.GraviorAdminConfig',  # admin con grupos ordenados (apps/core/admin_site.py)
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Apps del proyecto (una por dominio de contenido)
-    'core',
-    'inicio',
-    'empresa',
-    'genetica',
-    'calidad',
-    'productos',
-    'infraestructura',
-    'equipo',
-    'aliados',
-    'actualidad',
-    'contacto',
+    'apps.core',
+    'apps.inicio',
+    'apps.empresa',
+    'apps.genetica',
+    'apps.calidad',
+    'apps.productos',
+    'apps.infraestructura',
+    'apps.equipo',
+    'apps.aliados',
+    'apps.actualidad',
+    'apps.contacto',
 ]
 
 MIDDLEWARE = [
@@ -89,7 +89,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'core.context_processors.site',
+                'apps.core.context_processors.site',
             ],
         },
     },
