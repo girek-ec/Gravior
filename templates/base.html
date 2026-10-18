@@ -2,12 +2,12 @@
 <!doctype html>
 <html class="no-js" lang="es">
     <head>
-        <title>{% block title %}{% firstof site_config.default_seo_title site_config.company_name %}{% endblock %}</title>
+        <title>{% block title %}{% firstof seo_title site_config.default_seo_title site_config.company_name %}{% endblock %}</title>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="author" content="{{ site_config.company_name }}">
         <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-        <meta name="description" content="{% block meta_description %}{% firstof site_config.default_seo_description site_config.short_description %}{% endblock %}">
+        <meta name="description" content="{% block meta_description %}{% firstof seo_description site_config.default_seo_description site_config.short_description %}{% endblock %}">
         <!-- favicon icon -->
         <link rel="shortcut icon" href="{{ favicon_url }}">
         <link rel="apple-touch-icon" href="{% static 'crafto/images/apple-touch-icon-57x57.png' %}">
