@@ -23,7 +23,23 @@ class TimeStampedModel(models.Model):
         abstract = True
 
 
-class SiteConfiguration(TimeStampedModel):
+class SingletonModel(models.Model):
+    """Modelo del que debe existir una sola instancia (sección 21.1)."""
+
+    class Meta:
+        abstract = True
+
+    def clean(self):
+        super().clean()
+        if not self.pk and type(self).objects.exists():
+            raise ValidationError(f'Ya existe un registro de {self._meta.verbose_name}; edita el existente.')
+
+    @classmethod
+    def get_current(cls):
+        return cls.objects.first()
+
+
+class SiteConfiguration(SingletonModel, TimeStampedModel):
     """Singleton con la identidad y los datos corporativos del sitio."""
 
     company_name = models.CharField('nombre comercial', max_length=120)
@@ -77,14 +93,6 @@ class SiteConfiguration(TimeStampedModel):
 
     def __str__(self):
         return self.company_name
-
-    def clean(self):
-        if not self.pk and SiteConfiguration.objects.exists():
-            raise ValidationError('Ya existe una configuración general; edita la existente.')
-
-    @classmethod
-    def get_current(cls):
-        return cls.objects.first()
 
     @staticmethod
     def _digits(value):
@@ -180,3 +188,17 @@ class CallToAction(TimeStampedModel):
 
     def __str__(self):
         return f'{self.title} ({self.code})'
+
+
+def unique_slug(instance, value, field_name='slug', max_length=None):
+    """Slug único a partir de `value`; agrega -2, -3… si ya existe en el modelo."""
+    from django.utils.text import slugify
+    max_length = max_length or instance._meta.get_field(field_name).max_length
+    base = (slugify(value) or 'item')[:max_length]
+    slug, n = base, 2
+    queryset = type(instance).objects.exclude(pk=instance.pk)
+    while queryset.filter(**{field_name: slug}).exists():
+        suffix = f'-{n}'
+        slug = f'{base[:max_length - len(suffix)]}{suffix}'
+        n += 1
+    return slug

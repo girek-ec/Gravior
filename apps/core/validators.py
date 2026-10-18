@@ -58,3 +58,25 @@ validate_phone = RegexValidator(
     regex=r'^\+?[\d\s()-]{7,20}$',
     message='Escribe solo números, espacios y opcionalmente el prefijo +, por ejemplo +593 99 000 0000.',
 )
+
+
+validate_pdf_extension = FileExtensionValidator(
+    allowed_extensions=['pdf'],
+    message='Solo se permiten documentos PDF.',
+)
+
+
+def validate_pdf_signature(file):
+    """Comprueba que el archivo empiece como un PDF real (%PDF), no solo por la extensión."""
+    if not file:
+        return
+    position = file.tell() if hasattr(file, 'tell') else 0
+    file.seek(0)
+    header = file.read(5)
+    file.seek(position)
+    if header != b'%PDF-':
+        raise ValidationError('El archivo no parece ser un PDF válido.')
+
+
+def pdf_validators(max_mb=10):
+    return [validate_pdf_extension, validate_pdf_signature, MaxFileSizeValidator(max_mb)]

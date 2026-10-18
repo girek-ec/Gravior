@@ -1,13 +1,11 @@
 from django.contrib import admin
-from django.shortcuts import redirect
-from django.urls import reverse
 
-from .admin_utils import image_preview
+from .admin_utils import SingletonAdminMixin, image_preview
 from .models import CallToAction, CorporateEmail, SiteConfiguration, SocialNetwork
 
 
 @admin.register(SiteConfiguration)
-class SiteConfigurationAdmin(admin.ModelAdmin):
+class SiteConfigurationAdmin(SingletonAdminMixin, admin.ModelAdmin):
     """Singleton: una sola configuración, sin opción de crear otra ni de borrarla."""
 
     readonly_fields = ('logo_preview', 'logo_white_preview', 'isotype_preview', 'favicon_preview',
@@ -49,18 +47,6 @@ class SiteConfigurationAdmin(admin.ModelAdmin):
     @admin.display(description='vista previa')
     def favicon_preview(self, obj):
         return image_preview(obj.favicon, height=32)
-
-    def has_add_permission(self, request):
-        return not SiteConfiguration.objects.exists()
-
-    def has_delete_permission(self, request, obj=None):
-        return False
-
-    def changelist_view(self, request, extra_context=None):
-        config = SiteConfiguration.objects.first()
-        if config:
-            return redirect(reverse('admin:core_siteconfiguration_change', args=[config.pk]))
-        return redirect(reverse('admin:core_siteconfiguration_add'))
 
 
 @admin.register(CorporateEmail)
