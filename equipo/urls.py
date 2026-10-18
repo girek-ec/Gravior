@@ -6,5 +6,4 @@ app_name = 'equipo'
 
 urlpatterns = [
     path('equipo/', views.TeamView.as_view(), name='index'),
-    path('aliados/', views.PartnerView.as_view(), name='aliados'),
 ]

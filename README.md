@@ -48,19 +48,26 @@ python manage.py test
 
 | App | Contenido |
 | --- | --- |
-| `core` | Configuración general, correos, redes, CTAs y bloques de Inicio |
+| `core` | Configuración general, correos, redes, CTAs y utilidades compartidas |
+| `inicio` | Slider, diferenciales, indicadores y proceso de la página de inicio |
 | `empresa` | Quiénes somos y valores corporativos |
 | `genetica` | Líneas genéticas, características y documentos |
 | `calidad` | Calidad y bioseguridad |
 | `productos` | Catálogo informativo (sin tienda) |
 | `infraestructura` | Instalaciones y galería |
-| `equipo` | Equipo técnico y aliados |
+| `equipo` | Equipo técnico |
+| `aliados` | Aliados estratégicos |
 | `actualidad` | Noticias y artículos |
 | `contacto` | Motivos de consulta y mensajes recibidos |
 
 - `templates/`: `base.html` y un template por sección.
 - `static/`: assets de Crafto (css, js, images, fonts).
 - `media/`: archivos subidos desde el admin (no se versiona).
+
+## Documentación
+
+`docs/` contiene el documento maestro de arquitectura (fuente principal de
+modelos, admin y plan por bloques) y el brief del cliente.
 
 ## Correo
 

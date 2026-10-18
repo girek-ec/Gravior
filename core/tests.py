@@ -2,14 +2,14 @@ from django.test import TestCase
 from django.urls import reverse
 
 PAGES = [
-    ('core:index', '/'),
+    ('inicio:index', '/'),
     ('empresa:index', '/nosotros/'),
     ('genetica:index', '/genetica/'),
     ('calidad:index', '/calidad-bioseguridad/'),
     ('productos:index', '/productos/'),
     ('infraestructura:index', '/instalaciones/'),
     ('equipo:index', '/equipo/'),
-    ('equipo:aliados', '/aliados/'),
+    ('aliados:index', '/aliados/'),
     ('actualidad:index', '/actualidad/'),
     ('contacto:index', '/contacto/'),
 ]

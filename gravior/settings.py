@@ -55,12 +55,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Apps del proyecto (una por dominio de contenido)
     'core',
+    'inicio',
     'empresa',
     'genetica',
     'calidad',
     'productos',
     'infraestructura',
     'equipo',
+    'aliados',
     'actualidad',
     'contacto',
 ]
