@@ -9,6 +9,9 @@ APP_ORDER = [
 MODEL_ORDER = {
     'core': ['SiteConfiguration', 'CorporateEmail', 'SocialNetwork', 'CallToAction'],
     'inicio': ['HeroSlide', 'Differential', 'Statistic', 'ProcessStep'],
+    'empresa': ['AboutPage', 'CorporateValue'],
+    'genetica': ['GeneticLine', 'GeneticFeature', 'GeneticDocument'],
+    'calidad': ['QualityPage', 'QualityArea', 'QualityStep'],
 }
 
 
