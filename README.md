@@ -28,7 +28,8 @@ Luego:
 
 ```powershell
 python manage.py migrate
-python manage.py seed_bloque_a   # contenidos por defecto (no pisa lo editado)
+python manage.py seed_bloque_a   # contenidos de ejemplo del Bloque A (no pisa lo editado)
+python manage.py seed_bloque_b   # contenidos de ejemplo del Bloque B
 python manage.py createsuperuser
 python manage.py runserver
 ```
@@ -38,6 +39,14 @@ python manage.py runserver
 
 En Linux/macOS la activación es `source venv/bin/activate` y la copia
 `cp .env.example .env`.
+
+## Contenidos de ejemplo
+
+Los comandos `seed_bloque_*` cargan textos e imágenes de ejemplo para que
+ninguna sección quede en blanco. Sin opciones solo crean lo que falta; con
+`--fill-blanks` además completan los campos vacíos de registros existentes,
+sin sobrescribir nunca lo que ya tiene contenido. La lista de lo que debe
+reemplazarse antes de publicar está en `docs/CONTENIDO_EJEMPLO.md`.
 
 ## Tests
 
@@ -75,7 +84,8 @@ no cambian de nombre.
 
 ## Documentación
 
-`docs/` contiene la bitácora de desarrollo (`BITACORA.md`), el documento
+`docs/` contiene la bitácora de desarrollo (`BITACORA.md`), la lista de
+contenido de ejemplo a reemplazar (`CONTENIDO_EJEMPLO.md`), el documento
 maestro de arquitectura (fuente principal de
 modelos, admin y plan por bloques) y el brief del cliente.
 

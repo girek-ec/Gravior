@@ -251,3 +251,116 @@ Gravior/
   `migrate` sin pendientes, 16 tests OK, 11 URLs públicas + admin en 200,
   mismos registros del Bloque A y superusuario intacto. Respaldo previo de
   `db.sqlite3` fuera del repo.
+
+---
+
+## Ajustes del Bloque A (18/10/2026)
+
+### Decisiones del cliente interno
+- Los 2 videos de YouTube de la demo (Home: "Cómo trabajamos" y
+  "Acompañamiento en campo") **se quedan** hasta tener videos propios.
+  Pendiente: reemplazarlos.
+- La franja de Instagram del footer se queda como está.
+- Las franjas de frases en movimiento, los títulos de sección y las etiquetas
+  de menú/footer quedan fijos como diseño.
+- No se agrega campo de enlace a Differential ni CTA final al Home (lo pedirá
+  diseño).
+
+### Regla de textos de ejemplo
+Todo texto editable debe venir con un ejemplo cargado (nada en blanco). En el
+Bloque A se completaron razón social, ciudad, provincia, enlace de mapa de
+ejemplo, textos de apoyo de los CTA e iconos de las etapas. Statistic sigue
+sin cifras.
+
+### `--fill-blanks`
+Los comandos `seed_bloque_*` comparten `apps/core/seeding.py`:
+- Sin opción: un modelo se carga solo si su tabla está vacía; nunca modifica
+  registros existentes.
+- `--fill-blanks`: además completa los campos **vacíos** (también imágenes)
+  de los registros que coinciden por clave (email, name, code, title,
+  number), sin sobrescribir contenido. Si el cliente cambió la clave, el
+  registro no se toca.
+- En la base local completó: configuración general (legal_name, city,
+  province, google_maps_url), texto de los 3 CTA e icon_class de las 3
+  etapas.
+
+---
+
+## Bloque B · Empresa, Genética, Calidad y bioseguridad (18/10/2026)
+
+### Modelos y ubicación
+| Modelo | App (grupo admin) |
+| --- | --- |
+| AboutPage (singleton), CorporateValue | `apps/empresa` (Empresa) |
+| GeneticLine, GeneticFeature, GeneticDocument | `apps/genetica` (Genética) |
+| QualityPage (singleton), QualityArea, QualityStep | `apps/calidad` (Calidad y bioseguridad) |
+
+Campos del documento (secciones 8–10) + `created_at`/`updated_at`.
+
+### Decisiones
+- **Utilidades comunes**: `SingletonModel` y `SingletonAdminMixin` (usados
+  también por SiteConfiguration), `unique_slug` y validadores de PDF
+  (extensión, firma `%PDF-` y 10 MB).
+- **Slugs** de GeneticLine y QualityArea: se autogeneran desde el nombre si
+  están vacíos (sufijo -2, -3 si se repiten), son editables y no cambian si
+  luego se edita el nombre.
+- **on_delete (21.3)**: CASCADE en GeneticFeature y QualityStep (no existen
+  sin su padre); **PROTECT en GeneticDocument**: una línea con documentos no
+  se puede borrar por accidente; hay que retirar antes sus documentos.
+- **Medios**: `media/about/`, `media/about/values/`, `media/genetics/`,
+  `media/genetics/brands/`, `media/genetics/documents/`, `media/quality/`,
+  `media/quality/areas/`.
+- **PDF de ejemplo**: generado en código (`sample_pdf`, PDF 1.4 mínimo de una
+  página) en lugar de reportlab, para no sumar una dependencia solo para un
+  relleno. Validado con pypdf en modo estricto.
+- **Imágenes de relleno** recortadas al centro con Pillow a las proporciones
+  de la maqueta cuando hace falta (líneas genéticas).
+- **SEO por página**: `SeoMixin` pasa `seo_title`/`seo_description`; base.html
+  usa los de la configuración general si están vacíos. Genética usa el SEO
+  general (no hay modelo de página para el listado).
+
+### Mapeo a la maqueta
+- **Nosotros**: cabecera (page_title, intro, main_image); "Nuestra visión"
+  (secondary_image, value_proposition, vision, video: corporate_video_url o el
+  de la maqueta); franja (purpose); "Lo que hacemos" = CorporateValue
+  (imagen, icono, nombre, descripción); "¿Por qué GRAVIOR?" (client_commitment
+  + diferenciales).
+- **Genética**: una sección por línea activa (main_image, brand_name, name,
+  description, documentos activos como descargas, application y brand_logo
+  si existe) y su grilla de características activas (título de la grilla =
+  summary; fondo = secondary_image).
+- **Calidad y bioseguridad**: cabecera y descripción (QualityPage),
+  contadores calculados (áreas publicadas y etapas máximas por área),
+  pestañas = QualityArea, acordeón = QualityStep (número, título,
+  descripción; recuadro con imagen y nombre del área), franja final =
+  cta_text/cta_url.
+- **Home**: "Sobre GRAVIOR" (intro, company_description, main_image);
+  pestañas de soluciones = líneas destacadas + áreas de calidad (máx. 5),
+  con una estructura común lista para sumar productos en el Bloque C;
+  "Conocimiento aplicado" = primeras 3 áreas (nombre, descripción, icono).
+
+### Datos de ejemplo
+`python manage.py seed_bloque_b` (y `--fill-blanks`). Detalle de lo cargado y
+de lo que debe reemplazarse en `docs/CONTENIDO_EJEMPLO.md`. En la base local
+se recargaron una vez las 2 líneas de ejemplo para aplicar el recorte de
+imágenes (eran datos de ejemplo recién creados).
+
+### Verificación
+`check` sin issues · `makemigrations --check` sin cambios · `migrate` al día ·
+34 tests OK · 11 URLs públicas + admin en 200 con datos y con tablas vacías ·
+PDF servido como `application/pdf` · Nosotros, Genética, Calidad y Home
+revisados en navegador a 1366 px y 375 px (pestañas de Calidad cambian
+correctamente) · sin errores de consola en esta revisión.
+
+### Pendientes
+- Campos sin lugar en la maqueta actual (editables y con ejemplo, pero no
+  visibles): AboutPage.mission, QualityPage.quality_commitment y
+  QualityPage.biosecurity_approach. Requieren un bloque aprobado por diseño.
+- La insignia del recuadro "Enfoque" de las pestañas del Home ("Alto
+  desempeño", etc.) se omitió: no hay campo en el modelo y era un claim fijo.
+- En la franja de propósito de Nosotros se perdió el subrayado de las
+  últimas palabras (el texto ahora es un solo campo).
+- Videos de YouTube de la demo, franja de Instagram e imágenes
+  `placehold.co` decorativas siguen pendientes de material propio.
+- Error JS intermitente del carrusel de testimonios: no apareció en esta
+  revisión; sigue anotado.
