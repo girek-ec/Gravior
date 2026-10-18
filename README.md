@@ -70,7 +70,8 @@ python manage.py test
 
 ## Documentación
 
-`docs/` contiene el documento maestro de arquitectura (fuente principal de
+`docs/` contiene la bitácora de desarrollo (`BITACORA.md`), el documento
+maestro de arquitectura (fuente principal de
 modelos, admin y plan por bloques) y el brief del cliente.
 
 ## Correo
