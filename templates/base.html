@@ -1,0 +1,42 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{% endblock %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    {% block nav %}
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{% url 'core:index' %}">Inicio</a></li>
+                <li><a href="{% url 'empresa:index' %}">Quiénes somos</a></li>
+                <li><a href="{% url 'genetica:index' %}">Genética</a></li>
+                <li><a href="{% url 'calidad:index' %}">Calidad y bioseguridad</a></li>
+                <li><a href="{% url 'productos:index' %}">Productos</a></li>
+                <li><a href="{% url 'infraestructura:index' %}">Instalaciones</a></li>
+                <li><a href="{% url 'equipo:index' %}">Equipo</a></li>
+                <li><a href="{% url 'equipo:aliados' %}">Aliados</a></li>
+                <li><a href="{% url 'actualidad:index' %}">Actualidad</a></li>
+                <li><a href="{% url 'contacto:index' %}">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+    {% endblock %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block footer %}
+    <footer>
+        {# Datos corporativos desde SiteConfiguration, CorporateEmail y SocialNetwork (bloque A). #}
+    </footer>
+    {% endblock %}
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
