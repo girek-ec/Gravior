@@ -81,3 +81,49 @@ class SiteContextProcessorTests(TestCase):
         self._config()
         with self.assertRaises(ValidationError):
             SiteConfiguration(company_name='Otra').full_clean()
+
+
+class SeedBloqueATests(TestCase):
+    def setUp(self):
+        import shutil
+        import tempfile
+        from django.test import override_settings
+        self.media = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, self.media, ignore_errors=True)
+        override = override_settings(MEDIA_ROOT=self.media)
+        override.enable()
+        self.addCleanup(override.disable)
+
+    def run_seed(self):
+        from io import StringIO
+        from django.core.management import call_command
+        call_command('seed_bloque_a', stdout=StringIO())
+
+    def test_seed_is_idempotent_and_keeps_edits(self):
+        from inicio.models import Differential, HeroSlide, Statistic
+        from .models import CallToAction, SiteConfiguration
+        self.run_seed()
+        self.assertEqual(SiteConfiguration.objects.count(), 1)
+        self.assertEqual(HeroSlide.objects.count(), 3)
+        self.assertEqual(Differential.objects.count(), 6)
+        self.assertEqual(Statistic.objects.count(), 0)
+
+        config = SiteConfiguration.objects.get()
+        config.company_name = 'Editado por el cliente'
+        config.save()
+        slide = HeroSlide.objects.first()
+        slide.title = 'Título editado'
+        slide.save()
+        CallToAction.objects.filter(code='home_process').delete()
+
+        self.run_seed()
+        self.assertEqual(SiteConfiguration.objects.get().company_name, 'Editado por el cliente')
+        self.assertEqual(HeroSlide.objects.count(), 3)
+        self.assertTrue(HeroSlide.objects.filter(title='Título editado').exists())
+        self.assertTrue(CallToAction.objects.filter(code='home_process').exists())
+
+    def test_pages_render_with_seeded_data(self):
+        self.run_seed()
+        for path in ('/', '/nosotros/', '/contacto/'):
+            with self.subTest(path=path):
+                self.assertEqual(self.client.get(path).status_code, 200)
