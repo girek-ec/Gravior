@@ -47,7 +47,7 @@ CSRF_TRUSTED_ORIGINS = env_list('CSRF_TRUSTED_ORIGINS')
 # Aplicaciones
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    'core.admin_site.GraviorAdminConfig',  # admin con grupos ordenados (core/admin_site.py)
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
