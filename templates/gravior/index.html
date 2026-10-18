@@ -1,6 +1,18 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block extra_css %}
+{% if hero_slides %}
+{# En móvil la demo reemplaza el fondo de cada slide por CSS (gym-and-fitness.css); se usa la imagen móvil o la de escritorio. #}
+<style>
+    @media (max-width: 778px) {
+        {% for slide in hero_slides %}#rs-gym-and-fitness-{{ forloop.counter|stringformat:"02d" }} .tp-bgimg {background-image: url("{% if slide.mobile_image %}{{ slide.mobile_image.url }}{% else %}{{ slide.desktop_image.url }}{% endif %}") !important;}
+        {% endfor %}
+    }
+</style>
+{% endif %}
+{% endblock %}
+
 {% block content %}
 {% if hero_slides %}
 <!-- start slider -->

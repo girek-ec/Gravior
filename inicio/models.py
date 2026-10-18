@@ -20,7 +20,7 @@ class HeroSlide(TimeStampedModel):
         help_text='Fondo del slide. JPG horizontal de 1920 × 1100 px, máx. 5 MB.')
     mobile_image = models.ImageField(
         'imagen móvil', upload_to='hero/', blank=True, validators=image_validators(3),
-        help_text='Versión vertical opcional (768 × 1024 px). La maqueta actual del slider aún no la usa.')
+        help_text='Versión opcional para celulares (pantallas de hasta 778 px). Recomendado: 778 × 900 px. Si se deja vacía se usa la imagen de escritorio.')
     thumbnail = models.ImageField(
         'miniatura', upload_to='hero/', blank=True, validators=image_validators(1),
         help_text='Fondo del botón "Siguiente". 400 × 180 px. Si se deja vacía se usa la imagen de escritorio.')
