@@ -364,3 +364,67 @@ correctamente) · sin errores de consola en esta revisión.
   `placehold.co` decorativas siguen pendientes de material propio.
 - Error JS intermitente del carrusel de testimonios: no apareció en esta
   revisión; sigue anotado.
+
+---
+
+## Actualización de seguridad y de versiones (28 oct 2026)
+
+### Versiones
+| Componente | Antes | Después | Motivo |
+| --- | --- | --- | --- |
+| Python (venv) | 3.10.11 | **3.13.15** | Python 3.10 sin soporte desde el 1 oct 2026; Pillow 13 exige ≥ 3.11 y Django 6.x ≥ 3.12 |
+| pip | 23.0.1 | **26.2.2** | CVE-2026-6357 (corregido en 26.1) |
+| Django | 5.2.18 | **6.1.2** | Parches de seguridad de 6.1.2 (CVE-2026-77050, -84429, -87890, -87975 y la corrección de CVE-2026-15830) y alinear la versión con el resto del equipo. 5.2.18 ya traía los mismos parches, pero el equipo trabaja en 6.1 |
+| Pillow | 12.3.0 | **13.0.0** | 38 correcciones de seguridad (2 críticas, entre ellas el desbordamiento del decodificador JPEG); 12.x no recibe esos parches |
+| python-dotenv | 1.2.4 | 1.2.4 | Sin cambios |
+| asgiref / sqlparse / tzdata (transitivas) | 3.12.1 / 0.6.0 / 2026.5 | 3.13.0 / 0.6.0 / 2026.6 | Las instala Django |
+| Brotli / brotlicffi | no instalados | no instalados | CVE-2026-111497 no aplica |
+| litellm | no instalado | no instalado | La versión maliciosa 1.107.0 no está presente |
+
+`requirements.txt` pasa de versiones fijas a mínimos: `Django>=6.1.2,<6.2`,
+`Pillow>=13.0.0`, `python-dotenv>=1.2.4` (sin congelar transitivas).
+
+### Entorno
+- El venv anterior quedó como `venv_py310_old/` (ignorado con `venv_*/`).
+- Nuevo venv: `py -3.13 -m venv venv` + `pip install -r requirements.txt`.
+
+### Revisión de Django 6.0 y 6.1 contra el código
+Se revisaron los cambios incompatibles, eliminaciones y obsolescencias de
+ambas versiones frente a settings, URLs, apps, admin, validadores, context
+processor, comandos, tests y templates.
+- **Correo (único cambio necesario)**: Django 6.1 declara obsoletos los
+  ajustes `EMAIL_BACKEND`, `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`,
+  `EMAIL_HOST_PASSWORD`, `EMAIL_USE_TLS`, `EMAIL_USE_SSL` y `EMAIL_TIMEOUT`
+  (8 `RemovedInDjango2028Warning`). `settings.py` ahora arma `MAILERS`
+  (`default`) desde las mismas variables del `.env`; las opciones SMTP solo
+  se pasan al backend SMTP. Probado: envío por consola y construcción del
+  backend SMTP con host/puerto/TLS desde variables (sin envío real).
+- Sin impacto: `DEFAULT_AUTO_FIELD` ya era `BigAutoField`; no se usan
+  `list_select_related=True`, `select_related()` sin argumentos,
+  `values_list(flat=True)` sin campo, `get_connection`/`fail_silently`,
+  `format_html` sin argumentos, `save()` con posicionales, búsquedas
+  `{{ a..b }}` ni la clase CSS `wide` del admin; los `.first()` no dependen
+  de `order_by()` vacío; SQLite 3.50.4 (mínimo 3.37).
+- Migraciones: `makemigrations --check` sin cambios y `migrate --plan` sin
+  operaciones (ni del proyecto ni de las apps de Django). Se respaldó
+  `db.sqlite3` fuera del repo antes de verificar; no hubo que migrar.
+
+### Verificación
+- `python -Wa manage.py check`: sin issues ni advertencias.
+- `python -Wa manage.py test`: 35 tests OK, sin DeprecationWarning (incluye
+  un test nuevo de subida y vista previa de imagen en el admin con Pillow 13
+  y rechazo de un archivo falso).
+- Servidor con el venv nuevo: 11 páginas públicas + `/admin/login/` en 200
+  con datos y con las tablas de los bloques vacías (sobre una copia de la
+  base, luego restaurada); media y static servidos.
+- `seed_bloque_a` y `seed_bloque_b` (con `--fill-blanks`) funcionan; también
+  en los tests sobre base y media temporales.
+- Datos intactos: superusuario `admin` y todos los registros de los seeds.
+- Navegador: Home y login del admin correctos. Sigue apareciendo de forma
+  intermitente el error JS del carrusel de testimonios (`main.js:2720`), sin
+  relación con esta actualización.
+
+### Pendiente para cada desarrollador
+Recrear su venv con Python ≥ 3.12 (recomendado 3.13) e instalar
+`requirements.txt`; en PyCharm, seleccionar `venv\Scripts\python.exe` como
+intérprete.
