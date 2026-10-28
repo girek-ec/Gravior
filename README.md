@@ -4,7 +4,7 @@ Backend Django del sitio corporativo de GRAVIOR. La maqueta visual se basa en
 la plantilla Crafto HTML5: la plantilla controla el diseño y Django controla el
 contenido (ver el documento de arquitectura del proyecto).
 
-- Python 3.10+ · Django 5.2 LTS
+- **Python 3.12 o superior (recomendado 3.13)** · Django 6.1 · Pillow 13
 - Solo español (`LANGUAGE_CODE='es'`, `TIME_ZONE='America/Guayaquil'`)
 
 ## Puesta en marcha (Windows / PowerShell)
@@ -12,11 +12,27 @@ contenido (ver el documento de arquitectura del proyecto).
 ```powershell
 git clone <url-del-repo> Gravior
 cd Gravior
-python -m venv venv
+py -3.13 -m venv venv
 .\venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 Copy-Item .env.example .env
 ```
+
+### Recrear el entorno virtual (por ejemplo, al cambiar de versión de Python)
+
+`venv/` no se versiona. Para recrearlo con Python 3.13:
+
+```powershell
+Rename-Item venv venv_old        # o bórralo si no lo necesitas (venv_*/ está ignorado)
+py -3.13 -m venv venv
+.\venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+python manage.py check
+```
+
+Si usas PyCharm, apunta el intérprete del proyecto a `venv\Scripts\python.exe`.
 
 Edita `.env` y define una `SECRET_KEY` propia:
 
@@ -94,4 +110,6 @@ modelos, admin y plan por bloques) y el brief del cliente.
 En desarrollo los correos se imprimen en consola. Para producción, en `.env`:
 `EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend` y los datos
 `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`,
-`EMAIL_USE_TLS`/`EMAIL_USE_SSL` y `DEFAULT_FROM_EMAIL`.
+`EMAIL_USE_TLS`/`EMAIL_USE_SSL` y `DEFAULT_FROM_EMAIL`. `settings.py` traduce
+esas variables al ajuste `MAILERS` de Django 6.1 (los ajustes `EMAIL_*` de
+Django están obsoletos desde 6.1).
