@@ -1,8 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
-
-{% block title %}Productos y soluciones avícolas | GRAVIOR{% endblock %}
-{% block meta_description %}Conoce las líneas y soluciones de GRAVIOR para genética avícola, bioseguridad y acompañamiento técnico orientadas a una producción eficiente.{% endblock %}
+{% load static gravior_tags %}
 
 {% block content %}
         <!-- start page title -->
@@ -14,12 +11,13 @@
                         <h2 class="fw-700 alt-font ls-minus-1px text-dark-gray w-80 xl-w-85 mb-0 lg-w-100 sm-w-70 xs-w-100 lg-fs-60">Soluciones para cada etapa de la producción avícola<span class="text-base-color">.</span></h2>
                     </div>
                     <div class="col-md-6">
-                        <div class="outside-box-right-20 sm-outside-box-left-20 h-100 sm-h-300px xs-h-250px cover-background" style="background-image: url('https://placehold.co/960x489');"></div>
+                        <div class="outside-box-right-20 sm-outside-box-left-20 h-100 sm-h-300px xs-h-250px cover-background" style="background-image: url('{% with first=products.0 %}{% if first %}{{ first.main_image.url }}{% else %}https://placehold.co/960x489{% endif %}{% endwith %}');"></div>
                     </div>
                 </div>
             </div>
         </section>
         <!-- end page title --> 
+        {% if category_highlights %}
         <!-- start page title -->
         <section>
             <div class="container">
@@ -29,87 +27,67 @@
                     </div>
                     <div class="col-lg-8 offset-xxl-1">
                         <div class="row row-cols-1 row-cols-md-2">
+                            {% for column in category_highlights|slice_columns %}
                             <div class="col">
                                 <ul class="p-0 m-0 list-style-02 fw-500 text-dark-gray" data-anime='{ "el": "childs", "translateY": [30, 0], "opacity": [0,1], "duration": 600, "delay": 0, "staggervalue": 200, "easing": "easeOutQuad" }'>
-                                    <li class="pb-5px"><i class="feather icon-feather-arrow-right-circle fs-20 text-base-color me-10px"></i>Genética orientada a productividad y uniformidad.</li>
-                                    <li class="pb-5px"><i class="feather icon-feather-arrow-right-circle fs-20 text-base-color me-10px"></i>Acompañamiento técnico aplicado a campo.</li>
-                                    <li class="pb-5px"><i class="feather icon-feather-arrow-right-circle fs-20 text-base-color me-10px"></i>Enfoque preventivo en calidad y bioseguridad.</li>
+                                    {% for category in column %}
+                                    <li class="pb-5px"><i class="feather icon-feather-arrow-right-circle fs-20 text-base-color me-10px"></i>{{ category.description }}</li>
+                                    {% endfor %}
                                 </ul>
-                            </div>  
-                            <div class="col">
-                                <ul class="p-0 m-0 list-style-02 fw-500 text-dark-gray" data-anime='{ "el": "childs", "translateY": [30, 0], "opacity": [0,1], "duration": 600, "delay": 0, "staggervalue": 200, "easing": "easeOutQuad" }'>
-                                    <li class="pb-5px"><i class="feather icon-feather-arrow-right-circle fs-20 text-base-color me-10px"></i>Soluciones adaptadas a las necesidades productivas.</li>
-                                    <li class="pb-5px"><i class="feather icon-feather-arrow-right-circle fs-20 text-base-color me-10px"></i>Integración de genética, manejo, ambiente y sanidad.</li>
-                                    <li class="pb-5px"><i class="feather icon-feather-arrow-right-circle fs-20 text-base-color me-10px"></i>Soporte especializado para fortalecer resultados.</li>
-                                </ul>
-                            </div> 
+                            </div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
             </div>
         </section>
         <!-- end section -->
+        {% endif %}
+        {% if products %}
         <!-- start section -->
         <section class="pt-0">
             <div class="container">
+                {% if product_categories|length > 1 %}
+                <div class="row mb-50px sm-mb-30px">
+                    <div class="col-12 text-center">
+                        <a href="{% url 'productos:index' %}" class="btn btn-small btn-round-edge {% if selected_category %}btn-transparent-dark-gray{% else %}btn-dark-gray{% endif %} me-10px mb-10px">Todos</a>
+                        {% for category in product_categories %}
+                        <a href="{% url 'productos:index' %}?categoria={{ category.slug }}" class="btn btn-small btn-round-edge {% if category == selected_category %}btn-dark-gray{% else %}btn-transparent-dark-gray{% endif %} me-10px mb-10px">{{ category.name }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
                 <div class="row row-cols-1 row-cols-lg-3 row-cols-md-2 justify-content-center" data-anime='{"el": "childs", "translateX": [-30, 0], "opacity": [0,1], "delay": 500, "staggervalue": 100, "easing": "easeOutQuad" }'>
+                    {% for product in products %}
                     <!-- start pricing item -->
-                    <div class="col pricing-table-style-10 md-mb-30px">
-                        <div class="bg-very-light-gray p-50px lg-p-25px sm-mb-50px border-radius-6px overflow-hidden position-relative">
-                            <span class="fs-14 lh-normal fw-600 text-dark-gray text-uppercase bg-white box-shadow-small border-radius-26px d-inline-block pt-10px pb-10px ps-20px pe-20px mb-30px">Genética</span>
-                            <h2 class="h1 ls-minus-1px fw-700 alt-font text-dark-gray mb-0"><sub class="fs-30 bottom-0px">01</sub> Línea</h2>
-                            <span class="d-block mb-20px text-uppercase fs-15 fw-600 text-dark-gray">Potencial productivo</span>
+                    <div class="col pricing-table-style-10{% if product.is_featured %} position-relative{% endif %}{% if not forloop.last %} md-mb-30px{% endif %}" id="{{ product.slug }}">
+                        {% if product.is_featured %}<div class="popular-label fs-20 fw-600 alt-font text-uppercase text-dark-gray bg-base-color box-shadow-double-large border-radius-100">Destacado</div>{% endif %}
+                        <div class="bg-very-light-gray p-50px lg-p-25px{% if not product.is_featured %} sm-mb-50px{% endif %} border-radius-6px overflow-hidden position-relative">
+                            <span class="fs-14 lh-normal fw-600 text-dark-gray text-uppercase bg-white box-shadow-small border-radius-26px d-inline-block pt-10px pb-10px ps-20px pe-20px mb-30px">{{ product.category.name }}</span>
+                            <h2 class="h1 lh-50 fw-700 alt-font text-dark-gray mb-0"><sub class="fs-30 bottom-0px">{% firstof product.reference forloop.counter|stringformat:"02d" %}</sub> {{ product.name }}</h2>
+                            <span class="d-block mb-20px text-uppercase fs-15 fw-600 text-dark-gray">{{ product.summary }}</span>
+                            {% if product.active_features %}
                             <ul class="list-style-02 p-0 mb-30px fw-500">
-                                <li class="pb-10px text-dark-gray"><span class="d-flex align-items-center justify-content-center box-shadow-small bg-white h-25px w-25px border-radius-100 me-10px mt-5px"><i class="bi bi-check icon-small text-green"></i></span>Selección genética</li>
-                                <li class="pb-10px text-dark-gray"><span class="d-flex align-items-center justify-content-center box-shadow-small bg-white h-25px w-25px border-radius-100 me-10px mt-5px"><i class="bi bi-check icon-small text-green"></i></span>Uniformidad y desempeño</li>
-                                <li class="pb-10px text-dark-gray"><span class="d-flex align-items-center justify-content-center box-shadow-small bg-white h-25px w-25px border-radius-100 me-10px mt-5px"><i class="bi bi-check icon-small text-green"></i></span>Eficiencia productiva</li>
-                                <li class="pb-10px text-dark-gray"><span class="d-flex align-items-center justify-content-center box-shadow-small bg-white h-25px w-25px border-radius-100 me-10px mt-5px"><i class="bi bi-x icon-small text-red"></i></span>Manejo según programa</li>
-                                <li class="pb-10px text-dark-gray"><span class="d-flex align-items-center justify-content-center box-shadow-small bg-white h-25px w-25px border-radius-100 me-10px mt-5px"><i class="bi bi-x icon-small text-red"></i></span>Soporte según necesidad</li>
+                                {% for feature in product.active_features %}
+                                <li class="pb-10px text-dark-gray" title="{{ feature.description }}"><span class="d-flex align-items-center justify-content-center box-shadow-small bg-white h-25px w-25px border-radius-100 me-10px mt-5px"><i class="bi bi-check icon-small text-green"></i></span>{{ feature.title }}</li>
+                                {% endfor %}
                             </ul>
-                            <a href="{% url 'contacto:index' %}" class="btn btn-small btn-round-edge btn-dark-gray btn-slide-right me-15px">Solicitar información<span class="bg-very-light-gray"></span></a>
-                            <div class="cover-background background-position-center-bottom position-absolute right-0px top-0px h-100 w-65px" style="background-image: url('https://placehold.co/65x593');"></div>
+                            {% endif %}
+                            {% if product.inquiry_button_text %}
+                            {% inquiry_url product.name as product_inquiry_url %}
+                            <a href="{{ product_inquiry_url }}"{% if "wa.me" in product_inquiry_url %} target="_blank" rel="noopener"{% endif %} class="btn btn-small btn-round-edge btn-dark-gray btn-slide-right me-15px">{{ product.inquiry_button_text }}<span class="bg-very-light-gray"></span></a>
+                            {% endif %}
+                            {% for document in product.active_documents %}
+                            <a href="{{ document.file.url }}" target="_blank" rel="noopener" class="d-block mt-15px fs-15 fw-600 text-dark-gray"><i class="bi bi-file-earmark-arrow-down me-5px"></i>{{ document.title }}</a>
+                            {% endfor %}
+                            <div class="cover-background background-position-center-bottom position-absolute right-0px top-0px h-100 w-65px" style="background-image: url('{{ product.main_image.url }}');"></div>
                         </div>
                     </div>
                     <!-- end pricing item -->
-                    <!-- start pricing item -->
-                    <div class="col pricing-table-style-10 position-relative md-mb-30px">
-                        <div class="popular-label fs-20 fw-600 alt-font text-uppercase text-dark-gray bg-base-color box-shadow-double-large border-radius-100">Destacado</div>
-                        <div class="bg-very-light-gray p-50px lg-p-25px border-radius-6px overflow-hidden position-relative">
-                            <span class="fs-14 lh-normal fw-600 text-dark-gray text-uppercase bg-white box-shadow-small border-radius-26px d-inline-block pt-10px pb-10px ps-20px pe-20px mb-30px">Bioseguridad</span>
-                            <h2 class="h1 lh-50 fw-700 alt-font text-dark-gray mb-0"><sub class="fs-30 bottom-0px">02</sub> Control</h2>
-                            <span class="d-block mb-20px text-uppercase fs-15 fw-600 text-dark-gray">Prevención y seguridad</span>
-                            <ul class="list-style-02 p-0 mb-30px fw-500">
-                                <li class="pb-10px text-dark-gray"><span class="d-flex align-items-center justify-content-center box-shadow-small bg-white h-25px w-25px border-radius-100 me-10px mt-5px"><i class="bi bi-check icon-small text-green"></i></span>Protocolos de bioseguridad</li>
-                                <li class="pb-10px text-dark-gray"><span class="d-flex align-items-center justify-content-center box-shadow-small bg-white h-25px w-25px border-radius-100 me-10px mt-5px"><i class="bi bi-check icon-small text-green"></i></span>Prevención de riesgos</li>
-                                <li class="pb-10px text-dark-gray"><span class="d-flex align-items-center justify-content-center box-shadow-small bg-white h-25px w-25px border-radius-100 me-10px mt-5px"><i class="bi bi-check icon-small text-green"></i></span>Buenas prácticas sanitarias</li>
-                                <li class="pb-10px text-dark-gray"><span class="d-flex align-items-center justify-content-center box-shadow-small bg-white h-25px w-25px border-radius-100 me-10px mt-5px"><i class="bi bi-check icon-small text-green"></i></span>Control de procesos</li>
-                                <li class="pb-10px text-dark-gray"><span class="d-flex align-items-center justify-content-center box-shadow-small bg-white h-25px w-25px border-radius-100 me-10px mt-5px"><i class="bi bi-x icon-small text-red"></i></span>Seguimiento técnico</li>
-                            </ul>
-                            <a href="{% url 'contacto:index' %}" class="btn btn-small btn-round-edge btn-dark-gray btn-slide-right me-15px">Solicitar información<span class="bg-very-light-gray"></span></a>
-                            <div class="cover-background background-position-center-bottom position-absolute right-0px top-0px h-100 w-65px" style="background-image: url('https://placehold.co/65x593');"></div>
-                        </div>
-                    </div>
-                    <!-- end pricing item -->
-                    <!-- start pricing item -->
-                    <div class="col pricing-table-style-10">
-                        <div class="bg-very-light-gray p-50px lg-p-25px sm-mb-50px border-radius-6px overflow-hidden position-relative">
-                            <span class="fs-14 lh-normal fw-600 text-dark-gray text-uppercase bg-white box-shadow-small border-radius-26px d-inline-block pt-10px pb-10px ps-20px pe-20px mb-30px">Soporte técnico</span>
-                            <h2 class="h1 lh-50 fw-700 alt-font text-dark-gray mb-0"><sub class="fs-30 bottom-0px">03</sub> Asesoría</h2>
-                            <span class="d-block mb-20px text-uppercase fs-15 fw-600 text-dark-gray">Acompañamiento integral</span>
-                            <ul class="list-style-02 p-0 mb-30px fw-500">
-                                <li class="pb-10px text-dark-gray"><span class="d-flex align-items-center justify-content-center box-shadow-small bg-white h-25px w-25px border-radius-100 me-10px mt-5px"><i class="bi bi-check icon-small text-green"></i></span>Diagnóstico productivo</li>
-                                <li class="pb-10px text-dark-gray"><span class="d-flex align-items-center justify-content-center box-shadow-small bg-white h-25px w-25px border-radius-100 me-10px mt-5px"><i class="bi bi-check icon-small text-green"></i></span>Recomendaciones de manejo</li>
-                                <li class="pb-10px text-dark-gray"><span class="d-flex align-items-center justify-content-center box-shadow-small bg-white h-25px w-25px border-radius-100 me-10px mt-5px"><i class="bi bi-check icon-small text-green"></i></span>Seguimiento de resultados</li>
-                                <li class="pb-10px text-dark-gray"><span class="d-flex align-items-center justify-content-center box-shadow-small bg-white h-25px w-25px border-radius-100 me-10px mt-5px"><i class="bi bi-check icon-small text-green"></i></span>Capacitación técnica</li>
-                                <li class="pb-10px text-dark-gray"><span class="d-flex align-items-center justify-content-center box-shadow-small bg-white h-25px w-25px border-radius-100 me-10px mt-5px"><i class="bi bi-check icon-small text-green"></i></span>Asistencia especializada</li>
-                            </ul>
-                            <a href="{% url 'contacto:index' %}" class="btn btn-small btn-round-edge btn-dark-gray btn-slide-right me-15px">Solicitar información<span class="bg-very-light-gray"></span></a>
-                            <div class="cover-background background-position-center-bottom position-absolute right-0px top-0px h-100 w-65px" style="background-image: url('https://placehold.co/65x593');"></div>
-                        </div>
-                    </div>
-                    <!-- end pricing item -->
+                    {% endfor %}
                 </div>
             </div>
         </section>
         <!-- end section -->
+        {% endif %}
 {% endblock %}

@@ -108,12 +108,17 @@ class SiteConfiguration(SingletonModel, TimeStampedModel):
     @property
     def whatsapp_url(self):
         """URL de wa.me solo si el botón está activo y hay número."""
+        return self.whatsapp_link()
+
+    def whatsapp_link(self, subject=''):
+        """URL de wa.me con el mensaje inicial y, opcionalmente, el tema de la consulta (p. ej. un producto)."""
         digits = self._digits(self.whatsapp_number)
         if not (self.whatsapp_enabled and digits):
             return ''
+        message = ' – '.join(part for part in (self.whatsapp_message, subject) if part)
         url = f'https://wa.me/{digits}'
-        if self.whatsapp_message:
-            url += f'?text={quote(self.whatsapp_message)}'
+        if message:
+            url += f'?text={quote(message)}'
         return url
 
     @property
