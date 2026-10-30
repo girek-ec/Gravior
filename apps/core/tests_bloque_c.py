@@ -149,7 +149,7 @@ class BlockCViewsTests(SeedCMixin, TestCase):
         self.seed_c()
         response = self.client.get('/productos/')
         self.assertContains(response, 'col pricing-table-style-10', count=3)
-        self.assertContains(response, 'Programa de bioseguridad')
+        self.assertContains(response, 'Control sanitario')
         self.assertContains(response, 'Destacado', count=2)
         self.assertContains(response, '?categoria=bioseguridad')
         self.assertContains(response, 'Documento de ejemplo – reemplazar', count=3)
@@ -192,6 +192,6 @@ class BlockCViewsTests(SeedCMixin, TestCase):
     def test_home_tabs_include_featured_products(self):
         self.seed_c()
         response = self.client.get('/')
-        self.assertContains(response, 'Programa de bioseguridad')
+        self.assertContains(response, 'Control sanitario')
         self.assertContains(response, '?categoria=soporte-tecnico')
         self.assertNotContains(response, '?categoria=genetica')  # "Línea genética" no está destacada

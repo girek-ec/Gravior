@@ -27,7 +27,8 @@ class Product(SlugFromNameMixin, TimeStampedModel):
     # PROTECT: no se borra una categoría que tiene productos (sección 21.3).
     category = models.ForeignKey(ProductCategory, on_delete=models.PROTECT, related_name='products',
                                  verbose_name='categoría')
-    name = models.CharField('nombre', max_length=120)
+    name = models.CharField('nombre', max_length=120,
+                            help_text='Se muestra en grande en la tarjeta del catálogo: preferir nombres cortos (una o dos palabras).')
     slug = models.SlugField('identificador para URL', max_length=140, unique=True, blank=True,
                             help_text='Se genera automáticamente desde el nombre. Reservado para la futura página de detalle.')
     brand = models.CharField('marca', max_length=80, blank=True, help_text='Solo si aplica.')

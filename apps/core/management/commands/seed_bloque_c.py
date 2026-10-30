@@ -28,7 +28,7 @@ PRODUCT_CATEGORIES = [
 
 PRODUCTS = [
     {
-        'category': 'Genética', 'name': 'Línea genética', 'brand': 'Marca por confirmar', 'reference': 'REF-EJ-01',
+        'category': 'Genética', 'name': 'Línea genética', 'brand': 'Marca por confirmar', 'reference': 'EJ-01',
         'summary': 'Potencial productivo',
         'description': ('Solución genética orientada a expresar el potencial productivo de cada operación, '
                         'acompañada de recomendaciones de manejo y seguimiento técnico.'),
@@ -47,14 +47,14 @@ PRODUCTS = [
         ],
     },
     {
-        'category': 'Bioseguridad', 'name': 'Programa de bioseguridad', 'brand': 'GRAVIOR', 'reference': 'REF-EJ-02',
+        'category': 'Bioseguridad', 'name': 'Control sanitario', 'brand': 'GRAVIOR', 'reference': 'EJ-02',
         'summary': 'Prevención y seguridad',
         'description': ('Acompañamiento para revisar y fortalecer las prácticas de bioseguridad de la operación, '
                         'con foco en prevención, control y seguimiento.'),
         'application': 'Granjas y operaciones avícolas que buscan fortalecer sus prácticas preventivas.',
         'benefits': 'Protocolos ordenados, prevención de riesgos y seguimiento de las medidas implementadas.',
         'inquiry_button_text': 'Solicitar información', 'is_featured': True, 'order': 2,
-        'seo_title': 'Programa de bioseguridad | GRAVIOR',
+        'seo_title': 'Control sanitario | GRAVIOR',
         'seo_description': 'Acompañamiento de GRAVIOR en bioseguridad: prevención, control y buenas prácticas.',
         'image': 'gravior/home/solution-biosecurity.jpg',
         'features': [
@@ -66,7 +66,7 @@ PRODUCTS = [
         ],
     },
     {
-        'category': 'Soporte técnico', 'name': 'Asesoría técnica', 'brand': 'GRAVIOR', 'reference': 'REF-EJ-03',
+        'category': 'Soporte técnico', 'name': 'Asesoría técnica', 'brand': 'GRAVIOR', 'reference': 'EJ-03',
         'summary': 'Acompañamiento integral',
         'description': ('Soporte técnico desde el diagnóstico hasta el seguimiento de resultados, con '
                         'recomendaciones aplicadas a la realidad productiva de cada cliente.'),
