@@ -202,3 +202,17 @@ def unique_slug(instance, value, field_name='slug', max_length=None):
         slug = f'{base[:max_length - len(suffix)]}{suffix}'
         n += 1
     return slug
+
+
+class SlugFromNameMixin:
+    """Genera el slug desde `slug_source` (por defecto `name`) solo si está vacío.
+
+    El slug queda estable aunque luego se edite el nombre (sección 21.2).
+    """
+
+    slug_source = 'name'
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = unique_slug(self, getattr(self, self.slug_source))
+        super().save(*args, **kwargs)
