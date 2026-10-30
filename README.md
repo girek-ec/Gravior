@@ -46,6 +46,7 @@ Luego:
 python manage.py migrate
 python manage.py seed_bloque_a   # contenidos de ejemplo del Bloque A (no pisa lo editado)
 python manage.py seed_bloque_b   # contenidos de ejemplo del Bloque B
+python manage.py seed_bloque_c   # contenidos de ejemplo del Bloque C
 python manage.py createsuperuser
 python manage.py runserver
 ```

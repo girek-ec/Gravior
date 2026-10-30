@@ -428,3 +428,82 @@ processor, comandos, tests y templates.
 Recrear su venv con Python ≥ 3.12 (recomendado 3.13) e instalar
 `requirements.txt`; en PyCharm, seleccionar `venv\Scripts\python.exe` como
 intérprete.
+
+---
+
+## Bloque C · Productos e Infraestructura (29 oct 2026)
+
+### Sincronización previa
+`lucho` ya está integrada en `main` en GitHub (PR #1, `d016d4e`); ese merge
+no agrega contenido. No había cambios nuevos del equipo. `lucho` lleva 4
+commits locales sin subir (actualización a Python 3.13 / Django 6.1).
+
+### Modelos y ubicación
+| Modelo | App (grupo admin) |
+| --- | --- |
+| ProductCategory, Product, ProductFeature, ProductDocument | `apps/productos` (Productos) |
+| FacilityCategory, Facility, FacilityGallery | `apps/infraestructura` (Infraestructura) |
+
+Campos de las secciones 11 y 12 + `created_at`/`updated_at`. Catálogo
+informativo: sin precio, carrito, stock ni pago.
+
+### Decisiones
+- **on_delete (21.3)**: PROTECT de Product → ProductCategory y Facility →
+  FacilityCategory (no se borra una categoría con elementos, ejemplo literal
+  del documento) y de ProductDocument → Product (documentación publicada);
+  CASCADE en ProductFeature y FacilityGallery (dependen del padre).
+- **Slugs**: `SlugFromNameMixin` (core.models) para categorías, productos e
+  instalaciones; autogenerados si están vacíos, editables y estables.
+  Listos para futuras páginas de detalle (hoy hay anclas `#<slug>`).
+- **Medios**: `media/products/`, `media/products/documents/`,
+  `media/facilities/`, `media/facilities/gallery/`.
+- **Botón de consulta**: template tag `inquiry_url` → WhatsApp con el mensaje
+  configurado + nombre del producto (`SiteConfiguration.whatsapp_link`) si
+  WhatsApp está activo; si no, `/contacto/`. Se oculta si el producto no tiene
+  `inquiry_button_text`.
+- **Filtro de productos**: en el servidor (`/productos/?categoria=<slug>`),
+  con botones de Crafto. No se usó `.portfolio-filter` porque el JS del tema
+  cancela la navegación de esos enlaces. Una categoría inexistente muestra
+  todo.
+- **Instalaciones**: filtro isotope de Crafto por categoría (`.cat-<slug>`) y
+  lightbox de Crafto: la foto principal y la galería activa comparten
+  `data-group`. Para que el tema los agrupe, el enlace pasó a estar dentro de
+  `.portfolio-box` (el CSS solo usa selectores descendientes, el diseño no
+  cambia). El título del lightbox incluye la ubicación pública si existe.
+- **Home**: pestañas de soluciones = líneas destacadas + productos destacados
+  (enfoque = categoría, enlace al catálogo filtrado) + áreas de calidad,
+  máximo 5.
+- **Nombres de producto cortos**: la tarjeta muestra el nombre en tamaño
+  grande y la maqueta asume una o dos palabras; se acortó el ejemplo y el
+  admin lo indica.
+
+### Mapeo a la maqueta
+- **Productos**: cabecera (fondo = imagen del primer producto); "Una propuesta
+  integral" = descripciones de categorías en dos columnas; tarjeta = badge de
+  categoría, `<sub>` referencia (o número), nombre, resumen, características
+  activas (descripción como tooltip), botón de consulta, documentos activos y
+  franja derecha con la imagen principal; "Destacado" = `is_featured`.
+- **Instalaciones**: filtro + grilla con imagen principal y título.
+
+### Datos de ejemplo
+`python manage.py seed_bloque_c` (y `--fill-blanks`). Detalle en
+`docs/CONTENIDO_EJEMPLO.md`.
+
+### Verificación
+`check -Wa` sin issues ni advertencias · `makemigrations --check` sin cambios ·
+50 tests OK · 11 URLs públicas + admin en 200 con datos y con tablas vacías ·
+navegador a 1366 px y 375 px: productos (filtro, WhatsApp por producto,
+documentos), instalaciones (3 columnas, filtro: Galpones muestra 3 de 12,
+lightbox con 3 fotos y ubicación) y pestaña de producto en el Home. El error
+JS del carrusel de testimonios no apareció en estas cargas.
+
+### Pendientes
+- Campos sin lugar en la maqueta actual: Product.description, application,
+  benefits y brand; Facility.description y video_url (no hay página de
+  detalle). Quedan cargados y editables.
+- En móvil, la franja decorativa derecha de las tarjetas de producto se
+  superpone ~35 px al texto (rasgo de la maqueta; revisar en frontend).
+- Subtítulo de Instalaciones con texto de la demo: "Instalaciones - Three
+  column layout".
+- El contador del lightbox ("1 of 3") viene en inglés desde el plugin del
+  tema.
