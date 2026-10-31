@@ -611,125 +611,54 @@
         <section class="bg-gradient-very-light-gray z-index-0 position-relative overflow-hidden pb-0 md-pb-5">
             <img src="{% static 'crafto/images/demo-gym-and-fitness-home-17.png' %}" class="h-190px z-index-minus-1 position-absolute left-0px top-0px lg-h-120px d-none d-md-inline-block" data-bottom-top="transform: translate3d(80px, 0px, 0px);" data-top-bottom="transform: translate3d(-150px, 0px, 0px);" alt="" >
             <div class="container">
+                {% if featured_team %}
                 <div class="row align-items-center mb-4">
                     <div class="col-lg-7 md-mb-35px">
                         <div class="tab-content bg-white box-shadow-extra-large">
+                            {% for member in featured_team %}
                             <!-- start tab content -->
-                            <div class="tab-pane active fade in show" id="tab_nine1">
+                            <div class="tab-pane{% if forloop.first %} active{% endif %} fade in{% if forloop.first %} show{% endif %}" id="tab_nine{{ forloop.counter }}">
                                 <div class="row g-0 row-cols-1 row-cols-md-2">
                                     <div class="col p-55px xl-p-40px lg-p-30px">
-                                        <h4 class="alt-font fw-600 text-dark-gray mb-0">Especialista 01</h4>
-                                        <span class="fs-18 fw-500 text-base-color">Genética avícola</span>
+                                        <h4 class="alt-font fw-600 text-dark-gray mb-0">{{ member.name }}</h4>
+                                        <span class="fs-18 fw-500 text-base-color">{{ member.position }}</span>
                                         <div class="divider-style-03 divider-style-03-01 border-color-extra-medium-gray mt-15px mb-15px"></div>
-                                        <p>Perfil profesional pendiente de incorporar con información oficial del equipo GRAVIOR.</p>
+                                        <p>{{ member.short_bio }}</p>
                                         <div class="d-flex align-items-center mb-30px">
-                                            <div class="col-auto text-center"><h3 class="fw-700 ls-minus-3px text-dark-gray mb-0 xs-ls-minus-2px">01</h3></div>
+                                            <div class="col-auto text-center"><h3 class="fw-700 ls-minus-3px text-dark-gray mb-0 xs-ls-minus-2px">{{ forloop.counter|stringformat:"02d" }}</h3></div>
                                             <div class="col border-start border-color-extra-medium-gray ms-20px ps-20px">
                                                 <div class="review-star-icon fs-18">
                                                     <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                                                 </div>
-                                                <span class="fs-15 lh-22 fw-600 d-block text-dark-gray">Genética</span>
+                                                <span class="fs-15 lh-22 fw-600 d-block text-dark-gray">{% firstof member.specialty site_config.company_name %}</span>
                                             </div>
                                         </div>
-                                        <div class="elements-social social-icon-style-09">
-                                            <ul class="medium-icon dark">
-                                                <li><a class="facebook" href="https://www.facebook.com/" target="_blank"><i class="fa-brands fa-facebook-f"></i><span></span></a></li>
-                                                <li><a class="instagram" href="http://www.instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i><span></span></a></li>
-                                                <li><a class="twitter" href="http://www.twitter.com" target="_blank"><i class="fa-brands fa-twitter"></i><span></span></a></li>
-                                            </ul>
-                                        </div>
+                                        {% include "includes/member_social.html" %}
                                     </div>
-                                    <div class="col position-relative cover-background sm-h-300px" style="background-image:url('{% static 'crafto/images/gravior/home/team-01.jpg' %}');">
-                                        <span class="fs-190 fw-700 alt-font text-white position-absolute left-minus-30px bottom-minus-50px">01.</span>
+                                    <div class="col position-relative cover-background sm-h-300px" style="background-image:url('{{ member.photo.url }}');">
+                                        <span class="fs-190 fw-700 alt-font text-white position-absolute left-minus-30px bottom-minus-50px">{{ forloop.counter|stringformat:"02d" }}.</span>
                                     </div>
                                 </div>
                             </div>
                             <!-- end tab content -->
-                            <!-- start tab content -->
-                            <div class="tab-pane fade in" id="tab_nine2">
-                                <div class="row g-0 row-cols-1 row-cols-md-2">
-                                    <div class="col p-55px xl-p-40px lg-p-30px">
-                                        <h4 class="alt-font fw-600 text-dark-gray mb-0">Especialista 02</h4>
-                                        <span class="fs-18 fw-500 text-base-color">Calidad y bioseguridad</span>
-                                        <div class="divider-style-03 divider-style-03-01 border-color-extra-medium-gray mt-15px mb-15px"></div>
-                                        <p>Perfil profesional pendiente de incorporar con información oficial del equipo GRAVIOR.</p>
-                                        <div class="d-flex align-items-center mb-30px">
-                                            <div class="col-auto text-center"><h3 class="fw-700 ls-minus-3px text-dark-gray mb-0 xs-ls-minus-2px">02</h3></div>
-                                            <div class="col border-start border-color-extra-medium-gray ms-20px ps-20px">
-                                                <div class="review-star-icon fs-18">
-                                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                                </div>
-                                                <span class="fs-15 lh-22 fw-600 d-block text-dark-gray">Bioseguridad</span>
-                                            </div>
-                                        </div>
-                                        <div class="elements-social social-icon-style-09">
-                                            <ul class="medium-icon dark">
-                                                <li><a class="facebook" href="https://www.facebook.com/" target="_blank"><i class="fa-brands fa-facebook-f"></i><span></span></a></li>
-                                                <li><a class="instagram" href="http://www.instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i><span></span></a></li>
-                                                <li><a class="twitter" href="http://www.twitter.com" target="_blank"><i class="fa-brands fa-twitter"></i><span></span></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="col position-relative cover-background sm-h-300px" style="background-image:url('{% static 'crafto/images/gravior/home/team-02.jpg' %}');">
-                                        <span class="fs-190 fw-700 alt-font text-white position-absolute left-minus-30px bottom-minus-50px">02.</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end tab content -->
-                            <!-- start tab content -->
-                            <div class="tab-pane fade in" id="tab_nine3">
-                                <div class="row g-0 row-cols-1 row-cols-md-2">
-                                    <div class="col p-55px xl-p-40px lg-p-30px">
-                                        <h4 class="alt-font fw-600 text-dark-gray mb-0">Especialista 03</h4>
-                                        <span class="fs-18 fw-500 text-base-color">Asesoría técnica</span>
-                                        <div class="divider-style-03 divider-style-03-01 border-color-extra-medium-gray mt-15px mb-15px"></div>
-                                        <p>Perfil profesional pendiente de incorporar con información oficial del equipo GRAVIOR.</p>
-                                        <div class="d-flex align-items-center mb-30px">
-                                            <div class="col-auto text-center"><h3 class="fw-700 ls-minus-3px text-dark-gray mb-0 xs-ls-minus-2px">03</h3></div>
-                                            <div class="col border-start border-color-extra-medium-gray ms-20px ps-20px">
-                                                <div class="review-star-icon fs-18">
-                                                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                                </div>
-                                                <span class="fs-15 lh-22 fw-600 d-block text-dark-gray">Asesoría</span>
-                                            </div>
-                                        </div>
-                                        <div class="elements-social social-icon-style-09">
-                                            <ul class="medium-icon dark">
-                                                <li><a class="facebook" href="https://www.facebook.com/" target="_blank"><i class="fa-brands fa-facebook-f"></i><span></span></a></li>
-                                                <li><a class="instagram" href="http://www.instagram.com" target="_blank"><i class="fa-brands fa-instagram"></i><span></span></a></li>
-                                                <li><a class="twitter" href="http://www.twitter.com" target="_blank"><i class="fa-brands fa-twitter"></i><span></span></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="col position-relative cover-background sm-h-300px" style="background-image:url('{% static 'crafto/images/gravior/home/team-03.jpg' %}');">
-                                        <span class="fs-190 fw-700 alt-font text-white position-absolute left-minus-30px bottom-minus-50px">03.</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end tab content -->
+                            {% endfor %}
                         </div>                        
                     </div>
                     <div class="col-xl-4 offset-xl-1 col-lg-5 team-style-09" data-anime='{ "el": "childs", "translateX": [30, 0], "opacity": [0,1], "duration": 600, "delay": 0, "staggervalue": 200, "easing": "easeOutQuad" }'>
                         <span class="fs-19 lh-20 ls-0px fw-600 text-dark-gray d-inline-block text-decoration-line-bottom-medium border-color-base-color mb-25px">Equipo técnico</span>
                         <h2 class="h1 alt-font fw-700 ls-minus-1px text-dark-gray mb-15px">Especialistas que acompañan cada etapa<span class="text-base-color">.</span></h2>
                         <ul class="nav nav-tabs alt-font flex-column border-0 justify-content-center" data-anime='{ "el": "childs", "translateX": [30, 0], "opacity": [0,1], "duration": 600, "delay": 0, "staggervalue": 200, "easing": "easeOutQuad" }'>
+                            {% for member in featured_team %}
                             <li class="nav-item">
-                                <a data-bs-toggle="tab" href="#tab_nine1" class="nav-link active">
-                                    <span class="number fs-22 me-5px">01.</span><span class="name fs-22 text-dark-gray">Especialista 01</span><span class="text-medium-gray ms-auto">Genética avícola</span></a>
-                            </li>
-                            <li class="nav-item">
-                                <a data-bs-toggle="tab" href="#tab_nine2" class="nav-link">
-                                    <span class="number fs-22 me-5px">02.</span><span class="name fs-22 text-dark-gray">Especialista 02</span><span class="text-medium-gray ms-auto">Calidad y bioseguridad</span>
+                                <a data-bs-toggle="tab" href="#tab_nine{{ forloop.counter }}" class="nav-link{% if forloop.first %} active{% endif %}">
+                                    <span class="number fs-22 me-5px">{{ forloop.counter|stringformat:"02d" }}.</span><span class="name fs-22 text-dark-gray">{{ member.name }}</span><span class="text-medium-gray ms-auto">{% firstof member.specialty member.position %}</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-bs-toggle="tab" href="#tab_nine3">
-                                    <span class="number fs-22 me-5px">03.</span><span class="name fs-22 text-dark-gray">Especialista 03</span><span class="text-medium-gray ms-auto">Asesoría técnica</span>
-                                </a>
-                            </li>
+                            {% endfor %}
                         </ul>                        
                     </div>
                 </div>
+                {% endif %}
             </div>
             <div class="container-fluid">
                 <div class="row position-relative">

@@ -3,6 +3,7 @@ from django.views.generic import TemplateView
 
 from apps.calidad.views import active_areas
 from apps.empresa.models import AboutPage
+from apps.equipo.models import TeamMember
 from apps.genetica.models import GeneticLine
 from apps.productos.views import active_products
 
@@ -51,5 +52,6 @@ class HomeView(TemplateView):
             about=AboutPage.get_current(),
             solution_tabs=solution_tabs(),
             knowledge_areas=active_areas()[:KNOWLEDGE_AREAS_MAX],
+            featured_team=TeamMember.objects.filter(is_active=True, is_featured=True),
         )
         return context

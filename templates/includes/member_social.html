@@ -1,0 +1,10 @@
+{# Contacto público de un integrante (lista estilo social-icon-style-09). Solo campos con contenido. Recibe `member`. #}
+{% if member.linkedin_url or member.email or member.phone %}
+<div class="elements-social social-icon-style-09">
+    <ul class="medium-icon dark">
+        {% if member.linkedin_url %}<li><a class="linkedin" href="{{ member.linkedin_url }}" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i><span></span></a></li>{% endif %}
+        {% if member.email %}<li><a class="email" href="mailto:{{ member.email }}" aria-label="Correo"><i class="fa-solid fa-envelope"></i><span></span></a></li>{% endif %}
+        {% if member.phone %}<li><a class="phone" href="tel:{{ member.phone_link }}" aria-label="Teléfono"><i class="fa-solid fa-phone"></i><span></span></a></li>{% endif %}
+    </ul>
+</div>
+{% endif %}
