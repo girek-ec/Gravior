@@ -507,3 +507,25 @@ JS del carrusel de testimonios no apareció en estas cargas.
   column layout".
 - El contador del lightbox ("1 of 3") viene en inglés desde el plugin del
   tema.
+
+---
+
+## Pendientes para diseño (actualizado 31 oct 2026)
+
+Lista consolidada de lo acordado para resolver en diseño/frontend. Ninguno
+bloquea el backend; el contenido ya es editable desde el admin.
+
+| # | Tema | Detalle | Origen |
+| --- | --- | --- | --- |
+| 1 | CTA final del Home | El documento prevé un llamado a la acción final en el inicio, pero la maqueta no tiene ese bloque. Lo pedirá diseño. | Bloque A |
+| 2 | Campos editables sin lugar en la maqueta | `AboutPage.mission`, `QualityPage.quality_commitment`, `QualityPage.biosecurity_approach`; `Product.description`, `application`, `benefits`, `brand`; `Facility.description`, `video_url`. Están cargados y editables; en el admin, los de Product y Facility dicen "Aún no se muestra en la web". No habrá página de detalle por ahora. | Bloques B y C |
+| 3 | Franja decorativa de las tarjetas de producto en móvil | La franja de imagen de la derecha (`w-65px`, posición absoluta) se superpone ~35 px al texto a 375 px. | Bloque C |
+| 4 | Menú lateral largo | "Calidad y bioseguridad" ocupa dos líneas muy juntas en el menú lateral de escritorio. | Bloque A |
+| 5 | Subrayado perdido en Nosotros | La franja de propósito mostraba las últimas palabras subrayadas; ahora el texto es un solo campo (`AboutPage.purpose`). | Bloque B |
+| 6 | Nombres de producto largos | El nombre se muestra en tamaño grande en la tarjeta; nombres de más de dos palabras o palabras largas se parten o tocan la franja. El admin recomienda nombres cortos. | Bloque C |
+
+Resueltos en esta revisión (ya no están pendientes):
+- Subtítulo de demo "Instalaciones - Three column layout" → texto fijo en
+  español.
+- Contador del lightbox en inglés → traducido por configuración de Magnific
+  Popup en `base.html` ("1 de 3"), sin editar archivos del tema.
