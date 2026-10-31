@@ -32,9 +32,10 @@ class PublicPagesTests(TestCase):
                 response = self.client.get(reverse(name, kwargs={'slug': 'ejemplo'}))
                 self.assertEqual(response.status_code, 404)
 
-    def test_post_detail_mockup_renders(self):
+    def test_unknown_post_returns_404(self):
+        # Desde el Bloque E el detalle se resuelve contra Post: un slug inexistente responde 404.
         response = self.client.get(reverse('actualidad:detail', kwargs={'slug': 'ejemplo'}))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 404)
 
     def test_admin_login_loads(self):
         response = self.client.get(reverse('admin:login'))
