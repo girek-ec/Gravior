@@ -526,6 +526,9 @@ bloquea el backend; el contenido ya es editable desde el admin.
 | 7 | Sección de aliados en el Home | El documento prevé aliados destacados en el inicio (`Partner.is_featured`), pero la maqueta del Home no tiene ese bloque. El campo ya existe. | Bloque D |
 | 8 | Carrusel de Aliados en móvil | En móvil el carrusel aparece desplazado: la maqueta incluye diapositivas espaciadoras `d-none d-lg-block` que Swiper sigue contando. | Bloque D |
 | 9 | ~~Estrellas en tarjetas de equipo y aliados~~ | **Decisión tomada (31 oct 2026): se quitaron** las 5 estrellas fijas de la tarjeta destacada de Equipo, de las pestañas de equipo del Home y del carrusel de Aliados, para que no se lean como calificaciones. El carrusel de testimonios del Home no se modificó. | Bloque D |
+| 10 | Sección de actualidad en el Home | El documento prevé publicaciones destacadas en el inicio (`Post.is_featured`), pero la maqueta del Home no tiene ese bloque. El campo ya existe. | Bloque E |
+| 11 | Color del header en Actualidad | Las páginas de Actualidad cargan `corporate.css` de otra demo de Crafto (ya estaba en la maqueta) y el botón del header se ve azul en lugar del color de marca. | Bloque E |
+| 12 | Página de política de privacidad | El formulario pide consentimiento, pero aún no enlaza a una política de privacidad: falta decidir cómo resolver la página legal (ver propuesta en el Bloque E). | Bloque E |
 
 Resueltos en esta revisión (ya no están pendientes):
 - Subtítulo de demo "Instalaciones - Three column layout" → texto fijo en
@@ -584,3 +587,89 @@ para que el admin muestre los grupos "Equipo" y "Aliados" de la sección 4.
 (tarjeta destacada, grilla, tarjeta de contacto), aliados (logos, carrusel
 autoplay) y equipo destacado del Home; sin errores de consola. El error JS
 del carrusel de testimonios no apareció en estas cargas.
+
+
+---
+
+## Bloque E · Actualidad y Contacto (31 oct 2026)
+
+### Modelos y ubicación
+| Modelo | App (grupo admin) |
+| --- | --- |
+| PostCategory, Post | `apps/actualidad` (Actualidad) |
+| ContactReason, ContactMessage | `apps/contacto` (Contacto) |
+
+Campos de las secciones 14 y 15 + `created_at`/`updated_at`.
+
+### Decisiones
+- **on_delete (21.3)**: PROTECT de Post a su categoría y de ContactMessage a su
+  motivo (un motivo con mensajes se desactiva, no se borra).
+- **Contenido de Post en texto plano**: párrafos separados por línea en blanco,
+  siempre escapado (no se interpreta HTML). Sin editor rico ni dependencias
+  nuevas.
+- **Publicaciones vigentes**: `Post.objects.published()` = publicada, fecha
+  cumplida y categoría activa. Una fecha futura deja la publicación
+  programada. El detalle de una no vigente responde 404.
+- **Actualidad**: filtro por categoría y paginación (9 por página) en el
+  servidor; tarjeta reutilizable `includes/post_card.html`. Se quitó el
+  contador de "me gusta" (cifras inventadas).
+- **Detalle**: letra capital con el primer párrafo, cita con el resumen,
+  resto de párrafos, caja de autor con la descripción corporativa, botones
+  para compartir el artículo (Facebook, X, LinkedIn, WhatsApp) y
+  relacionados. Se eliminaron lorem ipsum, textos en inglés, imágenes sin
+  campo, comentarios inventados y el formulario que enviaba a un `.php`.
+- **Formulario de contacto**:
+  - El JS del tema intercepta los botones `.submit` y cancela el envío (con
+    `action` vacío no hacía nada). Se quitó la clase `submit` del botón: el
+    formulario se envía por POST normal (funciona sin JS), con errores por
+    campo y redirección con mensaje de éxito.
+  - CSRF, validación y limpieza en el servidor (`ContactForm`), consulta de
+    10 a 3000 caracteres, solo motivos activos, consentimiento obligatorio
+    (checkbox con el componente `terms-condition-box` de Crafto).
+  - Campo trampa `website`: si viene con contenido se responde como enviado
+    sin guardar ni avisar.
+  - Límite por IP con la caché de Django (`CONTACT_RATE_LIMIT`,
+    `CONTACT_RATE_WINDOW`). Usa `REMOTE_ADDR`.
+  - Aviso con `MAILERS` (consola en desarrollo) a los CorporateEmail
+    comerciales/ventas activos, luego todos los activos, luego el correo
+    general; con `Reply-To` del remitente. Si el envío falla se registra en
+    el log; el usuario no ve correos internos ni errores técnicos.
+- **Admin de mensajes**: datos enviados de solo lectura, sin alta manual,
+  filtros por leído/respondido/archivado/motivo, acciones para marcar; abrir
+  un mensaje lo marca como leído.
+- **Página de contacto**: una pestaña por correo corporativo activo con
+  dirección, horario, teléfono, WhatsApp y enlace a Google Maps de la
+  configuración general.
+
+### Propuestas pendientes de decisión
+**Retención y acceso a ContactMessage** (no implementado):
+- Conservar los mensajes 12 meses desde su recepción (24 si derivaron en
+  relación comercial) y luego eliminarlos o anonimizarlos con un comando
+  programado (por ejemplo `purge_contact_messages --older-than=365`).
+- Acceso solo para el equipo comercial con un grupo "Comercial" con permisos
+  de ver y cambiar el estado de los mensajes, sin permiso de borrar; el
+  borrado queda para el responsable de datos.
+- Exportación solo por el responsable de datos.
+- Reflejar el plazo final en la política de privacidad.
+
+**Página de política de privacidad** (no implementado):
+- Opción A (recomendada): modelo singleton `LegalPage` (título, contenido en
+  texto plano, fecha de actualización) editable en el admin y la URL
+  `/politica-de-privacidad/`; el formulario enlaza ahí. El texto lo redacta
+  el cliente o su asesor legal.
+- Opción B: template simple con el texto entregado por el cliente (cada
+  cambio requiere desarrollo).
+- Opción C: campo de URL en SiteConfiguration para enlazar una política
+  alojada fuera del sitio.
+
+### Datos de ejemplo
+`python manage.py seed_bloque_e` (y `--fill-blanks`). Detalle en
+`docs/CONTENIDO_EJEMPLO.md`.
+
+### Verificación
+`check -Wa` sin issues · `makemigrations --check` sin cambios · 81 tests OK
+(incluye CSRF, campo trampa, límite por IP, fallo de correo y contenido
+escapado) · 11 URLs públicas + admin en 200 · envío real desde el navegador
+y con curl (mensaje guardado, aviso en consola a comercial@ y ventas@ con
+Reply-To, 403 sin CSRF) · navegador a 1366 px y 375 px: actualidad, detalle y
+contacto sin errores de consola. Los mensajes de prueba se borraron.

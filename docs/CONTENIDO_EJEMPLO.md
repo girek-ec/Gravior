@@ -1,6 +1,6 @@
 # Contenido de ejemplo a reemplazar antes de publicar
 
-Todo lo listado aquí lo cargan los comandos `seed_bloque_a`, `seed_bloque_b`, `seed_bloque_c` y `seed_bloque_d`
+Todo lo listado aquí lo cargan los comandos `seed_bloque_a`, `seed_bloque_b`, `seed_bloque_c`, `seed_bloque_d` y `seed_bloque_e`
 para que ninguna sección quede en blanco. **No es información oficial**: debe
 reemplazarse desde el Django Admin con contenido aprobado por GRAVIOR (sección
 19 del documento de arquitectura).
@@ -17,11 +17,13 @@ python manage.py seed_bloque_a
 python manage.py seed_bloque_b
 python manage.py seed_bloque_c
 python manage.py seed_bloque_d
+python manage.py seed_bloque_e
 # Completar solo campos vacíos de registros existentes (nunca sobrescribe):
 python manage.py seed_bloque_a --fill-blanks
 python manage.py seed_bloque_b --fill-blanks
 python manage.py seed_bloque_c --fill-blanks
 python manage.py seed_bloque_d --fill-blanks
+python manage.py seed_bloque_e --fill-blanks
 ```
 
 ---
@@ -172,6 +174,26 @@ Sostenibilidad) con fotos de relleno — [Validar] [Imagen].
 
 ### Llamado a la acción
 `team_contact` ("Contactar al equipo" → /contacto/) — [Validar].
+
+---
+
+## Bloque E · Actualidad y Contacto
+
+### Actualidad (PostCategory, Post)
+- 4 categorías (Genética, Bioseguridad, Manejo, Tecnología) — [Validar].
+- 6 publicaciones con títulos de la maqueta y textos técnicos generales
+  (sin cifras ni resultados), autor "Equipo GRAVIOR", fechas en las últimas
+  semanas, 3 destacadas — [Cliente]. Reemplazar por noticias y artículos
+  reales con su autor y fecha.
+- Imágenes de relleno recortadas a 1600 × 920 (principal) y 600 × 430
+  (miniatura) — [Imagen].
+
+### Contacto (ContactReason, ContactMessage)
+- 5 motivos de consulta (Genética, Productos, Calidad y bioseguridad,
+  Asesoría técnica, Información general) — [Validar].
+- **No se cargan mensajes**: llegan solo desde el formulario.
+- Los avisos se envían a los correos corporativos comerciales/ventas
+  activos, hoy `@example.com` — [Cliente].
 
 ---
 

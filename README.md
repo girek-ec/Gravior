@@ -48,6 +48,7 @@ python manage.py seed_bloque_a   # contenidos de ejemplo del Bloque A (no pisa l
 python manage.py seed_bloque_b   # contenidos de ejemplo del Bloque B
 python manage.py seed_bloque_c   # contenidos de ejemplo del Bloque C
 python manage.py seed_bloque_d   # contenidos de ejemplo del Bloque D
+python manage.py seed_bloque_e   # contenidos de ejemplo del Bloque E
 python manage.py createsuperuser
 python manage.py runserver
 ```
@@ -115,3 +116,15 @@ En desarrollo los correos se imprimen en consola. Para producción, en `.env`:
 `EMAIL_USE_TLS`/`EMAIL_USE_SSL` y `DEFAULT_FROM_EMAIL`. `settings.py` traduce
 esas variables al ajuste `MAILERS` de Django 6.1 (los ajustes `EMAIL_*` de
 Django están obsoletos desde 6.1).
+
+## Formulario de contacto
+
+- Guarda cada mensaje en el admin (Contacto → Mensajes recibidos) y avisa por
+  correo a los correos corporativos comerciales/ventas activos (o a todos
+  los activos, o al correo general).
+- Protección: CSRF, validación en el servidor, campo trampa y límite de
+  envíos por IP (`CONTACT_RATE_LIMIT` envíos cada `CONTACT_RATE_WINDOW`
+  segundos, configurables en `.env`).
+- El límite usa la caché de Django. En producción conviene una caché
+  compartida (por ejemplo `FileBasedCache` o `DatabaseCache`) y, si el sitio
+  está detrás de un proxy, ajustar cómo se obtiene la IP del cliente.
