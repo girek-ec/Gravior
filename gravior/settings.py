@@ -188,3 +188,11 @@ MAILERS = {
 
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'webmaster@localhost')
 SERVER_EMAIL = os.getenv('SERVER_EMAIL', 'root@localhost')
+
+
+# Formulario de contacto: máximo de envíos por IP en la ventana (segundos).
+# Usa la caché de Django; en producción conviene una caché compartida
+# (por ejemplo FileBasedCache o DatabaseCache) para que el límite sea común
+# a todos los procesos.
+CONTACT_RATE_LIMIT = int(os.getenv('CONTACT_RATE_LIMIT', '5'))
+CONTACT_RATE_WINDOW = int(os.getenv('CONTACT_RATE_WINDOW', '3600'))
