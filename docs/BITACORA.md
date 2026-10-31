@@ -525,7 +525,7 @@ bloquea el backend; el contenido ya es editable desde el admin.
 | 6 | Nombres de producto largos | El nombre se muestra en tamaño grande en la tarjeta; nombres de más de dos palabras o palabras largas se parten o tocan la franja. El admin recomienda nombres cortos. | Bloque C |
 | 7 | Sección de aliados en el Home | El documento prevé aliados destacados en el inicio (`Partner.is_featured`), pero la maqueta del Home no tiene ese bloque. El campo ya existe. | Bloque D |
 | 8 | Carrusel de Aliados en móvil | En móvil el carrusel aparece desplazado: la maqueta incluye diapositivas espaciadoras `d-none d-lg-block` que Swiper sigue contando. | Bloque D |
-| 9 | Estrellas en tarjetas de equipo y aliados | La maqueta muestra 5 estrellas junto a integrantes y aliados; pueden leerse como calificaciones o testimonios. Se mantienen como diseño (siempre 5, sin variar por registro). | Bloque D |
+| 9 | ~~Estrellas en tarjetas de equipo y aliados~~ | **Decisión tomada (31 oct 2026): se quitaron** las 5 estrellas fijas de la tarjeta destacada de Equipo, de las pestañas de equipo del Home y del carrusel de Aliados, para que no se lean como calificaciones. El carrusel de testimonios del Home no se modificó. | Bloque D |
 
 Resueltos en esta revisión (ya no están pendientes):
 - Subtítulo de demo "Instalaciones - Three column layout" → texto fijo en
