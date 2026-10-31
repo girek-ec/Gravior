@@ -17,7 +17,7 @@ from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.db.models.fields.files import FieldFile
-from PIL import Image, ImageOps
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 STATIC_IMAGES = Path(settings.BASE_DIR) / 'static' / 'crafto' / 'images'
 
@@ -82,6 +82,26 @@ def attach_image(instance, field_name, spec):
         getattr(instance, field_name).save(name, ContentFile(buffer.getvalue()), save=False)
         return
     attach_file(instance, field_name, STATIC_IMAGES / spec)
+
+
+def placeholder_logo(title, subtitle='logo pendiente', size=(300, 120)):
+    """PNG de relleno con el mismo diseño que los SVG de la maqueta (static/crafto/images/gravior/partners/).
+
+    Se genera porque ImageField no acepta SVG. Devuelve (nombre, bytes) para usarlo en 'files'.
+    """
+    width, height = size
+    image = Image.new('RGB', size, (247, 247, 247))
+    draw = ImageDraw.Draw(image)
+    draw.rounded_rectangle((1, 1, width - 2, height - 2), radius=9, outline=(222, 222, 222), width=2)
+    title_font = ImageFont.load_default(size=22)
+    subtitle_font = ImageFont.load_default(size=12)
+    draw.text((width / 2, height / 2 - 8), title, fill=(35, 35, 35), font=title_font, anchor='ms', stroke_width=1,
+              stroke_fill=(35, 35, 35))
+    draw.text((width / 2, height / 2 + 18), subtitle, fill=(122, 122, 122), font=subtitle_font, anchor='ms')
+    buffer = BytesIO()
+    image.save(buffer, 'PNG')
+    slug = ''.join(ch if ch.isalnum() else '-' for ch in title.lower()).strip('-')
+    return (f'{slug}-placeholder.png', buffer.getvalue())
 
 
 def is_blank(value):

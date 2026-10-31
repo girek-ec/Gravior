@@ -3,7 +3,9 @@ from django.views.generic import TemplateView
 
 from apps.calidad.views import active_areas
 from apps.empresa.models import AboutPage
+from apps.equipo.models import TeamMember
 from apps.genetica.models import GeneticLine
+from apps.productos.views import active_products
 
 from .models import Differential, HeroSlide, ProcessStep, Statistic
 
@@ -12,15 +14,22 @@ KNOWLEDGE_AREAS_MAX = 3
 
 
 def solution_tabs():
-    """Pestañas "Genética / soluciones" del inicio (sección 18): líneas destacadas y áreas de calidad.
+    """Pestañas "Genética / soluciones" del inicio (sección 18).
 
-    Cada pestaña es un dict con la misma forma para que el Bloque C pueda sumar productos.
+    Orden: líneas genéticas destacadas, productos destacados y áreas de calidad hasta completar el máximo.
+    Cada pestaña es un dict con la misma forma.
     """
     tabs = []
     for line in GeneticLine.objects.filter(is_active=True, is_featured=True):
         tabs.append({
             'label': line.name, 'title': line.summary, 'text': line.application,
             'focus': line.brand_name, 'image': line.main_image, 'url': reverse('genetica:index'),
+        })
+    for product in active_products().filter(is_featured=True):
+        tabs.append({
+            'label': product.name, 'title': product.summary, 'text': product.description,
+            'focus': product.category.name, 'image': product.main_image,
+            'url': f"{reverse('productos:index')}?categoria={product.category.slug}",
         })
     for area in active_areas()[:max(SOLUTION_TABS_MAX - len(tabs), 0)]:
         tabs.append({
@@ -43,5 +52,6 @@ class HomeView(TemplateView):
             about=AboutPage.get_current(),
             solution_tabs=solution_tabs(),
             knowledge_areas=active_areas()[:KNOWLEDGE_AREAS_MAX],
+            featured_team=TeamMember.objects.filter(is_active=True, is_featured=True),
         )
         return context

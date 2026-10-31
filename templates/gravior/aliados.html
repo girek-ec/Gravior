@@ -1,11 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Aliados | GRAVIOR{% endblock %}
-{% block meta_description %}Conoce el enfoque de GRAVIOR hacia alianzas estratégicas, genética avícola, transferencia de conocimiento, innovación, calidad y acompañamiento técnico.{% endblock %}
-
 {% block content %}
-<section class="page-title-big-typography bg-dark-gray ipad-top-space-margin" data-parallax-background-ratio="0.5" style="background-image: url(https://placehold.co/1920x1100)">
+<section class="page-title-big-typography bg-dark-gray ipad-top-space-margin" data-parallax-background-ratio="0.5" style="background-image: url({% if hero_partner %}{{ hero_partner.image.url }}{% else %}https://placehold.co/1920x1100{% endif %})">
 <div class="opacity-extra-medium bg-dark-slate-blue"></div>
 <div class="container">
 <div class="row align-items-center justify-content-center extra-small-screen">
@@ -22,52 +19,22 @@
 </div>
 </div>
 </section>
+{% if partners %}
 <section class="ps-12 pe-12 xl-ps-10 xl-pe-10 lg-ps-3 lg-pe-3 half-section" id="down-section">
 <div class="container-fluid">
 <div class="row row-cols-1 row-cols-md-4 row-cols-sm-2 clients-style-06" data-anime='{ "el": "childs", "scale": [0,1], "opacity": [0,1], "duration": 300, "delay": 0, "staggervalue": 200, "easing": "easeOutQuad" }'>
+{% for partner in partners %}
 <!-- start client item -->
 <div class="col client-box text-center pt-6 pb-6 sm-pt-8 sm-pb-8">
-<a href="#"><img alt="Cobb · aliado estratégico" class="h-40px md-h-30px sm-h-40px" src="{% static 'crafto/images/gravior/partners/partner-cobb.svg' %}"/></a>
+{% if partner.website %}<a href="{{ partner.website }}" target="_blank" rel="noopener"><img alt="{{ partner.name }}" class="h-40px md-h-30px sm-h-40px" src="{{ partner.logo.url }}"/></a>{% else %}<img alt="{{ partner.name }}" class="h-40px md-h-30px sm-h-40px" src="{{ partner.logo.url }}"/>{% endif %}
 </div>
 <!-- end client item -->
-<!-- start client item -->
-<div class="col client-box text-center pt-6 pb-6 sm-pt-8 sm-pb-8">
-<a href="#"><img alt="Aliado estratégico · logo pendiente" class="h-40px md-h-30px sm-h-40px" src="{% static 'crafto/images/gravior/partners/partner-02.svg' %}"/></a>
-</div>
-<!-- end client item -->
-<!-- start client item -->
-<div class="col client-box text-center pt-6 pb-6 sm-pt-8 sm-pb-8">
-<a href="#"><img alt="Aliado estratégico · logo pendiente" class="h-40px md-h-30px sm-h-40px" src="{% static 'crafto/images/gravior/partners/partner-03.svg' %}"/></a>
-</div>
-<!-- end client item -->
-<!-- start client item -->
-<div class="col client-box text-center pt-6 pb-6 sm-pt-8 sm-pb-8">
-<a href="#"><img alt="Aliado estratégico · logo pendiente" class="h-40px md-h-30px sm-h-40px" src="{% static 'crafto/images/gravior/partners/partner-04.svg' %}"/></a>
-</div>
-<!-- end client item -->
-<!-- start client item -->
-<div class="col client-box text-center pt-6 pb-6 sm-pt-8 sm-pb-8">
-<a href="#"><img alt="Aliado estratégico · logo pendiente" class="h-40px md-h-30px sm-h-40px" src="{% static 'crafto/images/gravior/partners/partner-05.svg' %}"/></a>
-</div>
-<!-- end client item -->
-<!-- start client item -->
-<div class="col client-box text-center pt-6 pb-6 sm-pt-8 sm-pb-8">
-<a href="#"><img alt="Aliado estratégico · logo pendiente" class="h-40px md-h-30px sm-h-40px" src="{% static 'crafto/images/gravior/partners/partner-06.svg' %}"/></a>
-</div>
-<!-- end client item -->
-<!-- start client item -->
-<div class="col client-box text-center pt-6 pb-6 sm-pt-8 sm-pb-8">
-<a href="#"><img alt="Aliado estratégico · logo pendiente" class="h-40px md-h-30px sm-h-40px" src="{% static 'crafto/images/gravior/partners/partner-07.svg' %}"/></a>
-</div>
-<!-- end client item -->
-<!-- start client item -->
-<div class="col client-box text-center pt-6 pb-6 sm-pt-8 sm-pb-8">
-<a href="#"><img alt="Aliado estratégico · logo pendiente" class="h-40px md-h-30px sm-h-40px" src="{% static 'crafto/images/gravior/partners/partner-08.svg' %}"/></a>
-</div>
-<!-- end client item -->
+{% endfor %}
 </div>
 </div>
 </section>
+{% endif %}
+{% if carousel_partners %}
 <section class="bg-solitude-blue overflow-hidden xs-pb-20px">
 <div class="container-fluid">
 <div class="row justify-content-center mb-2">
@@ -81,114 +48,23 @@
 <div class="swiper slider-three-slide swiper-initialized swiper-horizontal magic-cursor" data-slider-options='{ "slidesPerView": 1, "spaceBetween": 30, "loopedSlides": true, "pagination": { "el": ".slider-four-slide-pagination-2", "clickable": true, "dynamicBullets": false }, "autoplay": { "delay": 3000, "disableOnInteraction": false }, "keyboard": { "enabled": true, "onlyInViewport": true }, "breakpoints": { "1200": { "slidesPerView": 4 }, "992": { "slidesPerView": 3 }, "768": { "slidesPerView": 2 } }, "effect": "slide" }'>
 <div class="swiper-wrapper pt-30px pb-30px">
 <div class="swiper-slide review-style-04 d-none d-lg-block h-auto"></div>
+{% for partner in carousel_partners %}
 <!-- start review item -->
 <div class="swiper-slide review-style-04">
 <div class="d-flex justify-content-center h-100 flex-column bg-white border-radius-6px p-15 xl-p-12 box-shadow-extra-large">
-<div class="review-star-icon fs-18 lh-30">
-<i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-</div>
-<span class="alt-font fw-500 fs-19 text-dark-gray mb-10px">Genética de alto desempeño</span>
-<p class="mb-20px">Trabajamos con aliados especializados para acercar soluciones genéticas y conocimiento técnico al productor.</p>
+<span class="alt-font fw-500 fs-19 text-dark-gray mb-10px">{{ partner.name }}</span>
+<p class="mb-20px">{{ partner.description }}</p>
 <div class="mt-5px d-flex align-items-center">
-<img alt="Genética avícola" class="rounded-circle w-90px h-90px me-20px" src="{% static 'crafto/images/gravior/partners/alliance-01.svg' %}"/>
+<img alt="{{ partner.name }}" class="rounded-circle w-90px h-90px me-20px" src="{% if partner.image %}{{ partner.image.url }}{% else %}{{ partner.logo.url }}{% endif %}"/>
 <div class="d-inline-block align-middle">
-<div class="text-dark-gray fw-500 alt-font">Colaboración</div>
-<div class="lh-20 fs-16">Genética avícola</div>
+{% if partner.alliance_type %}<div class="text-dark-gray fw-500 alt-font">{{ partner.alliance_type }}</div>{% endif %}
+{% if partner.website %}<div class="lh-20 fs-16"><a href="{{ partner.website }}" target="_blank" rel="noopener">{{ partner.website|cut:"https://"|cut:"http://"|cut:"www." }}</a></div>{% endif %}
 </div>
 </div>
 </div>
 </div>
 <!-- end review item -->
-<!-- start review item -->
-<div class="swiper-slide review-style-04">
-<div class="d-flex justify-content-center h-100 flex-column bg-white border-radius-6px p-15 xl-p-12 box-shadow-extra-large">
-<div class="review-star-icon fs-18 lh-30">
-<i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
-</div>
-<span class="alt-font fw-500 fs-19 text-dark-gray mb-10px">Transferencia de conocimiento</span>
-<p class="mb-20px">La actualización técnica y el intercambio de experiencia fortalecen la toma de decisiones en cada operación.</p>
-<div class="mt-5px d-flex align-items-center">
-<img alt="Soporte técnico" class="rounded-circle w-90px h-90px me-20px" src="{% static 'crafto/images/gravior/partners/alliance-02.svg' %}"/>
-<div class="d-inline-block align-middle">
-<div class="text-dark-gray fw-500 alt-font">Conocimiento</div>
-<div class="lh-20 fs-16">Soporte técnico</div>
-</div>
-</div>
-</div>
-</div>
-<!-- end review item -->
-<!-- start review item -->
-<div class="swiper-slide review-style-04">
-<div class="d-flex justify-content-center h-100 flex-column bg-white border-radius-6px p-15 xl-p-12 box-shadow-extra-large">
-<div class="review-star-icon fs-18 lh-30">
-<i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-</div>
-<span class="alt-font fw-500 fs-19 text-dark-gray mb-10px">Innovación aplicada</span>
-<p class="mb-20px">Integramos herramientas, procesos y criterios técnicos orientados a una producción moderna y eficiente.</p>
-<div class="mt-5px d-flex align-items-center">
-<img alt="Tecnología avícola" class="rounded-circle w-90px h-90px me-20px" src="{% static 'crafto/images/gravior/partners/alliance-03.svg' %}"/>
-<div class="d-inline-block align-middle">
-<div class="text-dark-gray fw-500 alt-font">Innovación</div>
-<div class="lh-20 fs-16">Tecnología avícola</div>
-</div>
-</div>
-</div>
-</div>
-<!-- end review item -->
-<!-- start review item -->
-<div class="swiper-slide review-style-04">
-<div class="d-flex justify-content-center h-100 flex-column bg-white border-radius-6px p-15 xl-p-12 box-shadow-extra-large">
-<div class="review-star-icon fs-18 lh-30">
-<i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-</div>
-<span class="alt-font fw-500 fs-19 text-dark-gray mb-10px">Calidad y bioseguridad</span>
-<p class="mb-20px">La colaboración especializada permite fortalecer protocolos, prevención y buenas prácticas en toda la cadena.</p>
-<div class="mt-5px d-flex align-items-center">
-<img alt="Bioseguridad" class="rounded-circle w-90px h-90px me-20px" src="{% static 'crafto/images/gravior/partners/alliance-04.svg' %}"/>
-<div class="d-inline-block align-middle">
-<div class="text-dark-gray fw-500 alt-font">Calidad</div>
-<div class="lh-20 fs-16">Bioseguridad</div>
-</div>
-</div>
-</div>
-</div>
-<!-- end review item -->
-<!-- start review item -->
-<div class="swiper-slide review-style-04">
-<div class="d-flex justify-content-center h-100 flex-column bg-white border-radius-6px p-15 xl-p-12 box-shadow-extra-large">
-<div class="review-star-icon fs-18 lh-30">
-<i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
-</div>
-<span class="alt-font fw-500 fs-19 text-dark-gray mb-10px">Eficiencia productiva</span>
-<p class="mb-20px">Impulsamos soluciones que conectan genética, manejo, ambiente y seguimiento técnico para mejorar resultados.</p>
-<div class="mt-5px d-flex align-items-center">
-<img alt="Producción" class="rounded-circle w-90px h-90px me-20px" src="{% static 'crafto/images/gravior/partners/alliance-05.svg' %}"/>
-<div class="d-inline-block align-middle">
-<div class="text-dark-gray fw-500 alt-font">Eficiencia</div>
-<div class="lh-20 fs-16">Producción</div>
-</div>
-</div>
-</div>
-</div>
-<!-- end review item -->
-<!-- start review item -->
-<div class="swiper-slide review-style-04">
-<div class="d-flex justify-content-center h-100 flex-column bg-white border-radius-6px p-15 xl-p-12 box-shadow-extra-large">
-<div class="review-star-icon fs-18 lh-30">
-<i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-</div>
-<span class="alt-font fw-500 fs-19 text-dark-gray mb-10px">Relaciones a largo plazo</span>
-<p class="mb-20px">Construimos vínculos profesionales basados en confianza, acompañamiento y objetivos compartidos con el sector avícola.</p>
-<div class="mt-5px d-flex align-items-center">
-<img alt="Alianzas estratégicas" class="rounded-circle w-90px h-90px me-20px" src="{% static 'crafto/images/gravior/partners/alliance-06.svg' %}"/>
-<div class="d-inline-block align-middle">
-<div class="text-dark-gray fw-500 alt-font">Confianza</div>
-<div class="lh-20 fs-16">Alianzas estratégicas</div>
-</div>
-</div>
-</div>
-</div>
-<!-- end review item -->
+{% endfor %}
 <div class="swiper-slide review-style-04 d-none d-lg-block h-auto"></div>
 </div>
 <!-- start slider pagination -->
@@ -199,4 +75,5 @@
 </div>
 </div>
 </section>
+{% endif %}
 {% endblock %}

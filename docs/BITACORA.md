@@ -364,3 +364,223 @@ correctamente) · sin errores de consola en esta revisión.
   `placehold.co` decorativas siguen pendientes de material propio.
 - Error JS intermitente del carrusel de testimonios: no apareció en esta
   revisión; sigue anotado.
+
+---
+
+## Actualización de seguridad y de versiones (28 oct 2026)
+
+### Versiones
+| Componente | Antes | Después | Motivo |
+| --- | --- | --- | --- |
+| Python (venv) | 3.10.11 | **3.13.15** | Python 3.10 sin soporte desde el 1 oct 2026; Pillow 13 exige ≥ 3.11 y Django 6.x ≥ 3.12 |
+| pip | 23.0.1 | **26.2.2** | CVE-2026-6357 (corregido en 26.1) |
+| Django | 5.2.18 | **6.1.2** | Parches de seguridad de 6.1.2 (CVE-2026-77050, -84429, -87890, -87975 y la corrección de CVE-2026-15830) y alinear la versión con el resto del equipo. 5.2.18 ya traía los mismos parches, pero el equipo trabaja en 6.1 |
+| Pillow | 12.3.0 | **13.0.0** | 38 correcciones de seguridad (2 críticas, entre ellas el desbordamiento del decodificador JPEG); 12.x no recibe esos parches |
+| python-dotenv | 1.2.4 | 1.2.4 | Sin cambios |
+| asgiref / sqlparse / tzdata (transitivas) | 3.12.1 / 0.6.0 / 2026.5 | 3.13.0 / 0.6.0 / 2026.6 | Las instala Django |
+| Brotli / brotlicffi | no instalados | no instalados | CVE-2026-111497 no aplica |
+| litellm | no instalado | no instalado | La versión maliciosa 1.107.0 no está presente |
+
+`requirements.txt` pasa de versiones fijas a mínimos: `Django>=6.1.2,<6.2`,
+`Pillow>=13.0.0`, `python-dotenv>=1.2.4` (sin congelar transitivas).
+
+### Entorno
+- El venv anterior quedó como `venv_py310_old/` (ignorado con `venv_*/`).
+- Nuevo venv: `py -3.13 -m venv venv` + `pip install -r requirements.txt`.
+
+### Revisión de Django 6.0 y 6.1 contra el código
+Se revisaron los cambios incompatibles, eliminaciones y obsolescencias de
+ambas versiones frente a settings, URLs, apps, admin, validadores, context
+processor, comandos, tests y templates.
+- **Correo (único cambio necesario)**: Django 6.1 declara obsoletos los
+  ajustes `EMAIL_BACKEND`, `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`,
+  `EMAIL_HOST_PASSWORD`, `EMAIL_USE_TLS`, `EMAIL_USE_SSL` y `EMAIL_TIMEOUT`
+  (8 `RemovedInDjango2028Warning`). `settings.py` ahora arma `MAILERS`
+  (`default`) desde las mismas variables del `.env`; las opciones SMTP solo
+  se pasan al backend SMTP. Probado: envío por consola y construcción del
+  backend SMTP con host/puerto/TLS desde variables (sin envío real).
+- Sin impacto: `DEFAULT_AUTO_FIELD` ya era `BigAutoField`; no se usan
+  `list_select_related=True`, `select_related()` sin argumentos,
+  `values_list(flat=True)` sin campo, `get_connection`/`fail_silently`,
+  `format_html` sin argumentos, `save()` con posicionales, búsquedas
+  `{{ a..b }}` ni la clase CSS `wide` del admin; los `.first()` no dependen
+  de `order_by()` vacío; SQLite 3.50.4 (mínimo 3.37).
+- Migraciones: `makemigrations --check` sin cambios y `migrate --plan` sin
+  operaciones (ni del proyecto ni de las apps de Django). Se respaldó
+  `db.sqlite3` fuera del repo antes de verificar; no hubo que migrar.
+
+### Verificación
+- `python -Wa manage.py check`: sin issues ni advertencias.
+- `python -Wa manage.py test`: 35 tests OK, sin DeprecationWarning (incluye
+  un test nuevo de subida y vista previa de imagen en el admin con Pillow 13
+  y rechazo de un archivo falso).
+- Servidor con el venv nuevo: 11 páginas públicas + `/admin/login/` en 200
+  con datos y con las tablas de los bloques vacías (sobre una copia de la
+  base, luego restaurada); media y static servidos.
+- `seed_bloque_a` y `seed_bloque_b` (con `--fill-blanks`) funcionan; también
+  en los tests sobre base y media temporales.
+- Datos intactos: superusuario `admin` y todos los registros de los seeds.
+- Navegador: Home y login del admin correctos. Sigue apareciendo de forma
+  intermitente el error JS del carrusel de testimonios (`main.js:2720`), sin
+  relación con esta actualización.
+
+### Pendiente para cada desarrollador
+Recrear su venv con Python ≥ 3.12 (recomendado 3.13) e instalar
+`requirements.txt`; en PyCharm, seleccionar `venv\Scripts\python.exe` como
+intérprete.
+
+---
+
+## Bloque C · Productos e Infraestructura (29 oct 2026)
+
+### Sincronización previa
+`lucho` ya está integrada en `main` en GitHub (PR #1, `d016d4e`); ese merge
+no agrega contenido. No había cambios nuevos del equipo. `lucho` lleva 4
+commits locales sin subir (actualización a Python 3.13 / Django 6.1).
+
+### Modelos y ubicación
+| Modelo | App (grupo admin) |
+| --- | --- |
+| ProductCategory, Product, ProductFeature, ProductDocument | `apps/productos` (Productos) |
+| FacilityCategory, Facility, FacilityGallery | `apps/infraestructura` (Infraestructura) |
+
+Campos de las secciones 11 y 12 + `created_at`/`updated_at`. Catálogo
+informativo: sin precio, carrito, stock ni pago.
+
+### Decisiones
+- **on_delete (21.3)**: PROTECT de Product → ProductCategory y Facility →
+  FacilityCategory (no se borra una categoría con elementos, ejemplo literal
+  del documento) y de ProductDocument → Product (documentación publicada);
+  CASCADE en ProductFeature y FacilityGallery (dependen del padre).
+- **Slugs**: `SlugFromNameMixin` (core.models) para categorías, productos e
+  instalaciones; autogenerados si están vacíos, editables y estables.
+  Listos para futuras páginas de detalle (hoy hay anclas `#<slug>`).
+- **Medios**: `media/products/`, `media/products/documents/`,
+  `media/facilities/`, `media/facilities/gallery/`.
+- **Botón de consulta**: template tag `inquiry_url` → WhatsApp con el mensaje
+  configurado + nombre del producto (`SiteConfiguration.whatsapp_link`) si
+  WhatsApp está activo; si no, `/contacto/`. Se oculta si el producto no tiene
+  `inquiry_button_text`.
+- **Filtro de productos**: en el servidor (`/productos/?categoria=<slug>`),
+  con botones de Crafto. No se usó `.portfolio-filter` porque el JS del tema
+  cancela la navegación de esos enlaces. Una categoría inexistente muestra
+  todo.
+- **Instalaciones**: filtro isotope de Crafto por categoría (`.cat-<slug>`) y
+  lightbox de Crafto: la foto principal y la galería activa comparten
+  `data-group`. Para que el tema los agrupe, el enlace pasó a estar dentro de
+  `.portfolio-box` (el CSS solo usa selectores descendientes, el diseño no
+  cambia). El título del lightbox incluye la ubicación pública si existe.
+- **Home**: pestañas de soluciones = líneas destacadas + productos destacados
+  (enfoque = categoría, enlace al catálogo filtrado) + áreas de calidad,
+  máximo 5.
+- **Nombres de producto cortos**: la tarjeta muestra el nombre en tamaño
+  grande y la maqueta asume una o dos palabras; se acortó el ejemplo y el
+  admin lo indica.
+
+### Mapeo a la maqueta
+- **Productos**: cabecera (fondo = imagen del primer producto); "Una propuesta
+  integral" = descripciones de categorías en dos columnas; tarjeta = badge de
+  categoría, `<sub>` referencia (o número), nombre, resumen, características
+  activas (descripción como tooltip), botón de consulta, documentos activos y
+  franja derecha con la imagen principal; "Destacado" = `is_featured`.
+- **Instalaciones**: filtro + grilla con imagen principal y título.
+
+### Datos de ejemplo
+`python manage.py seed_bloque_c` (y `--fill-blanks`). Detalle en
+`docs/CONTENIDO_EJEMPLO.md`.
+
+### Verificación
+`check -Wa` sin issues ni advertencias · `makemigrations --check` sin cambios ·
+50 tests OK · 11 URLs públicas + admin en 200 con datos y con tablas vacías ·
+navegador a 1366 px y 375 px: productos (filtro, WhatsApp por producto,
+documentos), instalaciones (3 columnas, filtro: Galpones muestra 3 de 12,
+lightbox con 3 fotos y ubicación) y pestaña de producto en el Home. El error
+JS del carrusel de testimonios no apareció en estas cargas.
+
+### Pendientes
+- Campos sin lugar en la maqueta actual: Product.description, application,
+  benefits y brand; Facility.description y video_url (no hay página de
+  detalle). Quedan cargados y editables.
+- En móvil, la franja decorativa derecha de las tarjetas de producto se
+  superpone ~35 px al texto (rasgo de la maqueta; revisar en frontend).
+- Subtítulo de Instalaciones con texto de la demo: "Instalaciones - Three
+  column layout".
+- El contador del lightbox ("1 of 3") viene en inglés desde el plugin del
+  tema.
+
+---
+
+## Pendientes para diseño (actualizado 31 oct 2026)
+
+Lista consolidada de lo acordado para resolver en diseño/frontend. Ninguno
+bloquea el backend; el contenido ya es editable desde el admin.
+
+| # | Tema | Detalle | Origen |
+| --- | --- | --- | --- |
+| 1 | CTA final del Home | El documento prevé un llamado a la acción final en el inicio, pero la maqueta no tiene ese bloque. Lo pedirá diseño. | Bloque A |
+| 2 | Campos editables sin lugar en la maqueta | `AboutPage.mission`, `QualityPage.quality_commitment`, `QualityPage.biosecurity_approach`; `Product.description`, `application`, `benefits`, `brand`; `Facility.description`, `video_url`. Están cargados y editables; en el admin, los de Product y Facility dicen "Aún no se muestra en la web". No habrá página de detalle por ahora. | Bloques B y C |
+| 3 | Franja decorativa de las tarjetas de producto en móvil | La franja de imagen de la derecha (`w-65px`, posición absoluta) se superpone ~35 px al texto a 375 px. | Bloque C |
+| 4 | Menú lateral largo | "Calidad y bioseguridad" ocupa dos líneas muy juntas en el menú lateral de escritorio. | Bloque A |
+| 5 | Subrayado perdido en Nosotros | La franja de propósito mostraba las últimas palabras subrayadas; ahora el texto es un solo campo (`AboutPage.purpose`). | Bloque B |
+| 6 | Nombres de producto largos | El nombre se muestra en tamaño grande en la tarjeta; nombres de más de dos palabras o palabras largas se parten o tocan la franja. El admin recomienda nombres cortos. | Bloque C |
+| 7 | Sección de aliados en el Home | El documento prevé aliados destacados en el inicio (`Partner.is_featured`), pero la maqueta del Home no tiene ese bloque. El campo ya existe. | Bloque D |
+| 8 | Carrusel de Aliados en móvil | En móvil el carrusel aparece desplazado: la maqueta incluye diapositivas espaciadoras `d-none d-lg-block` que Swiper sigue contando. | Bloque D |
+| 9 | ~~Estrellas en tarjetas de equipo y aliados~~ | **Decisión tomada (31 oct 2026): se quitaron** las 5 estrellas fijas de la tarjeta destacada de Equipo, de las pestañas de equipo del Home y del carrusel de Aliados, para que no se lean como calificaciones. El carrusel de testimonios del Home no se modificó. | Bloque D |
+
+Resueltos en esta revisión (ya no están pendientes):
+- Subtítulo de demo "Instalaciones - Three column layout" → texto fijo en
+  español.
+- Contador del lightbox en inglés → traducido por configuración de Magnific
+  Popup en `base.html` ("1 de 3"), sin editar archivos del tema.
+
+
+---
+
+## Bloque D · Equipo y Aliados (31 oct 2026)
+
+### Ajustes previos del Bloque C
+- `help_text` "Aún no se muestra en la web" en Product (descripción,
+  aplicación, beneficios, marca) y Facility (descripción, video).
+- Lightbox en español por configuración de Magnific Popup en `base.html`.
+- Subtítulo de Instalaciones en español.
+- Sección "Pendientes para diseño" consolidada.
+
+### Modelos y ubicación
+| Modelo | App (grupo admin) |
+| --- | --- |
+| TeamMember | `apps/equipo` (Equipo) |
+| Partner | `apps/aliados` (Aliados) |
+
+Campos de la sección 13 + `created_at`/`updated_at`. Cada modelo en su app
+para que el admin muestre los grupos "Equipo" y "Aliados" de la sección 4.
+
+### Decisiones
+- **Datos personales**: correo, teléfono y LinkedIn son opcionales, con
+  aviso en el admin; el template los muestra solo si tienen contenido
+  (`includes/member_social.html`). El seed nunca los completa, tampoco con
+  `--fill-blanks`.
+- **Nombres genéricos**: "Nombre del integrante N", "Cargo del integrante",
+  "Aliado de ejemplo N". Sin personas, marcas ni logos reales.
+- **Cobb** no se carga como aliado (el logo es obligatorio y no hay material
+  autorizado).
+- **Logos de relleno**: `placeholder_logo()` genera PNG con el diseño de los
+  SVG de la maqueta, porque `ImageField` (Pillow) no acepta SVG.
+- **Equipo**: el primer integrante (por orden) ocupa la tarjeta destacada; el
+  resto, la grilla; la tarjeta "+" usa el CTA `team_contact`.
+- **Aliados**: grilla de logos (enlace solo si hay sitio web) y carrusel con
+  los aliados que tienen reseña; la cabecera usa la imagen de un aliado si
+  existe.
+- **Home**: pestañas del equipo con los integrantes destacados; la maqueta no
+  tiene sección de aliados (queda en "Pendientes para diseño").
+- Medios: `media/team/`, `media/partners/`, `media/partners/images/`.
+
+### Datos de ejemplo
+`python manage.py seed_bloque_d` (y `--fill-blanks`). Detalle en
+`docs/CONTENIDO_EJEMPLO.md`.
+
+### Verificación
+`check -Wa` sin issues · `makemigrations --check` sin cambios · 61 tests OK ·
+11 URLs públicas + admin en 200 · navegador a 1366 px y 375 px: equipo
+(tarjeta destacada, grilla, tarjeta de contacto), aliados (logos, carrusel
+autoplay) y equipo destacado del Home; sin errores de consola. El error JS
+del carrusel de testimonios no apareció en estas cargas.

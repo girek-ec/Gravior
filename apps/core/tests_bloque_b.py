@@ -159,6 +159,34 @@ class BlockBAdminTests(TempMediaMixin, TestCase):
                 self.assertEqual(self.client.get(reverse(f'admin:{name}_add')).status_code, 403)
                 self.assertEqual(self.client.get(reverse(f'admin:{name}_delete', args=[obj.pk])).status_code, 403)
 
+    def test_image_upload_and_preview(self):
+        """Subida de un ImageField desde el admin y su miniatura (valida que Pillow procese la imagen)."""
+        from io import BytesIO
+
+        from PIL import Image
+
+        buffer = BytesIO()
+        Image.new('RGB', (600, 440), (200, 30, 40)).save(buffer, 'PNG')
+        upload = SimpleUploadedFile('valor.png', buffer.getvalue(), content_type='image/png')
+        response = self.client.post(reverse('admin:empresa_corporatevalue_add'), {
+            'name': 'Valor con imagen', 'description': 'Descripción', 'icon_class': '',
+            'image': upload, 'order': 1, 'is_active': 'on',
+        })
+        self.assertEqual(response.status_code, 302, getattr(response, 'context', None) and response.context['adminform'].form.errors)
+        value = CorporateValue.objects.get(name='Valor con imagen')
+        self.assertTrue(value.image.name.startswith('about/values/'))
+        with Image.open(value.image.path) as stored:
+            self.assertEqual(stored.size, (600, 440))
+        change = self.client.get(reverse('admin:empresa_corporatevalue_change', args=[value.pk]))
+        self.assertContains(change, f'<img src="{value.image.url}"')
+
+        fake = SimpleUploadedFile('falso.png', b'no es una imagen', content_type='image/png')
+        response = self.client.post(reverse('admin:empresa_corporatevalue_add'), {
+            'name': 'Falso', 'description': 'x', 'image': fake, 'order': 2, 'is_active': 'on',
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(CorporateValue.objects.filter(name='Falso').exists())
+
     def test_admin_groups_order(self):
         response = self.client.get(reverse('admin:index'))
         labels = [app['app_label'] for app in response.context['app_list']]

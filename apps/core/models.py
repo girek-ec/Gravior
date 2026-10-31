@@ -108,12 +108,17 @@ class SiteConfiguration(SingletonModel, TimeStampedModel):
     @property
     def whatsapp_url(self):
         """URL de wa.me solo si el botón está activo y hay número."""
+        return self.whatsapp_link()
+
+    def whatsapp_link(self, subject=''):
+        """URL de wa.me con el mensaje inicial y, opcionalmente, el tema de la consulta (p. ej. un producto)."""
         digits = self._digits(self.whatsapp_number)
         if not (self.whatsapp_enabled and digits):
             return ''
+        message = ' – '.join(part for part in (self.whatsapp_message, subject) if part)
         url = f'https://wa.me/{digits}'
-        if self.whatsapp_message:
-            url += f'?text={quote(self.whatsapp_message)}'
+        if message:
+            url += f'?text={quote(message)}'
         return url
 
     @property
@@ -202,3 +207,17 @@ def unique_slug(instance, value, field_name='slug', max_length=None):
         slug = f'{base[:max_length - len(suffix)]}{suffix}'
         n += 1
     return slug
+
+
+class SlugFromNameMixin:
+    """Genera el slug desde `slug_source` (por defecto `name`) solo si está vacío.
+
+    El slug queda estable aunque luego se edite el nombre (sección 21.2).
+    """
+
+    slug_source = 'name'
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = unique_slug(self, getattr(self, self.slug_source))
+        super().save(*args, **kwargs)

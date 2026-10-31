@@ -1,6 +1,6 @@
 # Contenido de ejemplo a reemplazar antes de publicar
 
-Todo lo listado aquí lo cargan los comandos `seed_bloque_a` y `seed_bloque_b`
+Todo lo listado aquí lo cargan los comandos `seed_bloque_a`, `seed_bloque_b`, `seed_bloque_c` y `seed_bloque_d`
 para que ninguna sección quede en blanco. **No es información oficial**: debe
 reemplazarse desde el Django Admin con contenido aprobado por GRAVIOR (sección
 19 del documento de arquitectura).
@@ -15,9 +15,13 @@ Para cargar los ejemplos:
 ```bash
 python manage.py seed_bloque_a
 python manage.py seed_bloque_b
+python manage.py seed_bloque_c
+python manage.py seed_bloque_d
 # Completar solo campos vacíos de registros existentes (nunca sobrescribe):
 python manage.py seed_bloque_a --fill-blanks
 python manage.py seed_bloque_b --fill-blanks
+python manage.py seed_bloque_c --fill-blanks
+python manage.py seed_bloque_d --fill-blanks
 ```
 
 ---
@@ -113,6 +117,61 @@ Sostenibilidad) con fotos de relleno — [Validar] [Imagen].
   [Validar]. Confirmar qué procesos pueden comunicarse públicamente
   (sección 25: no publicar protocolos internos).
 - Imágenes de las áreas: relleno de la maqueta — [Imagen].
+
+---
+
+## Bloque C · Productos e Infraestructura
+
+### Productos (ProductCategory, Product, ProductFeature, ProductDocument)
+- 3 categorías (Genética, Bioseguridad, Soporte técnico) con descripciones de
+  la maqueta, que alimentan la lista "Una propuesta integral" — [Validar].
+- 3 productos de ejemplo: **Línea genética** (marca "Marca por confirmar"),
+  **Control sanitario** y **Asesoría técnica** (marca GRAVIOR), referencias
+  `EJ-01…03`, resumen, descripción, aplicación, beneficios, texto del botón
+  y SEO redactados de forma genérica — [Cliente]. Sin precio, stock ni pago.
+- 5 características por producto (textos de la maqueta) — [Validar].
+- Imágenes de relleno recortadas a 960 × 640 — [Imagen].
+- Cada producto tiene un PDF **"Documento de ejemplo – reemplazar"**
+  generado por el sistema — reemplazar por fichas o catálogos aprobados —
+  [Cliente].
+- El botón de consulta abre WhatsApp con el número de ejemplo
+  (`+593 00 000 0000`) mientras siga activo en la configuración general.
+
+### Instalaciones (FacilityCategory, Facility, FacilityGallery)
+- 4 categorías (Galpones, Tecnología, Bioseguridad, Operación) — [Validar].
+- 12 instalaciones con los títulos de la maqueta, texto breve y descripción
+  genéricos — [Cliente]. **No incluyen capacidades ni datos estratégicos.**
+- Ubicación pública: "Provincia por confirmar" en todas — [Cliente]. Dejar
+  vacía si no es publicable.
+- Foto principal (800 × 635) y 2 fotos de galería (1040 × 700, pies "Vista
+  general" y "Detalle de la instalación") por instalación, recortadas de las
+  imágenes de la maqueta — [Imagen]. Reemplazar por fotografías propias.
+
+---
+
+## Bloque D · Equipo y Aliados
+
+### Equipo técnico (TeamMember)
+- 6 integrantes **"Nombre del integrante 1…6"**, cargo **"Cargo del
+  integrante"**, especialidades genéricas (Genética avícola, Calidad y
+  bioseguridad, Asesoría técnica, Producción avícola, Manejo y bienestar,
+  Soporte en campo), resumen y biografía "pendientes" — [Cliente].
+- Fotos de relleno de la maqueta (`team-01…03`, recortadas a 600 × 832) que
+  **no corresponden a personas de GRAVIOR** — [Imagen] [Cliente].
+- Correo, teléfono y LinkedIn **vacíos**: no se muestran en la web. Cargar
+  solo con autorización de cada persona — [Cliente].
+- Los 3 primeros están destacados (pestañas del Home).
+
+### Aliados estratégicos (Partner)
+- 7 aliados **"Aliado de ejemplo 1…7"** con tipo de relación y reseña
+  genéricos de la maqueta y sitio `https://www.example.com` — [Cliente].
+- Logos: PNG generados "ALIADO 0N · logo pendiente" (mismo diseño que los
+  SVG de la maqueta) — reemplazar por logos oficiales autorizados — [Cliente].
+- Imágenes del carrusel: fotos de relleno recortadas a 300 × 300 — [Imagen].
+- **Cobb no está cargado**: agregarlo cuando haya logo y textos autorizados.
+
+### Llamado a la acción
+`team_contact` ("Contactar al equipo" → /contacto/) — [Validar].
 
 ---
 

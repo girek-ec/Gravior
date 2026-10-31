@@ -1,11 +1,11 @@
 """
-Configuración de Django para el sitio corporativo GRAVIOR.
+Configuración de Django (6.1) para el sitio corporativo GRAVIOR.
 
 Los valores sensibles o dependientes del entorno se leen desde el archivo
 .env (ver .env.example).
 
-https://docs.djangoproject.com/en/5.2/topics/settings/
-https://docs.djangoproject.com/en/5.2/ref/settings/
+https://docs.djangoproject.com/en/6.1/topics/settings/
+https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
 import os
@@ -31,7 +31,7 @@ def env_list(name, default=''):
 
 
 # Seguridad
-# https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+# https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 if not SECRET_KEY:
@@ -99,7 +99,7 @@ WSGI_APPLICATION = 'gravior.wsgi.application'
 
 
 # Base de datos
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+# https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
@@ -112,7 +112,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # Validación de contraseñas
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+# https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -148,7 +148,7 @@ USE_TZ = True
 
 
 # Archivos estáticos (assets de Crafto en static/)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
+# https://docs.djangoproject.com/en/6.1/howto/static-files/
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
@@ -159,18 +159,32 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
-# Correo
-# En desarrollo se usa el backend de consola. En producción definir
+# Correo (MAILERS, Django 6.1+; los ajustes EMAIL_* de Django están obsoletos)
+# En desarrollo se usa el backend de consola. En producción definir en .env
 # EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend y los datos SMTP.
-# https://docs.djangoproject.com/en/5.2/topics/email/
+# Las variables del .env conservan sus nombres; aquí se traducen a MAILERS.
+# https://docs.djangoproject.com/en/6.1/howto/mailers-migration/
 
-EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
-EMAIL_HOST = os.getenv('EMAIL_HOST', 'localhost')
-EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
-EMAIL_USE_TLS = env_bool('EMAIL_USE_TLS', default=True)
-EMAIL_USE_SSL = env_bool('EMAIL_USE_SSL', default=False)
-EMAIL_TIMEOUT = int(os.getenv('EMAIL_TIMEOUT', '10'))
+EMAIL_BACKEND_PATH = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+EMAIL_OPTIONS = {}
+if EMAIL_BACKEND_PATH == 'django.core.mail.backends.smtp.EmailBackend':
+    # Solo el backend SMTP recibe estas opciones (los demás advierten si reciben opciones desconocidas).
+    EMAIL_OPTIONS = {
+        'host': os.getenv('EMAIL_HOST', 'localhost'),
+        'port': int(os.getenv('EMAIL_PORT', '587')),
+        'username': os.getenv('EMAIL_HOST_USER', ''),
+        'password': os.getenv('EMAIL_HOST_PASSWORD', ''),
+        'use_tls': env_bool('EMAIL_USE_TLS', default=True),
+        'use_ssl': env_bool('EMAIL_USE_SSL', default=False),
+        'timeout': int(os.getenv('EMAIL_TIMEOUT', '10')),
+    }
+
+MAILERS = {
+    'default': {
+        'BACKEND': EMAIL_BACKEND_PATH,
+        'OPTIONS': EMAIL_OPTIONS,
+    },
+}
+
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'webmaster@localhost')
 SERVER_EMAIL = os.getenv('SERVER_EMAIL', 'root@localhost')

@@ -12,6 +12,8 @@ MODEL_ORDER = {
     'empresa': ['AboutPage', 'CorporateValue'],
     'genetica': ['GeneticLine', 'GeneticFeature', 'GeneticDocument'],
     'calidad': ['QualityPage', 'QualityArea', 'QualityStep'],
+    'productos': ['ProductCategory', 'Product', 'ProductFeature', 'ProductDocument'],
+    'infraestructura': ['FacilityCategory', 'Facility', 'FacilityGallery'],
 }
 
 
