@@ -32,13 +32,14 @@ class Facility(SlugFromNameMixin, TimeStampedModel):
     slug = models.SlugField('identificador', max_length=140, unique=True, blank=True,
                             help_text='Se genera automáticamente desde el título. Reservado para una futura página de detalle.')
     summary = models.TextField('texto breve', max_length=200)
-    description = models.TextField('descripción ampliada', blank=True)
+    description = models.TextField('descripción ampliada', blank=True, help_text='Aún no se muestra en la web (no hay página de detalle).')
     main_image = models.ImageField('imagen principal', upload_to='facilities/', validators=image_validators(3),
                                    help_text='Recomendado 800 × 635 px. Máx. 3 MB. Usar fotografías propias o autorizadas.')
     public_location = models.CharField(
         'ubicación pública', max_length=120, blank=True,
         help_text='Solo si es publicable (por ejemplo, la provincia). No publicar ubicaciones sensibles.')
-    video_url = models.URLField('video', max_length=500, blank=True, help_text='Enlace de YouTube o Vimeo.')
+    video_url = models.URLField('video', max_length=500, blank=True,
+                                help_text='Enlace de YouTube o Vimeo. Aún no se muestra en la web (no hay página de detalle).')
     is_featured = models.BooleanField('destacado', default=False)
     order = models.PositiveIntegerField('orden', default=0)
     is_active = models.BooleanField('activo', default=True)

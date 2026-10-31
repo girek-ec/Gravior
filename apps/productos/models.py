@@ -31,14 +31,14 @@ class Product(SlugFromNameMixin, TimeStampedModel):
                             help_text='Se muestra en grande en la tarjeta del catálogo: preferir nombres cortos (una o dos palabras).')
     slug = models.SlugField('identificador para URL', max_length=140, unique=True, blank=True,
                             help_text='Se genera automáticamente desde el nombre. Reservado para la futura página de detalle.')
-    brand = models.CharField('marca', max_length=80, blank=True, help_text='Solo si aplica.')
+    brand = models.CharField('marca', max_length=80, blank=True, help_text='Solo si aplica. Aún no se muestra en la web (no hay página de detalle).')
     reference = models.CharField('código / referencia', max_length=40, blank=True)
     summary = models.TextField('resumen', max_length=200, help_text='Texto breve para la tarjeta del catálogo.')
-    description = models.TextField('descripción completa')
+    description = models.TextField('descripción completa', help_text='Aún no se muestra en la web (no hay página de detalle).')
     main_image = models.ImageField('imagen principal', upload_to='products/', validators=image_validators(3),
                                    help_text='Horizontal, recomendado 960 × 640 px. Máx. 3 MB.')
-    application = models.TextField('aplicación', blank=True)
-    benefits = models.TextField('beneficios', blank=True)
+    application = models.TextField('aplicación', blank=True, help_text='Aún no se muestra en la web (no hay página de detalle).')
+    benefits = models.TextField('beneficios', blank=True, help_text='Aún no se muestra en la web (no hay página de detalle).')
     inquiry_button_text = models.CharField(
         'texto del botón de consulta', max_length=40, blank=True,
         help_text='Ej.: Solicitar información. Abre WhatsApp si está activo en la configuración general; si no, Contacto.')
