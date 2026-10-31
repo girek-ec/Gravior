@@ -1,6 +1,6 @@
 # Contenido de ejemplo a reemplazar antes de publicar
 
-Todo lo listado aquí lo cargan los comandos `seed_bloque_a`, `seed_bloque_b` y `seed_bloque_c`
+Todo lo listado aquí lo cargan los comandos `seed_bloque_a`, `seed_bloque_b`, `seed_bloque_c` y `seed_bloque_d`
 para que ninguna sección quede en blanco. **No es información oficial**: debe
 reemplazarse desde el Django Admin con contenido aprobado por GRAVIOR (sección
 19 del documento de arquitectura).
@@ -16,10 +16,12 @@ Para cargar los ejemplos:
 python manage.py seed_bloque_a
 python manage.py seed_bloque_b
 python manage.py seed_bloque_c
+python manage.py seed_bloque_d
 # Completar solo campos vacíos de registros existentes (nunca sobrescribe):
 python manage.py seed_bloque_a --fill-blanks
 python manage.py seed_bloque_b --fill-blanks
 python manage.py seed_bloque_c --fill-blanks
+python manage.py seed_bloque_d --fill-blanks
 ```
 
 ---
@@ -144,6 +146,32 @@ Sostenibilidad) con fotos de relleno — [Validar] [Imagen].
 - Foto principal (800 × 635) y 2 fotos de galería (1040 × 700, pies "Vista
   general" y "Detalle de la instalación") por instalación, recortadas de las
   imágenes de la maqueta — [Imagen]. Reemplazar por fotografías propias.
+
+---
+
+## Bloque D · Equipo y Aliados
+
+### Equipo técnico (TeamMember)
+- 6 integrantes **"Nombre del integrante 1…6"**, cargo **"Cargo del
+  integrante"**, especialidades genéricas (Genética avícola, Calidad y
+  bioseguridad, Asesoría técnica, Producción avícola, Manejo y bienestar,
+  Soporte en campo), resumen y biografía "pendientes" — [Cliente].
+- Fotos de relleno de la maqueta (`team-01…03`, recortadas a 600 × 832) que
+  **no corresponden a personas de GRAVIOR** — [Imagen] [Cliente].
+- Correo, teléfono y LinkedIn **vacíos**: no se muestran en la web. Cargar
+  solo con autorización de cada persona — [Cliente].
+- Los 3 primeros están destacados (pestañas del Home).
+
+### Aliados estratégicos (Partner)
+- 7 aliados **"Aliado de ejemplo 1…7"** con tipo de relación y reseña
+  genéricos de la maqueta y sitio `https://www.example.com` — [Cliente].
+- Logos: PNG generados "ALIADO 0N · logo pendiente" (mismo diseño que los
+  SVG de la maqueta) — reemplazar por logos oficiales autorizados — [Cliente].
+- Imágenes del carrusel: fotos de relleno recortadas a 300 × 300 — [Imagen].
+- **Cobb no está cargado**: agregarlo cuando haya logo y textos autorizados.
+
+### Llamado a la acción
+`team_contact` ("Contactar al equipo" → /contacto/) — [Validar].
 
 ---
 

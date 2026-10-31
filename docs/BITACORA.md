@@ -523,9 +523,64 @@ bloquea el backend; el contenido ya es editable desde el admin.
 | 4 | Menú lateral largo | "Calidad y bioseguridad" ocupa dos líneas muy juntas en el menú lateral de escritorio. | Bloque A |
 | 5 | Subrayado perdido en Nosotros | La franja de propósito mostraba las últimas palabras subrayadas; ahora el texto es un solo campo (`AboutPage.purpose`). | Bloque B |
 | 6 | Nombres de producto largos | El nombre se muestra en tamaño grande en la tarjeta; nombres de más de dos palabras o palabras largas se parten o tocan la franja. El admin recomienda nombres cortos. | Bloque C |
+| 7 | Sección de aliados en el Home | El documento prevé aliados destacados en el inicio (`Partner.is_featured`), pero la maqueta del Home no tiene ese bloque. El campo ya existe. | Bloque D |
+| 8 | Carrusel de Aliados en móvil | En móvil el carrusel aparece desplazado: la maqueta incluye diapositivas espaciadoras `d-none d-lg-block` que Swiper sigue contando. | Bloque D |
+| 9 | Estrellas en tarjetas de equipo y aliados | La maqueta muestra 5 estrellas junto a integrantes y aliados; pueden leerse como calificaciones o testimonios. Se mantienen como diseño (siempre 5, sin variar por registro). | Bloque D |
 
 Resueltos en esta revisión (ya no están pendientes):
 - Subtítulo de demo "Instalaciones - Three column layout" → texto fijo en
   español.
 - Contador del lightbox en inglés → traducido por configuración de Magnific
   Popup en `base.html` ("1 de 3"), sin editar archivos del tema.
+
+
+---
+
+## Bloque D · Equipo y Aliados (31 oct 2026)
+
+### Ajustes previos del Bloque C
+- `help_text` "Aún no se muestra en la web" en Product (descripción,
+  aplicación, beneficios, marca) y Facility (descripción, video).
+- Lightbox en español por configuración de Magnific Popup en `base.html`.
+- Subtítulo de Instalaciones en español.
+- Sección "Pendientes para diseño" consolidada.
+
+### Modelos y ubicación
+| Modelo | App (grupo admin) |
+| --- | --- |
+| TeamMember | `apps/equipo` (Equipo) |
+| Partner | `apps/aliados` (Aliados) |
+
+Campos de la sección 13 + `created_at`/`updated_at`. Cada modelo en su app
+para que el admin muestre los grupos "Equipo" y "Aliados" de la sección 4.
+
+### Decisiones
+- **Datos personales**: correo, teléfono y LinkedIn son opcionales, con
+  aviso en el admin; el template los muestra solo si tienen contenido
+  (`includes/member_social.html`). El seed nunca los completa, tampoco con
+  `--fill-blanks`.
+- **Nombres genéricos**: "Nombre del integrante N", "Cargo del integrante",
+  "Aliado de ejemplo N". Sin personas, marcas ni logos reales.
+- **Cobb** no se carga como aliado (el logo es obligatorio y no hay material
+  autorizado).
+- **Logos de relleno**: `placeholder_logo()` genera PNG con el diseño de los
+  SVG de la maqueta, porque `ImageField` (Pillow) no acepta SVG.
+- **Equipo**: el primer integrante (por orden) ocupa la tarjeta destacada; el
+  resto, la grilla; la tarjeta "+" usa el CTA `team_contact`.
+- **Aliados**: grilla de logos (enlace solo si hay sitio web) y carrusel con
+  los aliados que tienen reseña; la cabecera usa la imagen de un aliado si
+  existe.
+- **Home**: pestañas del equipo con los integrantes destacados; la maqueta no
+  tiene sección de aliados (queda en "Pendientes para diseño").
+- Medios: `media/team/`, `media/partners/`, `media/partners/images/`.
+
+### Datos de ejemplo
+`python manage.py seed_bloque_d` (y `--fill-blanks`). Detalle en
+`docs/CONTENIDO_EJEMPLO.md`.
+
+### Verificación
+`check -Wa` sin issues · `makemigrations --check` sin cambios · 61 tests OK ·
+11 URLs públicas + admin en 200 · navegador a 1366 px y 375 px: equipo
+(tarjeta destacada, grilla, tarjeta de contacto), aliados (logos, carrusel
+autoplay) y equipo destacado del Home; sin errores de consola. El error JS
+del carrusel de testimonios no apareció en estas cargas.
