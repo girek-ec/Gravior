@@ -14,6 +14,8 @@ MODEL_ORDER = {
     'calidad': ['QualityPage', 'QualityArea', 'QualityStep'],
     'productos': ['ProductCategory', 'Product', 'ProductFeature', 'ProductDocument'],
     'infraestructura': ['FacilityCategory', 'Facility', 'FacilityGallery'],
+    'actualidad': ['PostCategory', 'Post'],
+    'contacto': ['ContactReason', 'ContactMessage'],
 }
 
 
