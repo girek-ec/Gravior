@@ -1,0 +1,21 @@
+{# Tarjeta de publicación (blog-grid de Crafto). Recibe `post` y opcionalmente `title_class`. #}
+<li class="grid-item">
+    <div class="card border-0 border-radius-5px box-shadow-quadruple-large box-shadow-quadruple-large-hover">
+        <div class="blog-image">
+            <a href="{{ post.get_absolute_url }}" class="d-block"><img src="{{ post.card_image.url }}" alt="{{ post.title }}" /></a>
+            <div class="blog-categories">
+                <a href="{% url 'actualidad:index' %}?categoria={{ post.category.slug }}" class="categories-btn bg-white text-dark-gray text-dark-gray-hover text-uppercase fw-700">{{ post.category.name }}</a>
+            </div>
+        </div>
+        <div class="card-body p-12 lg-p-10">
+            <a href="{{ post.get_absolute_url }}" class="card-title mb-15px fw-700 fs-19 {{ title_class }}text-dark-gray d-inline-block w-90 md-w-100">{{ post.title }}</a>
+            <p>{{ post.excerpt }}</p>
+            <div class="author d-flex justify-content-center align-items-center position-relative overflow-hidden fs-14 text-uppercase">
+                <div class="me-auto">
+                    <span class="blog-date d-inline-block fw-700 text-dark-gray">{{ post.published_at|date:"j M Y" }}</span>
+                    {% if post.author %}<div class="d-inline-block author-name fw-700 text-dark-gray">By <a href="{% url 'actualidad:index' %}" class="text-dark-gray text-decoration-line-bottom">{{ post.author }}</a></div>{% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</li>

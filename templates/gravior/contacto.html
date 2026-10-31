@@ -1,9 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Contacto | GRAVIOR{% endblock %}
-{% block meta_description %}Contacta con GRAVIOR para información sobre genética avícola, servicios técnicos, bioseguridad, productos y acompañamiento especializado.{% endblock %}
-
 {% block content %}
         <!-- start page title -->
         <section class="ipad-top-space-margin overflow-hidden bg-very-light-gray p-0 page-title-big-typography">
@@ -23,129 +20,51 @@
         <!-- start section -->
         <section class="pb-0 position-relative overflow-hidden">
             <div class="container position-relative z-index-1">
+                {% if contact_channels %}
                 <div class="row g-0 mb-8">
                     <div class="col-12 tab-style-08"> 
                         <div class="tab-content">
+                            {% for channel in contact_channels %}
                             <!-- start tab content -->
-                            <div class="tab-pane fade in active show" id="tab_eight1">
+                            <div class="tab-pane fade in{% if forloop.first %} active show{% endif %}" id="tab_eight{{ forloop.counter }}">
                                 <div class="row align-items-center justify-content-center g-0">
                                     <div class="col-md-6 col-lg-6 position-relative sm-mb-30px">
                                         <div class="w-90 xs-w-100 text-end ms-auto">
                                             <img src="https://placehold.co/510x390" class="border-radius-6px" alt="">
                                         </div>
-                                        <div class="position-absolute left-minus-40px bottom-40px md-w-60 lg-left-minus-70px md-bottom-0px d-none d-sm-inline-block" data-bottom-top="transform: translateY(-50px)" data-top-bottom="transform: translateY(50px)">
+                                        <div class="position-absolute left-minus-40px bottom-40px md-w-60 lg-left-minus-70px {% if forloop.first %}md-bottom-0px{% else %}md-bottom-6px{% endif %} d-none d-sm-inline-block" data-bottom-top="transform: translateY(-50px)" data-top-bottom="transform: translateY(50px)">
                                             <img src="https://placehold.co/251x240" alt="">
                                         </div>
                                     </div>
                                     <div class="col-md-5 offset-md-1 col-lg-5 offset-lg-1 text-center text-md-start">
-                                        <h4 class="fw-600 alt-font text-dark-gray mb-5px">Atención comercial</h4> 
-                                        <p class="mb-20px w-100">Consultas comerciales y disponibilidad,<br>orientación sobre soluciones GRAVIOR.</p>
-                                        <span class="d-block"><span class="text-dark-gray fw-600">Correo:</span> <a href="#" class="text-dark-gray fw-600 text-decoration-line-bottom">Correo por definir</a></span>
-                                        <span class="d-block"><span class="text-dark-gray fw-600">Teléfono:</span> <a href="#">Teléfono por definir</a></span>
-                                        <a href="#" class="btn btn-large btn-round-edge btn-dark-gray btn-slide-right mt-30px xs-mt-25px">Solicitar información<span class="bg-white"></span></a>
+                                        <h4 class="fw-600 alt-font text-dark-gray mb-5px">{{ channel.label }}</h4>
+                                        {% if site_config.location_text or site_config.business_hours %}<p class="mb-20px w-100">{{ site_config.location_text }}{% if site_config.location_text and site_config.business_hours %}<br>{% endif %}{{ site_config.business_hours }}</p>{% endif %}
+                                        <span class="d-block"><span class="text-dark-gray fw-600">Correo:</span> <a href="mailto:{{ channel.email }}" class="text-dark-gray fw-600 text-decoration-line-bottom">{{ channel.email }}</a></span>
+                                        {% if site_config.phone %}<span class="d-block"><span class="text-dark-gray fw-600">Teléfono:</span> <a href="tel:{{ site_config.phone_link }}">{{ site_config.phone }}</a></span>{% endif %}
+                                        {% if whatsapp_url %}<span class="d-block"><span class="text-dark-gray fw-600">WhatsApp:</span> <a href="{{ whatsapp_url }}" target="_blank" rel="noopener">{{ site_config.whatsapp_number }}</a></span>{% endif %}
+                                        {% if site_config.google_maps_url %}<span class="d-block"><span class="text-dark-gray fw-600">Ubicación:</span> <a href="{{ site_config.google_maps_url }}" target="_blank" rel="noopener" class="text-decoration-line-bottom">Ver en el mapa</a></span>{% endif %}
+                                        <a href="#formulario-contacto" class="btn btn-large btn-round-edge btn-dark-gray btn-slide-right mt-30px xs-mt-25px section-link">Solicitar información<span class="bg-white"></span></a>
                                     </div>
                                 </div>
                             </div>
                             <!-- end tab content -->
-                            <!-- start tab content -->
-                            <div class="tab-pane fade in" id="tab_eight2">
-                                <div class="row align-items-center justify-content-center g-0">
-                                    <div class="col-md-6 col-lg-6 position-relative sm-mb-30px">
-                                        <div class="w-90 xs-w-100 text-end ms-auto">
-                                            <img src="https://placehold.co/510x390" class="border-radius-6px" alt="">
-                                        </div>
-                                        <div class="position-absolute left-minus-40px bottom-40px md-w-60 lg-left-minus-70px md-bottom-6px d-none d-sm-inline-block" data-bottom-top="transform: translateY(-50px)" data-top-bottom="transform: translateY(50px)">
-                                            <img src="https://placehold.co/251x240" alt="">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5 offset-md-1 col-lg-5 offset-lg-1 text-center text-md-start">
-                                        <h4 class="fw-600 alt-font text-dark-gray mb-5px">Genética avícola</h4> 
-                                        <p class="mb-20px w-100">Información sobre genética avícola,<br>acompañamiento para cada operación.</p>
-                                        <span class="d-block"><span class="text-dark-gray fw-600">Correo:</span> <a href="#" class="text-dark-gray fw-600 text-decoration-line-bottom">Correo por definir</a></span>
-                                        <span class="d-block"><span class="text-dark-gray fw-600">Teléfono:</span> <a href="#">Teléfono por definir</a></span>
-                                        <a href="#" class="btn btn-large btn-round-edge btn-dark-gray btn-slide-right mt-30px xs-mt-25px">Solicitar información<span class="bg-white"></span></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end tab content -->
-                            <!-- start tab content -->
-                            <div class="tab-pane fade in" id="tab_eight3">
-                                <div class="row align-items-center justify-content-center g-0">
-                                    <div class="col-md-6 col-lg-6 position-relative sm-mb-30px">
-                                        <div class="w-90 xs-w-100 text-end ms-auto">
-                                            <img src="https://placehold.co/510x390" class="border-radius-6px" alt="">
-                                        </div>
-                                        <div class="position-absolute left-minus-40px bottom-40px md-w-60 lg-left-minus-70px md-bottom-6px d-none d-sm-inline-block" data-bottom-top="transform: translateY(-50px)" data-top-bottom="transform: translateY(50px)">
-                                            <img src="https://placehold.co/251x240" alt="">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5 offset-md-1 col-lg-5 offset-lg-1 text-center text-md-start">
-                                        <h4 class="fw-600 alt-font text-dark-gray mb-5px">Servicios técnicos</h4> 
-                                        <p class="mb-20px w-100">Asesoría en bioseguridad y manejo,<br>acompañamiento técnico especializado.</p>
-                                        <span class="d-block"><span class="text-dark-gray fw-600">Correo:</span> <a href="#" class="text-dark-gray fw-600 text-decoration-line-bottom">Correo por definir</a></span>
-                                        <span class="d-block"><span class="text-dark-gray fw-600">Teléfono:</span> <a href="#">Teléfono por definir</a></span>
-                                        <a href="#" class="btn btn-large btn-round-edge btn-dark-gray btn-slide-right mt-30px xs-mt-25px">Solicitar información<span class="bg-white"></span></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end tab content -->
-                            <!-- start tab content -->
-                            <div class="tab-pane fade in" id="tab_eight4">
-                                <div class="row align-items-center justify-content-center g-0">
-                                    <div class="col-md-6 col-lg-6 position-relative sm-mb-30px">
-                                        <div class="w-90 xs-w-100 text-end ms-auto">
-                                            <img src="https://placehold.co/510x390" class="border-radius-6px" alt="">
-                                        </div>
-                                        <div class="position-absolute left-minus-40px bottom-40px md-w-60 lg-left-minus-70px md-bottom-6px d-none d-sm-inline-block" data-bottom-top="transform: translateY(-50px)" data-top-bottom="transform: translateY(50px)">
-                                            <img src="https://placehold.co/251x240" alt="">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5 offset-md-1 col-lg-5 offset-lg-1 text-center text-md-start">
-                                        <h4 class="fw-600 alt-font text-dark-gray mb-5px">Productos y soluciones</h4> 
-                                        <p class="mb-20px w-100">Información sobre productos y líneas,<br>soluciones para el sector avícola.</p>
-                                        <span class="d-block"><span class="text-dark-gray fw-600">Correo:</span> <a href="#" class="text-dark-gray fw-600 text-decoration-line-bottom">Correo por definir</a></span>
-                                        <span class="d-block"><span class="text-dark-gray fw-600">Teléfono:</span> <a href="#">Teléfono por definir</a></span>
-                                        <a href="#" class="btn btn-large btn-round-edge btn-dark-gray btn-slide-right mt-30px xs-mt-25px">Solicitar información<span class="bg-white"></span></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end tab content -->
-                            <!-- start tab content -->
-                            <div class="tab-pane fade in" id="tab_eight5">
-                                <div class="row align-items-center justify-content-center g-0">
-                                    <div class="col-md-6 col-lg-6 position-relative sm-mb-30px">
-                                        <div class="w-90 xs-w-100 text-end ms-auto">
-                                            <img src="https://placehold.co/510x390" class="border-radius-6px" alt="">
-                                        </div>
-                                        <div class="position-absolute left-minus-40px bottom-40px md-w-60 lg-left-minus-70px md-bottom-6px d-none d-sm-inline-block" data-bottom-top="transform: translateY(-50px)" data-top-bottom="transform: translateY(50px)">
-                                            <img src="https://placehold.co/251x240" alt="">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-5 offset-md-1 col-lg-5 offset-lg-1 text-center text-md-start">
-                                        <h4 class="fw-600 alt-font text-dark-gray mb-5px">Soporte técnico</h4> 
-                                        <p class="mb-20px w-100">Seguimiento técnico y atención,<br>soporte para procesos y producción.</p>
-                                        <span class="d-block"><span class="text-dark-gray fw-600">Correo:</span> <a href="#" class="text-dark-gray fw-600 text-decoration-line-bottom">Correo por definir</a></span>
-                                        <span class="d-block"><span class="text-dark-gray fw-600">Teléfono:</span> <a href="#">Teléfono por definir</a></span>
-                                        <a href="#" class="btn btn-large btn-round-edge btn-dark-gray btn-slide-right mt-30px xs-mt-25px">Solicitar información<span class="bg-white"></span></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- end tab content -->
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
+                {% endif %}
             </div>
+            {% if contact_channels %}
             <div class="border-top border-1 border-color-extra-medium-gray bg-white">
                 <div class="container tab-style-08">
                     <ul class="nav nav-tabs fs-24 fw-500 alt-font border-0 text-center">
-                        <li class="nav-item border-end border-color-extra-medium-gray sm-border-end-0"><a data-bs-toggle="tab" href="#tab_eight1" class="nav-link active">Comercial<span class="tab-border bg-base-color"></span></a></li>
-                        <li class="nav-item border-end border-color-extra-medium-gray sm-border-end-0"><a class="nav-link" data-bs-toggle="tab" href="#tab_eight2">Genética<span class="tab-border bg-base-color"></span></a></li>
-                        <li class="nav-item border-end border-color-extra-medium-gray sm-border-end-0"><a class="nav-link" data-bs-toggle="tab" href="#tab_eight3">Servicios<span class="tab-border bg-base-color"></span></a></li>
-                        <li class="nav-item border-end border-color-extra-medium-gray sm-border-end-0"><a class="nav-link" data-bs-toggle="tab" href="#tab_eight4">Productos<span class="tab-border bg-base-color"></span></a></li>
-                        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab_eight5">Soporte<span class="tab-border bg-base-color"></span></a></li>
+                        {% for channel in contact_channels %}
+                        <li class="nav-item{% if not forloop.last %} border-end border-color-extra-medium-gray sm-border-end-0{% endif %}"><a{% if forloop.first %} data-bs-toggle="tab" href="#tab_eight{{ forloop.counter }}" class="nav-link active"{% else %} class="nav-link" data-bs-toggle="tab" href="#tab_eight{{ forloop.counter }}"{% endif %}>{{ channel.label }}<span class="tab-border bg-base-color"></span></a></li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>
+            {% endif %}
             <div class="marquees-text fs-180 fw-700 ls-minus-3px alt-font lg-fs-160 text-outline text-outline-color-extra-medium-gray text-nowrap position-absolute bottom-120px md-bottom-80px d-none d-md-inline-block">Conversemos sobre tu operación avícola.</div>
         </section>
         <!-- end section -->
@@ -153,7 +72,7 @@
         <section class="small-screen section-dark" data-parallax-background-ratio="0.4" style="background-image: url('https://placehold.co/1920x1100');"></section>
         <!-- end section -->
         <!-- start section -->
-        <section class="position-relative">
+        <section class="position-relative" id="formulario-contacto">
             <div class="position-absolute right-0px top-150px d-none d-md-inline-block" data-bottom-top="transform: translateY(-50px)" data-top-bottom="transform: translateY(50px)">
                 <img src="https://placehold.co/90x230" alt="">
             </div>
@@ -170,32 +89,68 @@
                                 </div>
                             </div>
                             <!-- start contact form -->
-                            <form action="" method="post" class="row contact-form-style-02">
+                            <form action="{% url 'contacto:index' %}#formulario-contacto" method="post" class="row contact-form-style-02" novalidate>
                                 {% csrf_token %}
-                                <div class="col-md-6 mb-30px">
-                                    <input class="input-name form-control required" type="text" name="name" placeholder="Nombre*" />
+                                {% if messages or form.non_field_errors %}
+                                <div class="col-12 mb-30px">
+                                    {% for message in messages %}<div class="form-results text-center alert {% if message.tags == 'success' %}alert-success{% else %}alert-danger{% endif %}">{{ message }}</div>{% endfor %}
+                                    {% for error in form.non_field_errors %}<div class="form-results text-center alert alert-danger">{{ error }}</div>{% endfor %}
+                                </div>
+                                {% endif %}
+                                {# Campo trampa: oculto para personas, los robots suelen completarlo. #}
+                                <div aria-hidden="true" style="position:absolute; left:-10000px; top:auto; width:1px; height:1px; overflow:hidden;">
+                                    <label for="id_website">Sitio web</label>
+                                    <input type="text" name="website" id="id_website" tabindex="-1" autocomplete="off" value="">
                                 </div>
                                 <div class="col-md-6 mb-30px">
-                                    <input class="form-control" type="tel" name="phone" placeholder="Teléfono" />
+                                    <input class="input-name form-control required{% if form.name.errors %} is-invalid{% endif %}" type="text" name="name" maxlength="120" placeholder="Nombre*" value="{{ form.name.value|default_if_none:'' }}" required />
+                                    {% for error in form.name.errors %}<div class="fs-14 text-red mt-5px">{{ error }}</div>{% endfor %}
                                 </div>
                                 <div class="col-md-6 mb-30px">
-                                    <input class="form-control required" type="email" name="email" placeholder="Correo electrónico*" />
+                                    <input class="form-control required{% if form.email.errors %} is-invalid{% endif %}" type="email" name="email" maxlength="254" placeholder="Correo electrónico*" value="{{ form.email.value|default_if_none:'' }}" required />
+                                    {% for error in form.email.errors %}<div class="fs-14 text-red mt-5px">{{ error }}</div>{% endfor %}
                                 </div>
                                 <div class="col-md-6 mb-30px">
-                                    <input class="form-control" type="text" name="subject" placeholder="Asunto" />
+                                    <input class="form-control{% if form.company.errors %} is-invalid{% endif %}" type="text" name="company" maxlength="150" placeholder="Empresa" value="{{ form.company.value|default_if_none:'' }}" />
+                                    {% for error in form.company.errors %}<div class="fs-14 text-red mt-5px">{{ error }}</div>{% endfor %}
+                                </div>
+                                <div class="col-md-6 mb-30px">
+                                    <input class="form-control{% if form.position.errors %} is-invalid{% endif %}" type="text" name="position" maxlength="120" placeholder="Cargo" value="{{ form.position.value|default_if_none:'' }}" />
+                                    {% for error in form.position.errors %}<div class="fs-14 text-red mt-5px">{{ error }}</div>{% endfor %}
+                                </div>
+                                <div class="col-md-6 mb-30px">
+                                    <input class="form-control{% if form.phone.errors %} is-invalid{% endif %}" type="tel" name="phone" maxlength="30" placeholder="Teléfono" value="{{ form.phone.value|default_if_none:'' }}" />
+                                    {% for error in form.phone.errors %}<div class="fs-14 text-red mt-5px">{{ error }}</div>{% endfor %}
+                                </div>
+                                <div class="col-md-6 mb-30px">
+                                    <input class="form-control{% if form.whatsapp.errors %} is-invalid{% endif %}" type="tel" name="whatsapp" maxlength="30" placeholder="WhatsApp" value="{{ form.whatsapp.value|default_if_none:'' }}" />
+                                    {% for error in form.whatsapp.errors %}<div class="fs-14 text-red mt-5px">{{ error }}</div>{% endfor %}
+                                </div>
+                                <div class="col-md-6 mb-30px">
+                                    <input class="form-control{% if form.city.errors %} is-invalid{% endif %}" type="text" name="city" maxlength="100" placeholder="Ciudad" value="{{ form.city.value|default_if_none:'' }}" />
+                                    {% for error in form.city.errors %}<div class="fs-14 text-red mt-5px">{{ error }}</div>{% endfor %}
+                                </div>
+                                <div class="col-md-6 mb-30px">
+                                    <select class="form-control{% if form.reason.errors %} is-invalid{% endif %}" name="reason" aria-label="Motivo de la consulta">
+                                        <option value="">{{ form.fields.reason.empty_label }}</option>
+                                        {% for reason in form.fields.reason.queryset %}<option value="{{ reason.pk }}"{% if form.reason.value|stringformat:"s" == reason.pk|stringformat:"s" %} selected{% endif %}>{{ reason.name }}</option>{% endfor %}
+                                    </select>
+                                    {% for error in form.reason.errors %}<div class="fs-14 text-red mt-5px">{{ error }}</div>{% endfor %}
                                 </div>
                                 <div class="col-md-12 mb-30px">
-                                    <textarea class="form-control" cols="40" rows="4" name="comment" placeholder="Cuéntanos cómo podemos ayudarte"></textarea>
+                                    <textarea class="form-control required{% if form.message.errors %} is-invalid{% endif %}" cols="40" rows="4" name="message" maxlength="3000" placeholder="Cuéntanos cómo podemos ayudarte*" required>{{ form.message.value|default_if_none:'' }}</textarea>
+                                    {% for error in form.message.errors %}<div class="fs-14 text-red mt-5px">{{ error }}</div>{% endfor %}
+                                </div>
+                                <div class="col-12 mb-20px">
+                                    <input type="checkbox" name="privacy_accepted" id="id_privacy_accepted" value="on" class="terms-condition d-inline-block align-middle me-5px{% if form.privacy_accepted.errors %} is-invalid{% endif %}"{% if form.privacy_accepted.value %} checked{% endif %} required>
+                                    <label for="id_privacy_accepted" class="fs-15 lh-26 d-inline">Acepto el tratamiento de mis datos para atender esta consulta.*</label>
+                                    {% for error in form.privacy_accepted.errors %}<div class="fs-14 text-red mt-5px">{{ error }}</div>{% endfor %}
                                 </div>
                                 <div class="col-xl-7 col-md-8 last-paragraph-no-margin">
                                     <p class="text-center text-md-start fs-15 lh-26">La información enviada será utilizada únicamente para atender tu consulta y establecer contacto relacionado con los servicios de GRAVIOR.</p>
                                 </div>
                                 <div class="col-xl-5 col-md-4 text-center text-md-end sm-mt-25px">
-                                    <input type="hidden" name="redirect" value="">
-                                    <button class="btn btn-medium btn-round-edge btn-dark-gray btn-slide-right submit" type="submit">Enviar mensaje<span class="bg-white"></span></button> 
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-results mt-20px d-none text-center"></div>
+                                    <button class="btn btn-medium btn-round-edge btn-dark-gray btn-slide-right" type="submit">Enviar mensaje<span class="bg-white"></span></button>
                                 </div>
                             </form>
                             <!-- end contact form -->
