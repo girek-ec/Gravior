@@ -141,9 +141,11 @@
                                     <textarea class="form-control required{% if form.message.errors %} is-invalid{% endif %}" cols="40" rows="4" name="message" maxlength="3000" placeholder="Cuéntanos cómo podemos ayudarte*" required>{{ form.message.value|default_if_none:'' }}</textarea>
                                     {% for error in form.message.errors %}<div class="fs-14 text-red mt-5px">{{ error }}</div>{% endfor %}
                                 </div>
-                                <div class="col-12 mb-20px">
-                                    <input type="checkbox" name="privacy_accepted" id="id_privacy_accepted" value="on" class="terms-condition d-inline-block align-middle me-5px{% if form.privacy_accepted.errors %} is-invalid{% endif %}"{% if form.privacy_accepted.value %} checked{% endif %} required>
-                                    <label for="id_privacy_accepted" class="fs-15 lh-26 d-inline">Acepto el tratamiento de mis datos para atender esta consulta.*</label>
+                                <div class="col-12 mb-20px terms-condition-box text-start">
+                                    <label for="id_privacy_accepted" class="d-inline-block">
+                                        <input type="checkbox" name="privacy_accepted" id="id_privacy_accepted" value="on" class="terms-condition d-inline-block align-middle{% if form.privacy_accepted.errors %} is-invalid{% endif %}"{% if form.privacy_accepted.value %} checked{% endif %} required>
+                                        <span class="box fs-15 lh-26">Acepto el tratamiento de mis datos para atender esta consulta.*</span>
+                                    </label>
                                     {% for error in form.privacy_accepted.errors %}<div class="fs-14 text-red mt-5px">{{ error }}</div>{% endfor %}
                                 </div>
                                 <div class="col-xl-7 col-md-8 last-paragraph-no-margin">
