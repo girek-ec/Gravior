@@ -64,6 +64,18 @@
 <!-- javascript libraries -->
         <script type="text/javascript" src="{% static 'crafto/js/jquery.js' %}"></script>
         <script type="text/javascript" src="{% static 'crafto/js/vendors.min.js' %}"></script>
+        <script type="text/javascript">
+            /* Textos en español del lightbox (Magnific Popup) por configuración, sin editar archivos del tema. */
+            if (window.jQuery && jQuery.magnificPopup) {
+                jQuery.extend(true, jQuery.magnificPopup.defaults, {
+                    tClose: 'Cerrar (Esc)',
+                    tLoading: 'Cargando…',
+                    gallery: {tPrev: 'Anterior', tNext: 'Siguiente', tCounter: '%curr% de %total%'},
+                    image: {tError: 'No se pudo cargar la imagen.'},
+                    ajax: {tError: 'No se pudo cargar el contenido.'}
+                });
+            }
+        </script>
         <!-- slider revolution core javaScript files -->
         <script type="text/javascript" src="{% static 'crafto/revolution/js/jquery.themepunch.tools.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'crafto/revolution/js/jquery.themepunch.revolution.min.js' %}"></script>
